@@ -1,5 +1,5 @@
-#/usr/bin/env python
-#coding: utf-8
+#!/usr/bin/env python
+# coding: utf-8
 
 def main():
 
@@ -50,6 +50,8 @@ def main():
     ]
 
 
+    move = []
+
     while True:
 
         pi = -1
@@ -81,7 +83,44 @@ def main():
         delta = a[ni]
         a[pi] = a[pi] + delta
         a[ni] = 0
-        print u"{:20} -> {:20} : {}".format(names[pi], names[ni], -delta)
+        mv = [pi, ni, -delta]
+        move.append(mv)
+
+    for mv in move:
+        #print mv
+        pi, ni, s = mv
+        print u"{:20} -> {:20} : {}".format(names[pi], names[ni], s)
+
+    print range(len(move))
+    fin = False
+    for i in range(len(move)):
+        #print i
+        cmv = move[i]
+        cpi, cni, cs = cmv
+        print names[cpi], names[cni], cs
+        for j in range(len(move)):
+            if i == j:
+                continue
+            mv = move[j]
+            pi, ni, s = mv
+            if cni == pi and s > cs:
+                print u"{:3}, {:3} ({:10} {:10}), ({:10} {:10})".format(i, j, names[cpi], names[cni], names[pi], names[ni])
+                # opt
+                #print names[cmv[1]]
+                mv[2] = s - cs
+                # change dest
+                cmv[1] = ni
+                move[i] = cmv
+                move[j] = mv
+                #fin = True
+                #break
+        if fin:
+            break
+
+    for mv in move:
+        #print mv
+        ni, pi, s = mv
+        print u"{:20} -> {:20} : {}".format(names[ni], names[pi], s)
 
     print a
 
