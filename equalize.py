@@ -86,43 +86,40 @@ def main():
         mv = [pi, ni, -delta]
         move.append(mv)
 
+    print "= = = Initial equalization:"
     for mv in move:
-        #print mv
         pi, ni, s = mv
         print u"{:20} -> {:20} : {}".format(names[pi], names[ni], s)
 
-    print range(len(move))
-    fin = False
+    print "= = = Equalization rests:"
+    print a
+
+    print "= = = Transaction contraction:"
     for i in range(len(move)):
-        #print i
         cmv = move[i]
         cpi, cni, cs = cmv
-        print names[cpi], names[cni], cs
+        #print names[cpi], names[cni], cs
         for j in range(len(move)):
             if i == j:
                 continue
             mv = move[j]
             pi, ni, s = mv
             if cni == pi and s > cs:
-                print u"{:3}, {:3} ({:10} {:10}), ({:10} {:10})".format(i, j, names[cpi], names[cni], names[pi], names[ni])
+                print u"{:3}, {:3} ({} {}), ({} {})".format(i, j, names[cpi], names[cni], names[pi], names[ni])
                 # opt
-                #print names[cmv[1]]
                 mv[2] = s - cs
                 # change dest
                 cmv[1] = ni
                 move[i] = cmv
                 move[j] = mv
-                #fin = True
-                #break
-        if fin:
-            break
 
+    move = sorted(move, key=lambda m: m[0])
+
+    print "= = = Results:"
     for mv in move:
-        #print mv
         ni, pi, s = mv
         print u"{:20} -> {:20} : {}".format(names[ni], names[pi], s)
 
-    print a
 
 main()
 
