@@ -28,27 +28,47 @@ function fe_new_sheet() {
     </form><?php
 }
 
-function fe_print_transaction_input($transaction_id, $transaction) {
-    print_r($transaction_id);
-    print " &nbsp; ";
-    print_r($transaction);
-    print "<br />";
+function fe_print_transaction_input($members, $transaction_id, $transaction) {
+    print("TID: $transaction_id\n");
+    $currency = $transaction["currency"];
+    echo "<tr>";
+    echo "<td>$currency</td>\n ";
+    foreach ($members as $member_id => $member_name) {
+        $charges = fe_get_or($transaction, "charges", array());
+        $value = fe_get_or($charges, $member_id, "0");
+        echo "<td><input name=\"tr${transaction_id}_${member_id}\" value=\"$value\" type=\"text\" /></td>\n ";
+    }
+    echo "</tr>";
+    //print_r($transaction);
 }
 
 
 function fe_edit_sheet($sheet_id) {
+    global $PHP_SELF;
     echo "Идентификатор листа: <b>$sheet_id</b><br />";
     $sheet_data = file_get_contents("data/$sheet_id.json");
     $sheet_data = json_decode($sheet_data, true);
     $members = $sheet_data["members"];
     $transactions = fe_get_or($sheet_data, "transactions", array());
+    ?>
+    <form action="<?php echo $PHP_SELF; ?>?action=update_sheet"> <?php
     foreach ($members as $member_id => $member_name) {
         print("$member_id $member_name<br/>");
     }
+    echo "<table>";
+
+    echo "<tr>";
+    echo "<th>&nbsp;</th>";
+    foreach ($members as $member_id => $member_name) {
+        echo "<th>$member_name</th>\n ";
+    }
+    echo "</tr>";
 
     foreach ($transactions as $transaction_id => $transaction) {
-        fe_print_transaction_input($transaction_id, $transaction);
+        fe_print_transaction_input($members, $transaction_id, $transaction);
     }
+    echo "</table>";
+    echo "</form>";
 
     print_r($sheet_data);
     print_r($transactions);
