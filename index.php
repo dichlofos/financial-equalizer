@@ -7,6 +7,12 @@ define('CUR_RUR', 'rur');
 define('CUR_USD', 'usd');
 
 
+function fe_print($object) {
+    echo "<pre>";
+    print_r($object);
+    echo "</pre>";
+}
+
 function fe_get_or($array, $key, $default_value = "") {
     if (array_key_exists($key, $array)) {
         return $array[$key];
@@ -37,11 +43,27 @@ function fe_new_sheet() {
     </form><?php
 }
 
+
+function fe_currency_selector($currency, $id) {
+    echo "<select name=\"$id\">";
+    $currencies = array(
+        CUR_RUR,
+        CUR_USD,
+    );
+    foreach ($currencies as $curr) {
+        $selected = ($curr == $currency) ? ' selected="selected" ' : '';
+        echo "<option value=\"$curr\"$selected>$curr</option>\n";
+    }
+    echo "</select>";
+}
+
 function fe_print_transaction_input($members, $transaction_id, $transaction) {
     //print_r($transaction);
     $currency = $transaction["currency"];
     echo "<tr>";
-    echo "<td>$currency</td>\n ";
+    echo "<td>";
+    fe_currency_selector($currency, "cur$transaction_id");
+    echo "</td>\n ";
     foreach ($members as $member_id => $member_name) {
         $charges = fe_get_or($transaction, "charges", array());
         $value = fe_get_or($charges, $member_id, "0");
@@ -81,8 +103,7 @@ function fe_edit_sheet($sheet_id) {
     </div>
     </form><?php
 
-    print_r($sheet_data);
-    print_r($transactions);
+    fe_print($sheet_data);
 }
 
 $sheet_id = fe_get_or($_REQUEST, "sheet_id");
@@ -123,7 +144,7 @@ if ($action == "new_sheet") {
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "update_sheet") {
-    print_r($_REQUEST);
+    fe_print($_REQUEST);
     $sheet_data = array();
     $transactions = array();
     foreach ($_REQUEST as $key => $value) {
@@ -135,12 +156,18 @@ if ($action == "new_sheet") {
             if (!array_key_exists($transaction_id, $transactions)) {
                 $transactions[$transaction_id] = array();
             }
-            $transactions[$transaction_id][$member_id] = $value;
+            if (!array_key_exists("charges", $transactions[$transaction_id])) {
+                $transactions[$transaction_id]["charges"] = array();
+            }
+            $transactions[$transaction_id]["charges"][$member_id] = $value;
+        } elseif (fe_startswith($key, "cur")) {
+            $transaction_id = substr($key, 3);
+            $transactions[$transaction_id]["currency"] = $value;
         }
     }
     $members = array();
     $sheet_data["transactions"] = $transactions;
-    print_r($transactions);
+    fe_print($transactions);
 
     exit();
 } elseif (fe_not_empty($action)) {
