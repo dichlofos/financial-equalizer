@@ -18,6 +18,15 @@ function fe_empty($value) {
     return strlen($value) == 0;
 }
 
+function fe_not_empty($value) {
+    return strlen($value) > 0;
+}
+
+function fe_startswith($str, $prefix) {
+    return (substr($str, 0, strlen($prefix)) == $prefix);
+}
+
+
 function fe_new_sheet() {
     global $PHP_SELF;
     $sheet_id = rand().'-'.rand().'-'.rand();
@@ -29,17 +38,16 @@ function fe_new_sheet() {
 }
 
 function fe_print_transaction_input($members, $transaction_id, $transaction) {
-    print("TID: $transaction_id\n");
+    //print_r($transaction);
     $currency = $transaction["currency"];
     echo "<tr>";
     echo "<td>$currency</td>\n ";
     foreach ($members as $member_id => $member_name) {
         $charges = fe_get_or($transaction, "charges", array());
         $value = fe_get_or($charges, $member_id, "0");
-        echo "<td><input name=\"tr${transaction_id}_${member_id}\" value=\"$value\" type=\"text\" /></td>\n ";
+        echo "<td><input class=\"amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$value\" type=\"text\" /></td>\n ";
     }
     echo "</tr>";
-    //print_r($transaction);
 }
 
 
@@ -51,9 +59,9 @@ function fe_edit_sheet($sheet_id) {
     $members = $sheet_data["members"];
     $transactions = fe_get_or($sheet_data, "transactions", array());
     ?>
-    <form action="<?php echo $PHP_SELF; ?>?action=update_sheet"> <?php
+    <form method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet"> <?php
     foreach ($members as $member_id => $member_name) {
-        print("$member_id $member_name<br/>");
+        echo "<div><b>$member_id:</b> <input type=\"text\" name=\"m$member_id\" value=\"$member_name\" /></div>\n";
     }
     echo "<table>";
 
@@ -66,9 +74,12 @@ function fe_edit_sheet($sheet_id) {
 
     foreach ($transactions as $transaction_id => $transaction) {
         fe_print_transaction_input($members, $transaction_id, $transaction);
-    }
-    echo "</table>";
-    echo "</form>";
+    }?>
+    </table>
+    <div>
+        <input type="submit" value="Сохранить" />
+    </div>
+    </form><?php
 
     print_r($sheet_data);
     print_r($transactions);
@@ -111,6 +122,29 @@ if ($action == "new_sheet") {
     echo $PHP_SELF;
     header("Location: /?sheet_id=$sheet_id");
     exit();
+} elseif ($action == "update_sheet") {
+    print_r($_REQUEST);
+    $sheet_data = array();
+    $transactions = array();
+    foreach ($_REQUEST as $key => $value) {
+        if (fe_startswith($key, "tr")) {
+            $amount_key = substr($key, 2);
+            $amount_key = explode("_", $amount_key);
+            $transaction_id = $amount_key[0];
+            $member_id = $amount_key[1];
+            if (!array_key_exists($transaction_id, $transactions)) {
+                $transactions[$transaction_id] = array();
+            }
+            $transactions[$transaction_id][$member_id] = $value;
+        }
+    }
+    $members = array();
+    $sheet_data["transactions"] = $transactions;
+    print_r($transactions);
+
+    exit();
+} elseif (fe_not_empty($action)) {
+    die("Unknown action: '$action'");
 }
 
 ?><!DOCTYPE html>
@@ -118,6 +152,11 @@ if ($action == "new_sheet") {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Financial Equalizer</title>
+<style>
+input.amount {
+    width: 80px;
+}
+</style>
 </head>
 <body><?php
 
