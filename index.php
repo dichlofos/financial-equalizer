@@ -70,15 +70,29 @@ function fe_currency_selector($currency, $id) {
 function fe_print_transaction_input($members, $transaction_id, $transaction) {
     //print_r($transaction);
     $currency = $transaction["currency"];
+    $description = fe_get_or($transaction, "description");
+
     echo "<tr>";
+    echo "<td>";
+    echo "<input class=\"transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\" />";
     echo "<td>";
     fe_currency_selector($currency, "cur$transaction_id");
     echo "</td>\n ";
     foreach ($members as $member_id => $member_name) {
+        echo "<td>";
         $charges = fe_get_or($transaction, "charges", array());
         $value = fe_get_or($charges, $member_id, "0");
-        echo "<td><input class=\"amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$value\" type=\"text\" /></td>\n ";
+        echo "<input class=\"amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$value\" type=\"text\" />";
+        $spent = fe_get_or($transaction, "spent", array());
+        $value = fe_get_or($spent, $member_id);
+        $checked = ($value == "yes") ? " checked=\"checked\" " : "";
+        echo "<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $checked type=\"checkbox\" />";
+        echo "</td>\n ";
     }
+
+    foreach ($members as $member_id => $member_name) {
+    }
+
     echo "</tr>";
 }
 
@@ -95,10 +109,10 @@ function fe_edit_sheet($sheet_id) {
     foreach ($members as $member_id => $member_name) {
         echo "<div><b>$member_id:</b> <input type=\"text\" name=\"m$member_id\" value=\"$member_name\" /></div>\n";
     }
-    echo "<table>";
-
+    echo "<table class=\"transactions\">";
     echo "<tr>";
-    echo "<th>&nbsp;</th>";
+    echo "<th>Описание</th>";
+    echo "<th>Валюта</th>";
     foreach ($members as $member_id => $member_name) {
         echo "<th>$member_name</th>\n ";
     }
@@ -131,6 +145,7 @@ if ($action == "new_sheet") {
     $transactions["1"] = array(
         "type"=>TR_EXPENSE,
         "currency"=>CUR_RUR,
+        "description"=>"Трансфер Душанбе-Варзов",
         "charges"=>array(
             "1"=>"1000",
             "2"=>"500",
@@ -138,6 +153,7 @@ if ($action == "new_sheet") {
     );
     $transactions["2"] = array(
         "type"=>TR_EXPENSE,
+        "description"=>"Пропили в кафешке",
         "currency"=>CUR_USD,
         "charges"=>array(
             "1"=>"50",
@@ -192,6 +208,19 @@ if ($action == "new_sheet") {
 input.amount {
     width: 80px;
 }
+table.transactions {
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+table.transactions td {
+    border: 1px solid #cfcfcf;
+    padding: 3px;
+}
+table.transactions th {
+    border: 1px solid #cfcfcf;
+    padding: 3px;
+}
+
 </style>
 </head>
 <body><?php
