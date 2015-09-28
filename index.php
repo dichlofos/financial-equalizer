@@ -32,6 +32,16 @@ function fe_startswith($str, $prefix) {
     return (substr($str, 0, strlen($prefix)) == $prefix);
 }
 
+function fe_save_sheet($sheet_id, $sheet_data) {
+    $sheet_f = fopen("data/$sheet_id.json", "w");
+    fwrite($sheet_f, json_encode($sheet_data));
+    fclose($sheet_f);
+}
+
+function fe_load_sheet($sheet_id) {
+    $sheet_data = file_get_contents("data/$sheet_id.json");
+    return json_decode($sheet_data, true);
+}
 
 function fe_new_sheet() {
     global $PHP_SELF;
@@ -76,12 +86,12 @@ function fe_print_transaction_input($members, $transaction_id, $transaction) {
 function fe_edit_sheet($sheet_id) {
     global $PHP_SELF;
     echo "Идентификатор листа: <b>$sheet_id</b><br />";
-    $sheet_data = file_get_contents("data/$sheet_id.json");
-    $sheet_data = json_decode($sheet_data, true);
+    $sheet_data = fe_load_sheet($sheet_id);
     $members = $sheet_data["members"];
     $transactions = fe_get_or($sheet_data, "transactions", array());
     ?>
-    <form method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet"> <?php
+    <form method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet">
+    <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" /><?php
     foreach ($members as $member_id => $member_name) {
         echo "<div><b>$member_id:</b> <input type=\"text\" name=\"m$member_id\" value=\"$member_name\" /></div>\n";
     }
@@ -111,7 +121,6 @@ $sheet_id = preg_replace("/[^0-9a-f-]/", "", $sheet_id);
 $action = fe_get_or($_REQUEST, "action");
 
 if ($action == "new_sheet") {
-    $sheet_f = fopen("data/$sheet_id.json", "w");
     $sheet_data = array();
     $members = array();
     $members["1"] = "one";
@@ -136,39 +145,39 @@ if ($action == "new_sheet") {
         ),
     );
     $sheet_data["transactions"] = $transactions;
-
-
-    fwrite($sheet_f, json_encode($sheet_data));
-    fclose($sheet_f);
+    fe_save_sheet($sheet_id, $sheet_data);
     echo $PHP_SELF;
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "update_sheet") {
+    if (fe_empty($sheet_id)) {
+        die("Invalid request: sheet_id is empty");
+    }
     fe_print($_REQUEST);
     $sheet_data = array();
     $transactions = array();
+    $members = array();
     foreach ($_REQUEST as $key => $value) {
         if (fe_startswith($key, "tr")) {
             $amount_key = substr($key, 2);
             $amount_key = explode("_", $amount_key);
             $transaction_id = $amount_key[0];
             $member_id = $amount_key[1];
-            if (!array_key_exists($transaction_id, $transactions)) {
-                $transactions[$transaction_id] = array();
-            }
-            if (!array_key_exists("charges", $transactions[$transaction_id])) {
-                $transactions[$transaction_id]["charges"] = array();
-            }
             $transactions[$transaction_id]["charges"][$member_id] = $value;
         } elseif (fe_startswith($key, "cur")) {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["currency"] = $value;
+        } elseif (fe_startswith($key, "m")) {
+            $member_id = substr($key, 1);
+            $members[$member_id] = $value;
         }
     }
-    $members = array();
     $sheet_data["transactions"] = $transactions;
+    $sheet_data["members"] = $members;
     fe_print($transactions);
-
+    fe_save_sheet($sheet_id, $sheet_data);
+    echo $PHP_SELF;
+    header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif (fe_not_empty($action)) {
     die("Unknown action: '$action'");
