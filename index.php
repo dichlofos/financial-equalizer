@@ -150,6 +150,10 @@ if ($action == "new_sheet") {
             "1"=>"1000",
             "2"=>"500",
         ),
+        "spent"=>array(
+            "3"=>"yes",
+            "2"=>"yes",
+        ),
     );
     $transactions["2"] = array(
         "type"=>TR_EXPENSE,
@@ -158,6 +162,10 @@ if ($action == "new_sheet") {
         "charges"=>array(
             "1"=>"50",
             "2"=>"100",
+        ),
+        "spent"=>array(
+            "1"=>"yes",
+            "3"=>"yes",
         ),
     );
     $sheet_data["transactions"] = $transactions;
@@ -180,6 +188,12 @@ if ($action == "new_sheet") {
             $transaction_id = $amount_key[0];
             $member_id = $amount_key[1];
             $transactions[$transaction_id]["charges"][$member_id] = $value;
+        } elseif (fe_startswith($key, "sp")) {
+            $spent_key = substr($key, 2);
+            $spent_key = explode("_", $spent_key);
+            $transaction_id = $spent_key[0];
+            $member_id = $spent_key[1];
+            $transactions[$transaction_id]["spent"][$member_id] = $value;
         } elseif (fe_startswith($key, "cur")) {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["currency"] = $value;
