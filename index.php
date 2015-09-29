@@ -197,6 +197,9 @@ if ($action == "new_sheet") {
         } elseif (fe_startswith($key, "cur")) {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["currency"] = $value;
+        } elseif (fe_startswith($key, "dtr")) {
+            $transaction_id = substr($key, 3);
+            $transactions[$transaction_id]["description"] = $value;
         } elseif (fe_startswith($key, "m")) {
             $member_id = substr($key, 1);
             $members[$member_id] = $value;
