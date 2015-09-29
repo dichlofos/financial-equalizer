@@ -108,7 +108,7 @@ function fe_edit_sheet($sheet_id) {
         <form method="post" action="<?php echo $PHP_SELF; ?>?action=add_member">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
         <?php
-            echo "Новый участник: <input type=\"text\" name=\"new_member\" value=\"\" />";
+            echo "Новый участник: <input type=\"text\" name=\"member_name\" value=\"\" />";
         ?>
         <input type="submit" value="Добавить участника" />
         </form>
@@ -145,6 +145,7 @@ function fe_edit_sheet($sheet_id) {
 $sheet_id = fe_get_or($_REQUEST, "sheet_id");
 $sheet_id = preg_replace("/[^0-9a-f-]/", "", $sheet_id);
 $action = fe_get_or($_REQUEST, "action");
+$member_name = fe_get_or($_REQUEST, "member_name");
 
 if ($action == "new_sheet") {
     $sheet_data = array();
