@@ -79,21 +79,21 @@ function fe_print_transaction_input($members, $transaction_id, $transaction) {
     echo "<td>";
     fe_currency_selector($currency, "cur$transaction_id");
     echo "</td>\n ";
+    $transaction_sum = 0;
     foreach ($members as $member_id => $member_name) {
         echo "<td>";
         $charges = fe_get_or($transaction, "charges", array());
-        $value = fe_get_or($charges, $member_id, "0");
-        echo "<input class=\"amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$value\" type=\"text\" />";
+        $charge = fe_get_or($charges, $member_id, "0");
+        $charge_int = (integer)($charge);
+        $transaction_sum += $charge_int;
+        echo "<input class=\"amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge\" type=\"text\" />";
         $spent = fe_get_or($transaction, "spent", array());
-        $value = fe_get_or($spent, $member_id);
-        $checked = ($value == "yes") ? " checked=\"checked\" " : "";
+        $member_spent = fe_get_or($spent, $member_id);
+        $checked = ($member_spent == "yes") ? " checked=\"checked\" " : "";
         echo "<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $checked type=\"checkbox\" />";
         echo "</td>\n ";
     }
-
-    foreach ($members as $member_id => $member_name) {
-    }
-
+    echo "<td>$transaction_sum</td>\n ";
     echo "</tr>";
 }
 
@@ -128,6 +128,7 @@ function fe_edit_sheet($sheet_id) {
         foreach ($members as $member_id => $member_name) {
             echo "<th>$member_name</th>\n ";
         }
+        echo "<th class=\"sum\">Сумма</th>\n";
         echo "</tr>";
 
         foreach ($transactions as $transaction_id => $transaction) {
