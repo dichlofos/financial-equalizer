@@ -5,6 +5,7 @@ define('TR_INTERNAL', 'int');
 
 define('CUR_RUR', 'rur');
 define('CUR_USD', 'usd');
+define('CUR_EUR', 'eur');
 
 
 function fe_print($object) {
@@ -138,6 +139,18 @@ function fe_edit_sheet($sheet_id) {
         </div>
         </form>
     </div>
+
+    <div class="form">
+        <form method="post" action="<?php echo $PHP_SELF; ?>?action=add_transaction">
+        <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
+        <?php
+            echo "Новая статья расходов: <input type=\"text\" name=\"description\" value=\"\" />";
+        ?>
+        <input type="submit" value="Добавить" />
+        </form>
+    </div>
+
+
     <?php
     fe_print($sheet_data);
 }
@@ -146,6 +159,7 @@ $sheet_id = fe_get_or($_REQUEST, "sheet_id");
 $sheet_id = preg_replace("/[^0-9a-f-]/", "", $sheet_id);
 $action = fe_get_or($_REQUEST, "action");
 $member_name = fe_get_or($_REQUEST, "member_name");
+$description = fe_get_or($_REQUEST, "description");
 
 if ($action == "new_sheet") {
     $sheet_data = array();
@@ -195,6 +209,7 @@ if ($action == "new_sheet") {
     $transactions = array();
     $members = array();
     foreach ($_REQUEST as $key => $value) {
+        $value = trim($value);
         if (fe_startswith($key, "tr")) {
             $amount_key = substr($key, 2);
             $amount_key = explode("_", $amount_key);
@@ -214,7 +229,7 @@ if ($action == "new_sheet") {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["description"] = $value;
         } elseif (fe_startswith($key, "m")) {
-            if (fe_empty(trim($value))) {
+            if (fe_empty($value)) {
                 continue;  // skip empty members
             }
             $member_id = substr($key, 1);
@@ -232,6 +247,16 @@ if ($action == "new_sheet") {
     $members = $sheet_data["members"];
     $members[] = $member_name;
     $sheet_data["members"] = $members;
+    fe_save_sheet($sheet_id, $sheet_data);
+    header("Location: /?sheet_id=$sheet_id");
+    exit();
+} elseif ($action == "add_transaction") {
+    $sheet_data = fe_load_sheet($sheet_id);
+    $sheet_data["transactions"][] = array(
+        "description"=>$description,
+        "currency"=>CUR_RUR,
+        "type"=>TR_EXPENSE,
+    );
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
@@ -265,7 +290,7 @@ table.transactions {
 }
 table.transactions td {
     border: 1px solid #cfcfcf;
-    padding: 3px;
+    padding: 3px 10px;
 }
 table.transactions th {
     border: 1px solid #cfcfcf;
