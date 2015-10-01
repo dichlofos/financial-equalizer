@@ -98,7 +98,7 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
 
     echo "<tr>";
     echo "<td>";
-    echo "<input class=\"transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\" />";
+    echo "<input class=\"form-control transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\" />";
     echo "<td>";
     fe_currency_selector($currency, "cur$transaction_id");
     echo "</td>\n ";
@@ -108,10 +108,10 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
         echo "<td>";
         $charge_int = fe_get_charge($transaction, $member_id);
         $transaction_sum += $charge_int;
-        echo "<input class=\"amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\" />";
+        echo "<input class=\"form-control amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\" />";
         $spent_checked = fe_get_spent($transaction, $member_id) ? " checked=\"checked\" " : "";
-        echo "<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $spent_checked type=\"checkbox\" />";
-        echo "$delta";
+        echo "&nbsp;<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $spent_checked type=\"checkbox\" />";
+        //echo "$delta";
         echo "</td>\n ";
     }
     echo "<td>$transaction_sum</td>\n ";
@@ -163,7 +163,7 @@ function fe_edit_sheet($sheet_id) {
     </form>
 
     <form class="form-inline" method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet">
-        <div class="form">
+        <div class="form-group">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" /><?php
         foreach ($members as $member_id => $member_name) {
             echo "<div class=\"form-group member-list\"><label for=\"m$member_id\" style=\"width: 30px\">$member_id:&nbsp;</label>";
@@ -346,9 +346,14 @@ input.transaction-title {
     width: 20%;
 }
 
-input.amount {
+.form-inline .form-control.amount {
     width: 4em;
 }
+
+.form-inline .form-control.transaction-description {
+    width: 30em;
+}
+
 table.transactions {
     table-layout: fixed;
     border-collapse: collapse;
