@@ -14,6 +14,7 @@ function fe_print($object) {
     echo "</pre>";
 }
 
+
 function fe_get_or($array, $key, $default_value = "") {
     if (array_key_exists($key, $array)) {
         return $array[$key];
@@ -21,17 +22,21 @@ function fe_get_or($array, $key, $default_value = "") {
     return $default_value;
 }
 
+
 function fe_empty($value) {
     return strlen($value) == 0;
 }
+
 
 function fe_not_empty($value) {
     return strlen($value) > 0;
 }
 
+
 function fe_startswith($str, $prefix) {
     return (substr($str, 0, strlen($prefix)) == $prefix);
 }
+
 
 function fe_save_sheet($sheet_id, $sheet_data) {
     $sheet_f = fopen("data/$sheet_id.json", "w");
@@ -39,10 +44,12 @@ function fe_save_sheet($sheet_id, $sheet_data) {
     fclose($sheet_f);
 }
 
+
 function fe_load_sheet($sheet_id) {
     $sheet_data = file_get_contents("data/$sheet_id.json");
     return json_decode($sheet_data, true);
 }
+
 
 function fe_new_sheet() {
     global $PHP_SELF;
@@ -68,7 +75,23 @@ function fe_currency_selector($currency, $id) {
     echo "</select>";
 }
 
-function fe_print_transaction_input($members, $transaction_id, $transaction) {
+
+function fe_get_charge($transaction, $member_id) {
+    $charges = fe_get_or($transaction, "charges", array());
+    $charge = fe_get_or($charges, $member_id, "0");
+    $charge_int = (integer)($charge);
+    return $charge_int;
+}
+
+
+function fe_get_spent($transaction, $member_id) {
+    $spent = fe_get_or($transaction, "spent", array());
+    $member_spent = fe_get_or($spent, $member_id);
+    return ($member_spent == "yes");
+}
+
+
+function fe_print_transaction_input($members, $transaction_id, $transaction, $transaction_deltas) {
     //print_r($transaction);
     $currency = $transaction["currency"];
     $description = fe_get_or($transaction, "description");
@@ -81,16 +104,14 @@ function fe_print_transaction_input($members, $transaction_id, $transaction) {
     echo "</td>\n ";
     $transaction_sum = 0;
     foreach ($members as $member_id => $member_name) {
+        $delta = $transaction_deltas[$member_id];
         echo "<td>";
-        $charges = fe_get_or($transaction, "charges", array());
-        $charge = fe_get_or($charges, $member_id, "0");
-        $charge_int = (integer)($charge);
+        $charge_int = fe_get_charge($transaction, $member_id);
         $transaction_sum += $charge_int;
-        echo "<input class=\"amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge\" type=\"text\" />";
-        $spent = fe_get_or($transaction, "spent", array());
-        $member_spent = fe_get_or($spent, $member_id);
-        $checked = ($member_spent == "yes") ? " checked=\"checked\" " : "";
-        echo "<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $checked type=\"checkbox\" />";
+        echo "<input class=\"amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\" />";
+        $spent_checked = fe_get_spent($transaction, $member_id) ? " checked=\"checked\" " : "";
+        echo "<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $spent_checked type=\"checkbox\" />";
+        echo "$delta";
         echo "</td>\n ";
     }
     echo "<td>$transaction_sum</td>\n ";
@@ -103,6 +124,33 @@ function fe_edit_sheet($sheet_id) {
     $sheet_data = fe_load_sheet($sheet_id);
     $members = $sheet_data["members"];
     $transactions = fe_get_or($sheet_data, "transactions", array());
+
+    $deltas = array();
+    $member_sums = array();
+    foreach ($members as $member_id => $member_name) {
+        $member_sums[$member_id] = 0;
+    }
+
+    foreach ($transactions as $transaction_id => $transaction) {
+        // calc transaction sum and spenders count
+        $transaction_sum = 0;
+        $spenders = 0;
+        foreach ($members as $member_id => $member_name) {
+            $transaction_sum += fe_get_charge($transaction, $member_id);
+            if (fe_get_spent($transaction, $member_id)) {
+                ++$spenders;
+            }
+        }
+        $deltas[$transaction_id] = array();
+        // charge - average spending
+        foreach ($members as $member_id => $member_name) {
+            $own_good = fe_get_spent($transaction, $member_id) ? ($transaction_sum / $spenders) : 0;
+            $delta = fe_get_charge($transaction, $member_id) - $own_good;
+            $deltas[$transaction_id][$member_id] = $delta;
+            $member_sums[$member_id] += $delta;
+        }
+    }
+
     ?>
 
     <div class="form">
@@ -132,13 +180,26 @@ function fe_edit_sheet($sheet_id) {
         echo "</tr>";
 
         foreach ($transactions as $transaction_id => $transaction) {
-            fe_print_transaction_input($members, $transaction_id, $transaction);
-        }?>
+            fe_print_transaction_input($members, $transaction_id, $transaction, $deltas[$transaction_id]);
+        }
+        // Total
+        echo "<tr>";
+        echo "<td>&nbsp;</td>";
+        echo "<td>&nbsp;</td>";
+        foreach ($members as $member_id => $member_name) {
+            $member_sum = $member_sums[$member_id];
+            echo "<td>$member_sum</td>\n ";
+        }
+        echo "<td>&nbsp;</td>\n";
+        echo "</tr>";
+        ?>
         </table>
         <div>
             <input type="submit" value="Сохранить" />
         </div>
-        </form>
+        </form><?php
+
+        ?>
     </div>
 
     <div class="form">
@@ -151,9 +212,7 @@ function fe_edit_sheet($sheet_id) {
         </form>
     </div>
 
-
     <?php
-    fe_print($sheet_data);
 }
 
 $sheet_id = fe_get_or($_REQUEST, "sheet_id");
