@@ -120,7 +120,7 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
 
 function fe_edit_sheet($sheet_id) {
     global $PHP_SELF;
-    echo "Идентификатор листа: <b>$sheet_id</b><br />";
+    echo "Идентификатор листа: <a href=\"$PHP_SELF\">$sheet_id</a><br />";
     $sheet_data = fe_load_sheet($sheet_id);
     $members = $sheet_data["members"];
     $transactions = fe_get_or($sheet_data, "transactions", array());
@@ -153,23 +153,23 @@ function fe_edit_sheet($sheet_id) {
 
     ?>
 
-    <div class="form">
-        <form method="post" action="<?php echo $PHP_SELF; ?>?action=add_member">
-        <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-        <?php
-            echo "Новый участник: <input type=\"text\" name=\"member_name\" value=\"\" />";
-        ?>
-        <input type="submit" value="Добавить участника" />
-        </form>
-    </div>
+    <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_member">
+        <div class="form-group">
+            <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
+            <label for="member_name">Новый участник:&nbsp;</label>
+            <input type="text" class="form-control" name="member_name" value="" placeholder="Иван Человеков" />
+            <button type="submit" class="btn btn-default">Добавить участника</button>
+        </div>
+    </form>
 
-    <div class="form">
-        <form method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet">
+    <form class="form-inline" method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet">
+        <div class="form">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" /><?php
         foreach ($members as $member_id => $member_name) {
-            echo "<div><b>$member_id:</b> <input type=\"text\" name=\"m$member_id\" value=\"$member_name\" /></div>\n";
+            echo "<div class=\"form-group member-list\"><label for=\"m$member_id\" style=\"width: 30px\">$member_id:&nbsp;</label>";
+            echo "<input class=\"form-control\" type=\"text\" name=\"m$member_id\" value=\"$member_name\" /></div>\n";
         }
-        echo "<table class=\"transactions\">";
+        echo "<table class=\"table table-bordered table-hover\">";
         echo "<tr>";
         echo "<th>Описание</th>";
         echo "<th>Валюта</th>";
@@ -183,7 +183,7 @@ function fe_edit_sheet($sheet_id) {
             fe_print_transaction_input($members, $transaction_id, $transaction, $deltas[$transaction_id]);
         }
         // Total
-        echo "<tr>";
+        echo "<tr class=\"info\">";
         echo "<td>&nbsp;</td>";
         echo "<td>&nbsp;</td>";
         foreach ($members as $member_id => $member_name) {
@@ -197,16 +197,14 @@ function fe_edit_sheet($sheet_id) {
         <div>
             <input type="submit" value="Сохранить" />
         </div>
-        </form><?php
-
-        ?>
-    </div>
+        </div>
+    </form>
 
     <div class="form">
         <form method="post" action="<?php echo $PHP_SELF; ?>?action=add_transaction">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
         <?php
-            echo "Новая статья расходов: <input type=\"text\" name=\"description\" value=\"\" />";
+            echo "Новая статья расходов: <input class=\"form-inline transaction-title\" type=\"text\" name=\"description\" value=\"\" />";
         ?>
         <input type="submit" value="Добавить" />
         </form>
@@ -326,21 +324,30 @@ if ($action == "new_sheet") {
 
 ?><!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Financial Equalizer</title>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Финансовый коммунизм</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <style>
+body {
+    padding: 10px;
+}
+div.member-list {
+    margin-top: 5px;
+}
 div.form {
     padding: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: #ffffdd;
-    border-radius: 3px;
-    border: 1px solid #eeeecc;
-
 }
+input.transaction-title {
+    width: 20%;
+}
+
 input.amount {
-    width: 80px;
+    width: 4em;
 }
 table.transactions {
     table-layout: fixed;
