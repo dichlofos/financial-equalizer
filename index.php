@@ -57,7 +57,7 @@ function fe_new_sheet() {
     ?>
     <form method="post" action="<?php echo $PHP_SELF; ?>?action=new_sheet">
         <input type="hidden" id="sheet_id" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-        <input type="submit" value="Создать новый лист" />
+        <button type="submit" class="btn btn-default">Создать новый лист"</button>
     </form><?php
 }
 
@@ -92,13 +92,12 @@ function fe_get_spent($transaction, $member_id) {
 
 
 function fe_print_transaction_input($members, $transaction_id, $transaction, $transaction_deltas) {
-    //print_r($transaction);
     $currency = $transaction["currency"];
     $description = fe_get_or($transaction, "description");
 
     echo "<tr>";
     echo "<td>";
-    echo "<input class=\"form-control transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\" />";
+    echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\" />";
     echo "<td>";
     fe_currency_selector($currency, "cur$transaction_id");
     echo "</td>\n ";
@@ -108,7 +107,7 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
         echo "<td>";
         $charge_int = fe_get_charge($transaction, $member_id);
         $transaction_sum += $charge_int;
-        echo "<input class=\"form-control amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\" />";
+        echo "<input class=\"form-control input-sm amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\" />";
         $spent_checked = fe_get_spent($transaction, $member_id) ? " checked=\"checked\" " : "";
         echo "&nbsp;<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $spent_checked type=\"checkbox\" />";
         //echo "$delta";
@@ -124,6 +123,7 @@ function fe_edit_sheet($sheet_id) {
     $sheet_data = fe_load_sheet($sheet_id);
     $members = $sheet_data["members"];
     $transactions = fe_get_or($sheet_data, "transactions", array());
+    $exchange_rates = fe_get_or($sheet_data, "exchange_rates", array());
 
     $deltas = array();
     $member_sums = array();
@@ -165,11 +165,18 @@ function fe_edit_sheet($sheet_id) {
     <form class="form-inline" method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet">
         <div class="form-group">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" /><?php
+
+        foreach ($exchange_rates as $currency => $rate) {
+            echo "<div class=\"form-group member-list\"><label for=\"e$currency\" style=\"width: 30px\">$currency:&nbsp;</label>";
+            echo "<input class=\"form-control\" type=\"text\" name=\"e$currency\" value=\"$rate\" /></div>\n";
+        }
+
         foreach ($members as $member_id => $member_name) {
             echo "<div class=\"form-group member-list\"><label for=\"m$member_id\" style=\"width: 30px\">$member_id:&nbsp;</label>";
             echo "<input class=\"form-control\" type=\"text\" name=\"m$member_id\" value=\"$member_name\" /></div>\n";
         }
-        echo "<table class=\"table table-bordered table-hover\">";
+
+        echo "<table class=\"table table-bordered table-hover\" style=\"margin-top: 10px\">";
         echo "<tr>";
         echo "<th>Описание</th>";
         echo "<th>Валюта</th>";
@@ -254,6 +261,11 @@ if ($action == "new_sheet") {
         ),
     );
     $sheet_data["transactions"] = $transactions;
+    $sheet_data["exchange_rates"] = array(
+        CUR_USD=>"67",
+        CUR_RUR=>"1",
+        CUR_EUR=>"77",
+    );
     fe_save_sheet($sheet_id, $sheet_data);
     echo $PHP_SELF;
     header("Location: /?sheet_id=$sheet_id");
@@ -327,50 +339,11 @@ if ($action == "new_sheet") {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Финансовый коммунизм</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<style>
-body {
-    padding: 10px;
-}
-div.member-list {
-    margin-top: 5px;
-}
-div.form {
-    padding: 5px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-input.transaction-title {
-    width: 20%;
-}
-
-.form-inline .form-control.amount {
-    width: 4em;
-}
-
-.form-inline .form-control.transaction-description {
-    width: 30em;
-}
-
-table.transactions {
-    table-layout: fixed;
-    border-collapse: collapse;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-table.transactions td {
-    border: 1px solid #cfcfcf;
-    padding: 3px 10px;
-}
-table.transactions th {
-    border: 1px solid #cfcfcf;
-    padding: 3px;
-}
-
-</style>
-</head>
+        <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css" />
+        <link rel="stylesheet" href="/static/communism/css/main.css" />
+        <script src="/static/jquery/jquery-1.11.3.min.js"></script>
+        <script src="/static/bootstrap/js/bootstrap.js"></script>
+    </head>
 <body><?php
 
 if (fe_empty($sheet_id)) {

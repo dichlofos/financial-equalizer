@@ -1,0 +1,43 @@
+body {
+    padding: 10px;
+}
+div.member-list {
+    margin-top: 5px;
+}
+div.form {
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+input.transaction-title {
+    width: 20%;
+}
+
+.input-sm {
+    height: 20px;
+    padding: 0px 2px;
+    font-size: 8px;
+    line-height: 1.5;
+    border-radius: 1px;
+}
+
+.input-sm.amount {
+    width: 3.5em;
+}
+
+.form-inline .form-control.transaction-description {
+    width: 30em;
+}
+
+table {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+table.table > tbody > tr > td {
+    padding: 2px 2px;
+}
+
+input[type="checkbox"] {
+    margin: 2px 0 0;
+}
