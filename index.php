@@ -114,7 +114,11 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
 
 function fe_edit_sheet($sheet_id) {
     global $PHP_SELF; ?>
-    <div class="sheet-link">Идентификатор листа: <a href="<?php echo $PHP_SELF; ?>"><?php echo $sheet_id; ?></a></div><?php
+    <div class="sheet-link">
+        Идентификатор листа: <a href="<?php echo $PHP_SELF; ?>"><?php echo $sheet_id; ?></a><br />
+        С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.
+        Исходники <a href="https://bitbucket.org/dichlofos/financial-equalizer">на Ведре</a>
+    </div><?php
     $sheet_data = fe_load_sheet($sheet_id);
     $members = $sheet_data["members"];
     $transactions = fe_get_or($sheet_data, "transactions", array());
