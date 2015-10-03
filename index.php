@@ -41,7 +41,11 @@ function fe_save_sheet($sheet_id, $sheet_data) {
 
 
 function fe_load_sheet($sheet_id) {
-    $sheet_data = file_get_contents("data/$sheet_id.json");
+    $name = "data/$sheet_id.json";
+    if (!file_exists($name)) {
+        return array();
+    }
+    $sheet_data = file_get_contents($name);
     return json_decode($sheet_data, true);
 }
 
@@ -125,7 +129,7 @@ function fe_edit_sheet($sheet_id) {
         Исходники <a href="https://bitbucket.org/dichlofos/financial-equalizer">на Ведре</a>
     </div><?php
     $sheet_data = fe_load_sheet($sheet_id);
-    $members = $sheet_data["members"];
+    $members = fe_get_or($sheet_data, "members", array());
     $transactions = fe_get_or($sheet_data, "transactions", array());
     $exchange_rates = fe_get_or($sheet_data, "exchange_rates", array());
 
