@@ -284,7 +284,6 @@ if ($action == "new_sheet") {
     if (fe_empty($sheet_id)) {
         die("Invalid request: sheet_id is empty");
     }
-    //fe_print($_REQUEST);
     $sheet_data = array();
     $transactions = array();
     $members = array();
@@ -323,7 +322,6 @@ if ($action == "new_sheet") {
     $sheet_data["transactions"] = $transactions;
     $sheet_data["members"] = $members;
     $sheet_data["exchange_rates"] = $exchange_rates;
-    //fe_print($transactions);
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
