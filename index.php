@@ -66,12 +66,17 @@ function fe_new_sheet() {
 }
 
 
-function fe_currency_selector($currency, $id) {
-    $currencies = array(
+function fe_get_currencies() {
+    return array(
         'RUR',
         'USD',
         'EUR',
     );
+}
+
+
+function fe_currency_selector($currency, $id) {
+    $currencies = fe_get_currencies();
     echo "<select name=\"$id\">";
     foreach ($currencies as $curr) {
         $selected = ($curr == $currency) ? ' selected="selected" ' : '';
@@ -132,6 +137,7 @@ function fe_edit_sheet($sheet_id) {
     $members = fe_get_or($sheet_data, "members", array());
     $transactions = fe_get_or($sheet_data, "transactions", array());
     $exchange_rates = fe_get_or($sheet_data, "exchange_rates", array());
+    $currencies = fe_get_currencies();
 
     $deltas = array();
     $member_sums = array();
@@ -140,11 +146,12 @@ function fe_edit_sheet($sheet_id) {
     }
 
     foreach ($transactions as $transaction_id => $transaction) {
+        $rate = (integer)$exchange_rates[$transaction["currency"]];
         // calc transaction sum and spenders count
         $transaction_sum = 0;
         $spenders = 0;
         foreach ($members as $member_id => $member_name) {
-            $transaction_sum += fe_get_charge($transaction, $member_id);
+            $transaction_sum += fe_get_charge($transaction, $member_id) * $rate;
             if (fe_get_spent($transaction, $member_id)) {
                 ++$spenders;
             }
@@ -153,7 +160,7 @@ function fe_edit_sheet($sheet_id) {
         // charge - average spending
         foreach ($members as $member_id => $member_name) {
             $own_good = fe_get_spent($transaction, $member_id) ? ($transaction_sum / $spenders) : 0;
-            $delta = fe_get_charge($transaction, $member_id) - $own_good;
+            $delta = fe_get_charge($transaction, $member_id) * $rate - $own_good;
             $deltas[$transaction_id][$member_id] = $delta;
             $member_sums[$member_id] += $delta;
         }
@@ -187,7 +194,8 @@ function fe_edit_sheet($sheet_id) {
         }
         ?><br/>
         <label>Курсы валют:&nbsp;</label><br/><?php
-        foreach ($exchange_rates as $currency => $rate) {
+        foreach ($currencies as $currency) {
+            $rate = fe_get_or($exchange_rates, $currency, "1");
             echo "<div class=\"form-group member-list\"><label for=\"e$currency\" style=\"width: 40px\">$currency:&nbsp;</label>";
             echo "<input class=\"form-control rate\" type=\"text\" name=\"e$currency\" value=\"$rate\" /></div>\n";
         }
@@ -207,7 +215,7 @@ function fe_edit_sheet($sheet_id) {
         }
         // Total
         echo "<tr class=\"info\">";
-        echo "<td>Итого</td>";
+        echo "<td>Итого (RUR)</td>";
         echo "<td>&nbsp;</td>";
         foreach ($members as $member_id => $member_name) {
             $member_sum = $member_sums[$member_id];
