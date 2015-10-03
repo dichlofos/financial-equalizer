@@ -61,7 +61,7 @@ function fe_new_sheet() {
     ?>
     <form method="post" action="<?php echo $PHP_SELF; ?>?action=new_sheet">
         <input type="hidden" id="sheet_id" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-        <button type="submit" class="btn btn-default">Создать новый лист</button>
+        <button type="submit" class="btn btn-warning">Создать новый лист</button>
     </form><?php
 }
 
@@ -129,9 +129,9 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
 function fe_edit_sheet($sheet_id) {
     global $PHP_SELF; ?>
     <div class="sheet-link">
-        Идентификатор листа: <a href="<?php echo $PHP_SELF; ?>"><?php echo $sheet_id; ?></a><br />
-        С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.
-        Исходники <a href="https://bitbucket.org/dichlofos/financial-equalizer">на Ведре</a>
+        Поделиться листом: <a href="<?php echo $PHP_SELF; ?>"><?php echo $sheet_id; ?></a><br />
+        С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.<br/>
+        Исходный код <a href="https://bitbucket.org/dichlofos/financial-equalizer">на BitBucket</a>.
     </div><?php
     $sheet_data = fe_load_sheet($sheet_id);
     $members = fe_get_or($sheet_data, "members", array());
@@ -371,5 +371,9 @@ if (fe_empty($sheet_id)) {
     fe_edit_sheet($sheet_id);
 }
 ?>
+<div class="copyright">
+    &copy; 2015&#8212;<?php echo date('Y'); ?>, Mikhail Veltishchev aka <a href="https://dichlofos.tumblr.com">DichlofoS</a>.
+    All rights reversed. This software is provided AS IS, without any warranty about your data safety.
+</div>
 </body>
 </html>

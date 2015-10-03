@@ -60,3 +60,9 @@ input[type="checkbox"] {
 tr.info > td {
     background-color: #fcf8e3;
 }
+
+div.copyright {
+    margin-top: 20px;
+    border-top: 1px dotted #9f9f9f;
+    padding: 3px;
+}
