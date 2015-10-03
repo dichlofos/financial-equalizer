@@ -107,7 +107,8 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
 
     echo "<tr>";
     echo "<td>";
-    echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\" />";
+    echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\"
+        title=\"Товар или оказанная услуга\" placeholder=\"Трансфер из пункта А в пункт Б\" />";
     echo "<td>";
     fe_currency_selector($currency, "cur$transaction_id");
     echo "</td>\n ";
@@ -117,9 +118,11 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
         echo "<td>";
         $charge_int = fe_get_charge($transaction, $member_id);
         $transaction_sum += $charge_int;
-        echo "<input class=\"form-control input-sm amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\" />";
+        echo "<input class=\"form-control input-sm amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\"
+            title=\"Сумма в указанной валюте\" />";
         $spent_checked = fe_get_spent($transaction, $member_id) ? " checked=\"checked\" " : "";
-        echo "&nbsp;<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $spent_checked type=\"checkbox\" />";
+        echo "&nbsp;<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $spent_checked type=\"checkbox\"
+            title=\"Пользовался ли данный участник данной услугой\" />";
         echo "</td>\n ";
     }
     echo "<td>$transaction_sum</td>\n ";
@@ -232,6 +235,13 @@ function fe_edit_sheet($sheet_id) {
         </div>
     </form>
 
+    <div class="tip">
+        Сборы в &laquo;кассу&raquo; удобно считать следующим образом. Всем, кто сдавал деньги, пишем их как обычные расходы,
+        а кассиру пишем суммарное количество этих собранных денег со знаком <b>минус</b>. Таким образом, сумма по данной транзакции
+        в правой колонке будет равна нулю. Точно так же можно учитывать, например, событие типа &laquo;Вася одолжил у Пети 500р на
+        пиво и мороженое&raquo;: Васе пишем&nbsp;-500, а Пете&nbsp;&#8212;&nbsp;500.
+    </div>
+
     <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=delete_sheet">
         <div class="form-group">
             <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
@@ -260,7 +270,7 @@ if ($action == "new_sheet") {
     $transactions["1"] = array(
         "type"=>TR_EXPENSE,
         "currency"=>"RUR",
-        "description"=>"Трансфер из А в Б",
+        "description"=>"",
         "charges"=>array(
             "1"=>"1000",
             "2"=>"500",

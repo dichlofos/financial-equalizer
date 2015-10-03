@@ -66,3 +66,12 @@ div.copyright {
     border-top: 1px dotted #9f9f9f;
     padding: 3px;
 }
+
+div.tip {
+    border-radius: 3px;
+    border: 1px solid #ddddaa;
+    background-color: #fcfeec;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
