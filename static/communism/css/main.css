@@ -17,7 +17,7 @@ input.transaction-title {
 .input-sm {
     height: 20px;
     padding: 0px 2px;
-    font-size: 8px;
+    font-size: 12px;
     line-height: 1.5;
     border-radius: 1px;
 }
@@ -31,13 +31,32 @@ input.transaction-title {
 }
 
 table {
+    width: 100%;
     margin-top: 5px;
     margin-bottom: 5px;
 }
-table.table > tbody > tr > td {
+table > tbody > tr > td {
     padding: 2px 2px;
 }
 
 input[type="checkbox"] {
     margin: 2px 0 0;
+}
+
+.form-inline {
+    margin-bottom: 10px;
+}
+
+.form-inline .form-control.rate {
+    width: 60px;
+}
+
+.sheet-link {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+tr.info > td {
+    background-color: #fcf8e3;
 }
