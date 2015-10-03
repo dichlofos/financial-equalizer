@@ -46,6 +46,11 @@ function fe_load_sheet($sheet_id) {
 }
 
 
+function fe_delete_sheet($sheet_id) {
+    rename("data/$sheet_id.json", "data/$sheet_id.deleted.json");
+}
+
+
 function fe_new_sheet() {
     global $PHP_SELF;
     $sheet_id = rand().'-'.rand().'-'.rand();
@@ -215,6 +220,14 @@ function fe_edit_sheet($sheet_id) {
         </div>
     </form>
 
+    <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=delete_sheet">
+        <div class="form-group">
+            <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
+            <button type="submit" class="btn btn-danger">Удалить лист</button>
+        </div>
+    </form>
+
+
     <?php
 }
 
@@ -234,8 +247,8 @@ if ($action == "new_sheet") {
     $transactions = array();
     $transactions["1"] = array(
         "type"=>TR_EXPENSE,
-        "currency"=>CUR_RUR,
-        "description"=>"Трансфер Душанбе-Варзов",
+        "currency"=>"RUR",
+        "description"=>"Трансфер из А в Б",
         "charges"=>array(
             "1"=>"1000",
             "2"=>"500",
@@ -310,11 +323,15 @@ if ($action == "new_sheet") {
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
+} elseif ($action == "delete_sheet") {
+    fe_delete_sheet($sheet_id);
+    header("Location: /");
+    exit();
 } elseif ($action == "add_transaction") {
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_data["transactions"][] = array(
         "description"=>$description,
-        "currency"=>CUR_RUR,
+        "currency"=>"RUR",
         "type"=>TR_EXPENSE,
     );
     fe_save_sheet($sheet_id, $sheet_data);
