@@ -138,12 +138,7 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
 }
 
 function fe_edit_sheet($sheet_id) {
-    global $PHP_SELF; ?>
-    <div class="sheet-link">
-        Поделиться листом: <a href="<?php echo $PHP_SELF; ?>"><?php echo $sheet_id; ?></a><br />
-        С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.<br/>
-        Исходный код <a href="https://bitbucket.org/dichlofos/financial-equalizer">на BitBucket</a>.
-    </div><?php
+    global $PHP_SELF;
     $sheet_data = fe_load_sheet($sheet_id);
     $members = fe_get_or($sheet_data, "members", array());
     $transactions = fe_get_or($sheet_data, "transactions", array());
@@ -298,7 +293,6 @@ if ($action == "new_sheet") {
         'EUR'=>"77",
     );
     fe_save_sheet($sheet_id, $sheet_data);
-    echo $PHP_SELF;
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "update_sheet") {
@@ -374,15 +368,25 @@ if ($action == "new_sheet") {
 
 ?><!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Финансовый коммунизм</title>
-        <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css" />
-        <link rel="stylesheet" href="/static/communism/css/main.css" />
-        <script src="/static/jquery/jquery-1.11.3.min.js"></script>
-        <script src="/static/bootstrap/js/bootstrap.js"></script>
-    </head>
-<body><?php
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Финансовый коммунизм</title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="/static/communism/css/main.css" />
+    <script src="/static/jquery/jquery-1.11.3.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+</head>
+<body>
+    <div class="sheet-link">
+        <?php
+        if (fe_not_empty($sheet_id)) {
+            global $PHP_SELF; ?>
+            Поделиться листом: <a href="<?php echo $PHP_SELF; ?>"><?php echo $sheet_id; ?></a><br /><?php
+        }
+        ?>
+        С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.<br/>
+        Исходный код <a href="https://bitbucket.org/dichlofos/financial-equalizer">на BitBucket</a>.
+    </div><?php
 
 if (fe_empty($sheet_id)) {
     fe_new_sheet();
@@ -390,9 +394,9 @@ if (fe_empty($sheet_id)) {
     fe_edit_sheet($sheet_id);
 }
 ?>
-<div class="copyright">
-    &copy; 2015&#8212;<?php echo date('Y'); ?>, Mikhail Veltishchev aka <a href="https://dichlofos.tumblr.com">DichlofoS</a>.
-    All rights reversed. This software is provided AS IS, without any warranty about your data safety.
-</div>
+    <div class="copyright">
+        &copy; 2015&#8212;<?php echo date('Y'); ?>, Mikhail Veltishchev aka <a href="https://dichlofos.tumblr.com">DichlofoS</a>.
+        All rights reversed. This software is provided AS IS, without any warranty about your data safety.
+    </div>
 </body>
 </html>
