@@ -26,6 +26,22 @@ input.transaction-title {
     width: 3.5em;
 }
 
+.input-sm.spent {
+    width: 2em;
+}
+.input-sm.spent.no-use {
+    background-color: #ffffff;
+}
+.input-sm.spent.lower-use {
+    background-color: #ccffcc;
+}
+.input-sm.spent.normal-use {
+    background-color: #ffffcc;
+}
+.input-sm.spent.high-use {
+    background-color: #ffcccc;
+}
+
 .form-inline .form-control.transaction-description {
     width: 30em;
 }
@@ -50,6 +66,10 @@ input[type="checkbox"] {
 .form-inline .form-control.rate {
     width: 60px;
 }
+.form-inline .form-control.currency-select {
+    height: 20px;
+}
+
 
 .sheet-link {
     position: absolute;

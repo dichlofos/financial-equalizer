@@ -77,7 +77,7 @@ function fe_get_currencies() {
 
 function fe_currency_selector($currency, $id) {
     $currencies = fe_get_currencies();
-    echo "<select name=\"$id\">";
+    echo "<select class=\"form-control input-sm currency-select\" name=\"$id\">";
     foreach ($currencies as $curr) {
         $selected = ($curr == $currency) ? ' selected="selected" ' : '';
         echo "<option value=\"$curr\"$selected>$curr</option>\n";
@@ -96,8 +96,8 @@ function fe_get_charge($transaction, $member_id) {
 
 function fe_get_spent($transaction, $member_id) {
     $spent = fe_get_or($transaction, "spent", array());
-    $member_spent = fe_get_or($spent, $member_id);
-    return ($member_spent == "yes");
+    $member_spent = (float)fe_get_or($spent, $member_id, "1.0");
+    return $member_spent;
 }
 
 
@@ -120,9 +120,17 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
         $transaction_sum += $charge_int;
         echo "<input class=\"form-control input-sm amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\"
             title=\"Сумма в указанной валюте\" />";
-        $spent_checked = fe_get_spent($transaction, $member_id) ? " checked=\"checked\" " : "";
-        echo "&nbsp;<input class=\"spent\" name=\"sp${transaction_id}_${member_id}\" value=\"yes\" $spent_checked type=\"checkbox\"
-            title=\"Пользовался ли данный участник данной услугой\" />";
+        $member_spent = fe_get_spent($transaction, $member_id);
+        $spent_class = "no-use";
+        if ($member_spent > 0.01 && $member_spent < 0.99) {
+            $spent_class = "lower-use";
+        } elseif ($member_spent >= 0.99 && $member_spent <= 1.01) {
+            $spent_class = "normal-use";
+        } elseif ($member_spent > 1.01) {
+            $spent_class = "high-use";
+        }
+        echo "&nbsp;<input class=\"form-control input-sm spent $spent_class\" name=\"sp${transaction_id}_${member_id}\" value=\"$member_spent\" type=\"text\"
+            title=\"Коэффициент пользования данной услугой для данного участника\" />";
         echo "</td>\n ";
     }
     echo "<td>$transaction_sum</td>\n ";
@@ -147,22 +155,25 @@ function fe_edit_sheet($sheet_id) {
     foreach ($members as $member_id => $member_name) {
         $member_sums[$member_id] = 0;
     }
-
+    $error = false;
     foreach ($transactions as $transaction_id => $transaction) {
         $rate = (integer)$exchange_rates[$transaction["currency"]];
         // calc transaction sum and spenders count
         $transaction_sum = 0;
-        $spenders = 0;
+        $lambda_norm = 0.0;
         foreach ($members as $member_id => $member_name) {
             $transaction_sum += fe_get_charge($transaction, $member_id) * $rate;
-            if (fe_get_spent($transaction, $member_id)) {
-                ++$spenders;
-            }
+            $lambda_norm += fe_get_spent($transaction, $member_id);
+        }
+        if ($lambda_norm < 0.01) {
+            $error = true;
+            continue;
         }
         $deltas[$transaction_id] = array();
+
         // charge - average spending
         foreach ($members as $member_id => $member_name) {
-            $own_good = fe_get_spent($transaction, $member_id) ? ($transaction_sum / $spenders) : 0;
+            $own_good = $transaction_sum * fe_get_spent($transaction, $member_id) / $lambda_norm;
             $delta = fe_get_charge($transaction, $member_id) * $rate - $own_good;
             $deltas[$transaction_id][$member_id] = $delta;
             $member_sums[$member_id] += $delta;
@@ -276,8 +287,8 @@ if ($action == "new_sheet") {
             "2"=>"500",
         ),
         "spent"=>array(
-            "3"=>"yes",
-            "2"=>"yes",
+            "3"=>"0.5",
+            "2"=>"0",
         ),
     );
     $sheet_data["transactions"] = $transactions;
