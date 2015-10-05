@@ -95,3 +95,7 @@ div.tip {
     margin-top: 5px;
     margin-bottom: 10px;
 }
+
+th.non-member {
+    color: #337ab7;
+}

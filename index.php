@@ -208,16 +208,19 @@ function fe_edit_sheet($sheet_id) {
             echo "<div class=\"form-group member-list\"><label for=\"e$currency\" style=\"width: 40px\">$currency:&nbsp;</label>";
             echo "<input class=\"form-control rate\" type=\"text\" name=\"e$currency\" value=\"$rate\" /></div>\n";
         }
+        ?>
 
-        echo "<table class=\"table table-condensed\" style=\"margin-top: 10px\">";
-        echo "<tr>";
-        echo "<th>Статья расхода или сбора</th>";
-        echo "<th>Валюта</th>";
+        <table class="table table-condensed" style="margin-top: 10px">
+        <tr>
+        <th class="non-member">Статья расхода или сбора</th>
+        <th class="non-member">Валюта</th><?php
         foreach ($members as $member_id => $member_name) {
-            echo "<th>$member_name</th>\n ";
+            echo "<th>$member_name</th>\n";
         }
-        echo "<th class=\"sum\">Сумма</th>\n";
-        echo "</tr>";
+        ?>
+        <th class="non-member">Сумма</th>
+        </tr>
+        <?php
 
         foreach ($transactions as $transaction_id => $transaction) {
             fe_print_transaction_input($members, $transaction_id, $transaction, $deltas[$transaction_id]);
@@ -248,14 +251,23 @@ function fe_edit_sheet($sheet_id) {
         пиво и мороженое&raquo;: Васе пишем&nbsp;-500, а Пете&nbsp;&#8212;&nbsp;500.
     </div>
 
-    <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=delete_sheet">
-        <div class="form-group">
-            <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-            <button type="submit" class="btn btn-danger">Удалить лист</button>
+    <div class="row">
+        <div class="col-md-6">
+        <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=delete_sheet">
+            <div class="form-group">
+                <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
+                <button type="submit" class="btn btn-danger">Удалить лист</button>
+            </div>
+        </form>
         </div>
-    </form>
-
-
+        <div class="col-md-6">
+            <form method="post" class="form-inline" style="text-align: right" action="/">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-warning">На главную</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <?php
 }
 
