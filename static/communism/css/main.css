@@ -99,3 +99,8 @@ div.tip {
 th.non-member {
     color: #337ab7;
 }
+
+.form-inline label {
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
