@@ -69,19 +69,9 @@ function fe_new_sheet() {
 }
 
 
-function fe_get_currencies() {
-    return array(
-        'RUR',
-        'USD',
-        'EUR',
-    );
-}
-
-
-function fe_currency_selector($currency, $id) {
-    $currencies = fe_get_currencies();
+function fe_currency_selector($currency, $id, $exchange_rates) {
     echo "<select class=\"form-control input-sm currency-select\" name=\"$id\">";
-    foreach ($currencies as $curr) {
+    foreach ($exchange_rates as $curr => $rate) {
         $selected = ($curr == $currency) ? ' selected="selected" ' : '';
         echo "<option value=\"$curr\"$selected>$curr</option>\n";
     }
@@ -104,8 +94,13 @@ function fe_get_spent($transaction, $member_id) {
 }
 
 
-function fe_print_transaction_input($members, $transaction_id, $transaction, $transaction_deltas) {
-    $currency = fe_get_or($transaction, "currency", FE_DEFAULT_CURRENCY);
+function fe_get_currency($transaction) {
+    return fe_get_or($transaction, "currency", FE_DEFAULT_CURRENCY);
+}
+
+
+function fe_print_transaction_input($members, $transaction_id, $transaction, $transaction_deltas, $exchange_rates) {
+    $currency = fe_get_currency($transaction);
     $description = fe_get_or($transaction, "description");
 
     echo "<tr>";
@@ -113,10 +108,11 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
     echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\"
         title=\"Товар или оказанная услуга\" placeholder=\"Трансфер из пункта А в пункт Б\" />";
     echo "<td>";
-    fe_currency_selector($currency, "cur$transaction_id");
+    fe_currency_selector($currency, "cur$transaction_id", $exchange_rates);
     echo "</td>\n ";
     $transaction_sum = 0;
     foreach ($members as $member_id => $member_name) {
+        // TODO: fix at http://fe.local/?sheet_id=344552942-1662170856-73040037
         $delta = $transaction_deltas[$member_id];
         echo "<td>";
         $charge_int = fe_get_charge($transaction, $member_id);
@@ -146,16 +142,16 @@ function fe_edit_sheet($sheet_id) {
     $members = fe_get_or($sheet_data, "members", array());
     $transactions = fe_get_or($sheet_data, "transactions", array());
     $exchange_rates = fe_get_or($sheet_data, "exchange_rates", array());
-    $currencies = fe_get_currencies();
 
     $deltas = array();
     $member_sums = array();
     foreach ($members as $member_id => $member_name) {
         $member_sums[$member_id] = 0;
     }
-    $error = false;
+    $norm_error = false;
     foreach ($transactions as $transaction_id => $transaction) {
-        $rate = (integer)$exchange_rates[fe_get_or($transaction, "currency", FE_DEFAULT_CURRENCY)];
+        $transaction_currency = fe_get_currency($transaction);
+        $rate = (integer)$exchange_rates[$transaction_currency];
         // calc transaction sum and spenders count
         $transaction_sum = 0;
         $lambda_norm = 0.0;
@@ -164,7 +160,7 @@ function fe_edit_sheet($sheet_id) {
             $lambda_norm += fe_get_spent($transaction, $member_id);
         }
         if ($lambda_norm < 0.01) {
-            $error = true;
+            $norm_error = true;
             continue;
         }
         $deltas[$transaction_id] = array();
@@ -206,12 +202,16 @@ function fe_edit_sheet($sheet_id) {
         }
         ?><br/>
         <label>Курсы валют:&nbsp;</label><br/><?php
-        foreach ($currencies as $currency) {
-            $rate = fe_get_or($exchange_rates, $currency, "1");
+        foreach ($exchange_rates as $currency => $rate) {
             echo "<div class=\"form-group member-list\"><label for=\"e$currency\" style=\"width: 40px\">$currency:&nbsp;</label>";
             echo "<input class=\"form-control rate\" type=\"text\" name=\"e$currency\" value=\"$rate\" /></div>\n";
         }
-        ?>
+
+        if ($norm_error) {?>
+        <div class="warning">
+            В ведомости присутствуют статьи расходов, которые ни на кого не были потрачены (выделены цветом)
+        </div><?php
+        }?>
 
         <table class="table table-condensed" style="margin-top: 10px">
         <tr>
@@ -229,7 +229,8 @@ function fe_edit_sheet($sheet_id) {
                 $members,
                 $transaction_id,
                 $transaction,
-                fe_get_or($deltas, $transaction_id, array())
+                fe_get_or($deltas, $transaction_id, array()),
+                $exchange_rates
             );
         }
         // Total
