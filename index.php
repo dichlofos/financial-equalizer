@@ -1,8 +1,4 @@
 <?php
-
-define('TR_EXPENSE', 'exp');
-define('TR_INTERNAL', 'int');
-
 define('FE_DEFAULT_CURRENCY', 'RUR');
 
 
@@ -150,8 +146,8 @@ function fe_edit_sheet($sheet_id) {
     }
     $norm_error = false;
     foreach ($transactions as $transaction_id => $transaction) {
-        $transaction_currency = fe_get_currency($transaction);
-        $rate = (integer)$exchange_rates[$transaction_currency];
+        $transaction_currency = strtoupper(fe_get_currency($transaction));
+        $rate = (integer)fe_get_or($exchange_rates, $transaction_currency, "1");
         // calc transaction sum and spenders count
         $transaction_sum = 0;
         $lambda_norm = 0.0;
@@ -176,23 +172,41 @@ function fe_edit_sheet($sheet_id) {
 
     ?>
 
-    <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_member">
-        <div class="form-group">
-            <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-            <label for="member_name">Новый участник:&nbsp;</label>
-            <input type="text" class="form-control" name="member_name" value="" placeholder="Иван Человеков" />
-            <button type="submit" class="btn btn-primary">Добавить участника</button>
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_member">
+                <div class="form-group">
+                    <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
+                    <label for="member_name">Новый участник:&nbsp;</label>
+                    <input type="text" class="form-control" name="member_name" value="" placeholder="Иван Человеков" />
+                    <button type="submit" class="btn btn-primary">Добавить участника</button>
+                </div>
+            </form>
         </div>
-    </form>
+
+        <div class="col-md-4">
+            <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_currency">
+                <div class="form-group">
+                <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
+                <label for="description">Новая валюта:&nbsp;</label>
+                <input class="form-control" type="text" name="currency" value="" placeholder="USD" />
+                <button type="submit" class="btn btn-primary">Добавить</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-4">&nbsp;</div>
+    </div>
 
     <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_transaction">
         <div class="form-group">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
         <label for="description">Новая статья расходов:&nbsp;</label>
-        <input class="form-control" type="text" name="description" value="" />
+        <input class="form-control" type="text" name="description" value="" placeholder="Скинулись на шаурму" />
         <button type="submit" class="btn btn-primary">Добавить</button>
         </div>
     </form>
+
     <form class="form-inline" method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
         <label>Участники:</label><br/><?php
@@ -284,6 +298,7 @@ $sheet_id = preg_replace("/[^0-9a-f-]/", "", $sheet_id);
 $action = fe_get_or($_REQUEST, "action");
 $member_name = fe_get_or($_REQUEST, "member_name");
 $description = fe_get_or($_REQUEST, "description");
+$currency = fe_get_or($_REQUEST, "currency");
 
 if ($action == "new_sheet") {
     $sheet_data = array();
@@ -334,6 +349,9 @@ if ($action == "new_sheet") {
             $member_id = substr($key, 1);
             $members[$member_id] = $value;
         } elseif (fe_startswith($key, "e")) {
+            if (fe_empty($value)) {
+                continue;  // skip empty currencies
+            }
             $currency = substr($key, 1);
             $exchange_rates[$currency] = $value;
         }
@@ -346,9 +364,13 @@ if ($action == "new_sheet") {
     exit();
 } elseif ($action == "add_member") {
     $sheet_data = fe_load_sheet($sheet_id);
-    $members = $sheet_data["members"];
-    $members[] = $member_name;
-    $sheet_data["members"] = $members;
+    $sheet_data["members"][] = $member_name;
+    fe_save_sheet($sheet_id, $sheet_data);
+    header("Location: /?sheet_id=$sheet_id");
+    exit();
+} elseif ($action == "add_currency") {
+    $sheet_data = fe_load_sheet($sheet_id);
+    $sheet_data["exchange_rates"][$currency] = "1";
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
@@ -361,7 +383,6 @@ if ($action == "new_sheet") {
     $sheet_data["transactions"][] = array(
         "description"=>$description,
         "currency"=>FE_DEFAULT_CURRENCY,
-        "type"=>TR_EXPENSE,
     );
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
