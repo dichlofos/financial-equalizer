@@ -3,6 +3,9 @@
 define('TR_EXPENSE', 'exp');
 define('TR_INTERNAL', 'int');
 
+define('FE_DEFAULT_CURRENCY', 'RUR');
+
+
 function fe_print($object) {
     echo "<pre>";
     print_r($object);
@@ -102,7 +105,7 @@ function fe_get_spent($transaction, $member_id) {
 
 
 function fe_print_transaction_input($members, $transaction_id, $transaction, $transaction_deltas) {
-    $currency = $transaction["currency"];
+    $currency = fe_get_or($transaction, "currency", FE_DEFAULT_CURRENCY);
     $description = fe_get_or($transaction, "description");
 
     echo "<tr>";
@@ -152,7 +155,7 @@ function fe_edit_sheet($sheet_id) {
     }
     $error = false;
     foreach ($transactions as $transaction_id => $transaction) {
-        $rate = (integer)$exchange_rates[$transaction["currency"]];
+        $rate = (integer)$exchange_rates[fe_get_or($transaction, "currency", FE_DEFAULT_CURRENCY)];
         // calc transaction sum and spenders count
         $transaction_sum = 0;
         $lambda_norm = 0.0;
@@ -221,9 +224,13 @@ function fe_edit_sheet($sheet_id) {
         <th class="non-member">Сумма</th>
         </tr>
         <?php
-
         foreach ($transactions as $transaction_id => $transaction) {
-            fe_print_transaction_input($members, $transaction_id, $transaction, $deltas[$transaction_id]);
+            fe_print_transaction_input(
+                $members,
+                $transaction_id,
+                $transaction,
+                fe_get_or($deltas, $transaction_id, array())
+            );
         }
         // Total
         echo "<tr class=\"info\">";
@@ -280,24 +287,8 @@ $description = fe_get_or($_REQUEST, "description");
 if ($action == "new_sheet") {
     $sheet_data = array();
     $members = array();
-    $members["1"] = "Вася";
-    $members["2"] = "Петя";
-    $members["3"] = "Макс";
     $sheet_data["members"] = $members;
     $transactions = array();
-    $transactions["1"] = array(
-        "type"=>TR_EXPENSE,
-        "currency"=>"RUR",
-        "description"=>"",
-        "charges"=>array(
-            "1"=>"1000",
-            "2"=>"500",
-        ),
-        "spent"=>array(
-            "3"=>"0.5",
-            "2"=>"0",
-        ),
-    );
     $sheet_data["transactions"] = $transactions;
     $sheet_data["exchange_rates"] = array(
         'USD'=>"67",
@@ -368,7 +359,7 @@ if ($action == "new_sheet") {
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_data["transactions"][] = array(
         "description"=>$description,
-        "currency"=>"RUR",
+        "currency"=>FE_DEFAULT_CURRENCY,
         "type"=>TR_EXPENSE,
     );
     fe_save_sheet($sheet_id, $sheet_data);
