@@ -189,7 +189,19 @@ function fe_edit_sheet($sheet_id) {
                 <div class="form-group">
                 <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
                 <label for="description">Новая валюта:&nbsp;</label>
-                <input class="form-control" type="text" name="currency" value="" placeholder="USD" />
+
+                <select class="form-control" name="currency"><?php
+                $all_currencies = array(
+                    "EUR",
+                    "KGS",
+                    "RUR",
+                    "USD",
+                    "UZS",
+                );
+                foreach ($all_currencies as $curr) {
+                    echo "<option value=\"$curr\">$curr</option>\n";
+                }?>
+                </select>
                 <button type="submit" class="btn btn-primary">Добавить</button>
                 </div>
             </form>
@@ -292,7 +304,7 @@ function fe_edit_sheet($sheet_id) {
         </form>
         </div>
         <div class="col-md-6">
-            <form method="post" class="form-inline" style="text-align: right" action="/">
+            <form method="post" class="form-inline" style="text-align: right" action="/?action=clear_session">
                 <div class="form-group">
                     <button type="submit" class="btn btn-warning">На главную</button>
                 </div>
@@ -302,12 +314,23 @@ function fe_edit_sheet($sheet_id) {
     <?php
 }
 
+session_start();
+
 $sheet_id = fe_get_or($_REQUEST, "sheet_id");
 $sheet_id = preg_replace("/[^0-9a-f-]/", "", $sheet_id);
+if (fe_empty($sheet_id)) {
+    // use sheet id from session if available
+    $session_sheet_id = fe_get_or($_SESSION, "sheet_id");
+    if (fe_not_empty($session_sheet_id)) {
+        $sheet_id = $session_sheet_id;
+    }
+}
+
 $action = fe_get_or($_REQUEST, "action");
 $member_name = fe_get_or($_REQUEST, "member_name");
 $description = fe_get_or($_REQUEST, "description");
 $currency = fe_get_or($_REQUEST, "currency");
+$currency = preg_replace("/[^A-Z]/", "", strtoupper($currency));
 
 if ($action == "new_sheet") {
     $sheet_data = array();
@@ -321,6 +344,7 @@ if ($action == "new_sheet") {
         'EUR'=>"77",
     );
     fe_save_sheet($sheet_id, $sheet_data);
+    $_SESSION["sheet_id"] = $sheet_id;
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "update_sheet") {
@@ -387,6 +411,10 @@ if ($action == "new_sheet") {
     fe_delete_sheet($sheet_id);
     header("Location: /");
     exit();
+} elseif ($action == "clear_session") {
+    $_SESSION["sheet_id"] = "";
+    header("Location: /");
+    exit();
 } elseif ($action == "add_transaction") {
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_data["transactions"][] = array(
@@ -441,9 +469,8 @@ if ($action == "new_sheet") {
     <!-- /Yandex.Metrika counter -->
     <div class="sheet-link">
         <?php
-        if (fe_not_empty($sheet_id)) {
-            global $PHP_SELF; ?>
-            Поделиться листом: <a href="<?php echo $PHP_SELF; ?>"><?php echo $sheet_id; ?></a><br /><?php
+        if (fe_not_empty($sheet_id)) {?>
+            Поделиться листом: <a href="/?sheet_id=<?php echo $sheet_id; ?>"><?php echo $sheet_id; ?></a><br /><?php
         }
         ?>
         С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.<br/>
