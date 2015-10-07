@@ -424,6 +424,8 @@ if ($action == "new_sheet") {
     <title>Финансовый коммунизм</title>
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="/static/communism/css/main.css" />
+    <link rel="icon" sizes="128x128" type="image/png" href="/favicon.png">
+    <link rel="icon" sizes="128x128" type="x-icon" href="/favicon.ico">
     <script src="/static/jquery/jquery-1.11.3.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.js"></script>
 </head>
@@ -471,9 +473,10 @@ if (fe_empty($sheet_id)) {
 } else {
     fe_edit_sheet($sheet_id);
 }
+$version = file_get_contents('version');
 ?>
     <div class="copyright">
-        &copy; 2015&#8212;<?php echo date('Y'); ?>, Mikhail Veltishchev aka <a href="https://dichlofos.tumblr.com">DichlofoS</a>.
+        Financial Equalizer v<?php echo $version; ?> &copy; 2015&#8212;<?php echo date('Y'); ?>, Mikhail Veltishchev aka <a href="https://dichlofos.tumblr.com">DichlofoS</a>.
         All rights reversed. This software is provided AS IS, without any warranty about your data safety.
     </div>
 </body>
