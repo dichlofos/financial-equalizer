@@ -269,7 +269,7 @@ function fe_edit_sheet($sheet_id) {
             echo "<td>$member_sum_rounded</td>\n ";
         }
         $avg_spendings = ((integer)(100.0 * $all_transactions_sum / count($members))) / 100;
-        echo "<td>$all_transactions_sum ($avg_spendings&nbsp;/&nbsp;чел)</td>\n";
+        echo "<td><b>$all_transactions_sum</b> ($avg_spendings&nbsp;/&nbsp;<i>чел</i>)</td>\n";
         echo "</tr>";
         ?>
         </table>
