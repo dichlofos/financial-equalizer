@@ -49,11 +49,6 @@ function fe_load_sheet($sheet_id) {
 }
 
 
-function fe_delete_sheet($sheet_id) {
-    rename("data/$sheet_id.json", "data/$sheet_id.deleted.json");
-}
-
-
 function fe_new_sheet() {
     global $PHP_SELF;
     $sheet_id = rand().'-'.rand().'-'.rand();
@@ -114,7 +109,7 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
         $charge_int = fe_get_charge($transaction, $member_id);
         $transaction_sum += $charge_int;
         echo "<input class=\"form-control input-sm amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\"
-            title=\"Сумма в указанной валюте\" />";
+            title=\"Сколько потратил данный участник в указанной валюте\" />";
         $member_spent = fe_get_spent($transaction, $member_id);
         $spent_class = "no-use";
         if ($member_spent > 0.01 && $member_spent < 0.99) {
@@ -261,7 +256,7 @@ function fe_edit_sheet($sheet_id) {
         }
         // Total
         echo "<tr class=\"info\">";
-        echo "<td>Итого (RUR)</td>";
+        echo "<td>Итого, кто сколько потратил (RUR)</td>";
         echo "<td>&nbsp;</td>";
         foreach ($members as $member_id => $member_name) {
             $member_sum = $member_sums[$member_id];
@@ -295,16 +290,8 @@ function fe_edit_sheet($sheet_id) {
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-        <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=delete_sheet">
-            <div class="form-group">
-                <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-                <button type="submit" class="btn btn-danger">Удалить лист</button>
-            </div>
-        </form>
-        </div>
-        <div class="col-md-6">
-            <form method="post" class="form-inline" style="text-align: right" action="/?action=clear_session">
+        <div class="col-md-12">
+            <form method="post" class="form-inline" action="/?action=clear_session">
                 <div class="form-group">
                     <button type="submit" class="btn btn-warning">На главную</button>
                 </div>
@@ -406,10 +393,6 @@ if ($action == "new_sheet") {
     $sheet_data["exchange_rates"][$currency] = "1";
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
-    exit();
-} elseif ($action == "delete_sheet") {
-    fe_delete_sheet($sheet_id);
-    header("Location: /");
     exit();
 } elseif ($action == "clear_session") {
     $_SESSION["sheet_id"] = "";
