@@ -139,6 +139,7 @@ function fe_edit_sheet($sheet_id) {
     foreach ($members as $member_id => $member_name) {
         $member_sums[$member_id] = 0;
     }
+    $all_transactions_sum = 0;
     $norm_error = false;
     foreach ($transactions as $transaction_id => $transaction) {
         $transaction_currency = strtoupper(fe_get_currency($transaction));
@@ -154,6 +155,8 @@ function fe_edit_sheet($sheet_id) {
             $norm_error = true;
             continue;
         }
+        $all_transactions_sum += $transaction_sum;
+
         $deltas[$transaction_id] = array();
 
         // charge - average spending
@@ -255,15 +258,18 @@ function fe_edit_sheet($sheet_id) {
             );
         }
         // Total
-        echo "<tr class=\"info\">";
-        echo "<td>Итого, кто сколько потратил (RUR)</td>";
-        echo "<td>&nbsp;</td>";
+        ?>
+        <tr class="info">
+            <td>Итоговые расходы участника (RUR)</td>
+            <td>&nbsp;</td>
+        <?php
         foreach ($members as $member_id => $member_name) {
             $member_sum = $member_sums[$member_id];
             $member_sum_rounded = (integer)($member_sum * 100) / 100;
             echo "<td>$member_sum_rounded</td>\n ";
         }
-        echo "<td>&nbsp;</td>\n";
+        $avg_spendings = ((integer)(100.0 * $all_transactions_sum / count($members))) / 100;
+        echo "<td>$all_transactions_sum ($avg_spendings&nbsp;/&nbsp;чел)</td>\n";
         echo "</tr>";
         ?>
         </table>
