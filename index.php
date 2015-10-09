@@ -103,9 +103,7 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
     echo "</tr>";
 }
 
-function fe_edit_sheet($sheet_id) {
-    global $PHP_SELF;
-    $sheet_data = fe_load_sheet($sheet_id);
+function fe_calc_sheet($sheet_data) {
     $members = fe_get_or($sheet_data, "members", array());
     $transactions = fe_get_or($sheet_data, "transactions", array());
     $exchange_rates = fe_get_or($sheet_data, "exchange_rates", array());
@@ -145,6 +143,28 @@ function fe_edit_sheet($sheet_id) {
             $member_sums[$member_id] += $delta;
         }
     }
+    return array(
+        "deltas"=>$deltas,
+        "member_sums"=>$member_sums,
+        "all_transactions_sum"=>$all_transactions_sum,
+        "bad_lambda_norm"=>$bad_lambda_norm,
+    );
+}
+
+
+function fe_edit_sheet($sheet_id) {
+    global $PHP_SELF;
+    $sheet_data = fe_load_sheet($sheet_id);
+
+    $members = fe_get_or($sheet_data, "members", array());
+    $transactions = fe_get_or($sheet_data, "transactions", array());
+    $exchange_rates = fe_get_or($sheet_data, "exchange_rates", array());
+
+    $result = fe_calc_sheet($sheet_data);
+    $deltas = $result["deltas"];
+    $member_sums = $result["member_sums"];
+    $all_transactions_sum = $result["all_transactions_sum"];
+    $bad_lambda_norm = $result["bad_lambda_norm"];
 
     ?>
 
