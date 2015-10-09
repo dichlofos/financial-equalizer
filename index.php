@@ -1,36 +1,7 @@
 <?php
+require_once('utils.php');
+
 define('FE_DEFAULT_CURRENCY', 'RUR');
-
-
-function fe_print($object) {
-    echo "<pre>";
-    print_r($object);
-    echo "</pre>";
-}
-
-
-function fe_get_or($array, $key, $default_value = "") {
-    if (array_key_exists($key, $array)) {
-        return $array[$key];
-    }
-    return $default_value;
-}
-
-
-function fe_empty($value) {
-    return strlen($value) == 0;
-}
-
-
-function fe_not_empty($value) {
-    return strlen($value) > 0;
-}
-
-
-function fe_startswith($str, $prefix) {
-    return (substr($str, 0, strlen($prefix)) == $prefix);
-}
-
 
 function fe_save_sheet($sheet_id, $sheet_data) {
     $sheet_f = fopen("data/$sheet_id.json", "w");
@@ -80,8 +51,14 @@ function fe_get_charge($transaction, $member_id) {
 
 function fe_get_spent($transaction, $member_id) {
     $spent = fe_get_or($transaction, "spent", array());
-    $member_spent = (float)fe_get_or($spent, $member_id, "1.0");
-    return $member_spent;
+    $member_spent = fe_get_or($spent, $member_id, "1.0");
+    if ($member_spent == "yes") {
+        // backwards compatibility
+        $member_spent = "1.0";
+    } elseif (fe_empty($member_spent)) {
+        $member_spent = "0.0";
+    }
+    return (float)$member_spent;
 }
 
 
