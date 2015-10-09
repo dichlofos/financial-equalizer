@@ -80,7 +80,6 @@ function fe_print_transaction_input($members, $transaction_id, $transaction, $tr
     echo "</td>\n ";
     $transaction_sum = 0;
     foreach ($members as $member_id => $member_name) {
-        // TODO: fix at http://fe.local/?sheet_id=344552942-1662170856-73040037
         $delta = $transaction_deltas[$member_id];
         echo "<td>";
         $charge_int = fe_get_charge($transaction, $member_id);
@@ -117,7 +116,7 @@ function fe_edit_sheet($sheet_id) {
         $member_sums[$member_id] = 0;
     }
     $all_transactions_sum = 0;
-    $norm_error = false;
+    $bad_lambda_norm = array();
     foreach ($transactions as $transaction_id => $transaction) {
         $transaction_currency = strtoupper(fe_get_currency($transaction));
         $rate = (integer)fe_get_or($exchange_rates, $transaction_currency, "1");
@@ -129,8 +128,7 @@ function fe_edit_sheet($sheet_id) {
             $lambda_norm += fe_get_spent($transaction, $member_id);
         }
         if ($lambda_norm < 0.01) {
-            $norm_error = true;
-            continue;
+            $bad_lambda_norm[$transaction_id] = true;
         }
         $all_transactions_sum += $transaction_sum;
 
@@ -138,7 +136,10 @@ function fe_edit_sheet($sheet_id) {
 
         // charge - average spending
         foreach ($members as $member_id => $member_name) {
-            $own_good = $transaction_sum * fe_get_spent($transaction, $member_id) / $lambda_norm;
+            $own_good = 0;
+            if ($lambda_norm >= 0.01) {
+                $own_good = $transaction_sum * fe_get_spent($transaction, $member_id) / $lambda_norm;
+            }
             $delta = fe_get_charge($transaction, $member_id) * $rate - $own_good;
             $deltas[$transaction_id][$member_id] = $delta;
             $member_sums[$member_id] += $delta;
@@ -208,7 +209,7 @@ function fe_edit_sheet($sheet_id) {
             echo "<input class=\"form-control rate\" type=\"text\" name=\"e$currency\" value=\"$rate\" /></div>\n";
         }
 
-        if ($norm_error) {?>
+        if (count($bad_lambda_norm)) {?>
         <div class="warning">
             В ведомости присутствуют статьи расходов, которые ни на кого не были потрачены (выделены цветом)
         </div><?php
