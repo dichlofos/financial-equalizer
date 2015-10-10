@@ -23,11 +23,20 @@ function fe_currency_selector($currency, $id, $exchange_rates) {
 }
 
 
-function fe_print_transaction_input($members, $transaction_id, $transaction, $transaction_deltas, $exchange_rates) {
+function fe_print_transaction_input(
+    $members,
+    $transaction_id,
+    $transaction,
+    $transaction_deltas,
+    $exchange_rates,
+    $bad_lambda_norm
+) {
     $currency = fe_get_currency($transaction);
     $description = fe_get_or($transaction, "description");
 
-    echo "<tr>";
+    $bad_lambda_norm_class = $bad_lambda_norm ? "warning" : "";
+
+    echo "<tr class=\"$bad_lambda_norm_class\">";
     echo "<td>";
     echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\"
         title=\"Товар или оказанная услуга\" placeholder=\"Трансфер из пункта А в пункт Б\" />";
@@ -160,7 +169,8 @@ function fe_edit_sheet($sheet_id) {
                 $transaction_id,
                 $transaction,
                 fe_get_or($deltas, $transaction_id, array()),
-                $exchange_rates
+                $exchange_rates,
+                fe_get_or($bad_lambda_norm, $transaction_id)
             );
         }
         // Total
