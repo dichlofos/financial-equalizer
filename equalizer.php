@@ -1,4 +1,6 @@
 <?php
+require_once('utils.php');
+
 
 define('FE_DEFAULT_CURRENCY', 'RUR');
 

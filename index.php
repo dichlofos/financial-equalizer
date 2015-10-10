@@ -228,6 +228,7 @@ if (fe_empty($sheet_id)) {
 $action = fe_get_or($_REQUEST, "action");
 $member_name = fe_get_or($_REQUEST, "member_name");
 $description = fe_get_or($_REQUEST, "description");
+
 $currency = fe_get_or($_REQUEST, "currency");
 $currency = preg_replace("/[^A-Z]/", "", strtoupper($currency));
 
