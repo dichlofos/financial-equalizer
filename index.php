@@ -347,6 +347,10 @@ if ($action == "new_sheet") {
     <script src="/static/bootstrap/js/bootstrap.js"></script>
 </head>
 <body>
+<?php
+
+$host = fe_get_or($_SERVER, "HTTP_HOST");
+if (strpos($host, "communism.dmvn.net") !== false) {?>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function (d, w, c) {
@@ -375,6 +379,8 @@ if ($action == "new_sheet") {
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/32864640" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+<?php
+}?>
     <div class="sheet-link">
         <?php
         if (fe_not_empty($sheet_id)) {?>
