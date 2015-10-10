@@ -138,7 +138,7 @@ function fe_edit_sheet($sheet_id) {
         }
 
         if (count($bad_lambda_norm)) {?>
-        <div class="warning">
+        <div class="tip bg-warning">
             В ведомости присутствуют статьи расходов, которые ни на кого не были потрачены (выделены цветом)
         </div><?php
         }?>
@@ -185,7 +185,7 @@ function fe_edit_sheet($sheet_id) {
         </div>
     </form>
 
-    <div class="tip">
+    <div class="tip bg-info">
     <?php
     $tip_rnd = rand(0, 1);
     echo "<b>Совет $tip_rnd</b>: ";

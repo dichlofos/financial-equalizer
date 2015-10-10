@@ -90,11 +90,17 @@ div.copyright {
 
 div.tip {
     border-radius: 3px;
-    border: 1px solid #ddddaa;
-    background-color: #fcfeec;
     padding: 5px;
     margin-top: 5px;
     margin-bottom: 10px;
+}
+
+div.tip.bg-warning {
+    border: 1px solid #ddddaa;
+}
+
+div.tip.bg-info {
+    border: 1px solid #aaaadd;
 }
 
 th.non-member {
