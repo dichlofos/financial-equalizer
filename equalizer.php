@@ -86,11 +86,16 @@ function fe_calc_sheet($sheet_data) {
             $member_sums[$member_id] += $delta;
         }
     }
+    $avg_spendings = 0.0;
+    if (count($members) > 0) {
+        $avg_spendings = ((integer)(100.0 * $all_transactions_sum / count($members))) / 100;
+    }
     return array(
         "deltas"=>$deltas,
         "member_sums"=>$member_sums,
         "all_transactions_sum"=>$all_transactions_sum,
         "bad_lambda_norm"=>$bad_lambda_norm,
+        "avg_spendings"=>$avg_spendings,
     );
 }
 

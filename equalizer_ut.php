@@ -141,7 +141,24 @@ function fe_test_currency() {
     fe_assert_equal($member_sums[1], 0, "Member sums check 1");
     fe_assert_equal($member_sums[2],  100 - 50*70 - 50, "Member sums check 2");
 
+    $avg_spendings = $result["avg_spendings"];
+    fe_assert_equal($avg_spendings, 14400, "Average spendings");
+
     fe_print("fe_test_currency PASSED");
+}
+
+function fe_test_avg_spendings() {
+    $sheet_data = array(
+        "members"=>array(
+        ),
+        "transactions"=>array(
+        ),
+    );
+    $result = fe_calc_sheet($sheet_data);
+    $avg_spendings = $result["avg_spendings"];
+    fe_assert_equal($avg_spendings, 0, "Average spendings");
+
+    fe_print("fe_test_avg_spendings PASSED");
 }
 
 ?>
@@ -157,4 +174,5 @@ function fe_test_currency() {
 fe_print("equalizer unittest STARTED");
 fe_test_deltas();
 fe_test_currency();
+fe_test_avg_spendings();
 fe_print("equalizer unittest FINISHED");

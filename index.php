@@ -82,6 +82,7 @@ function fe_edit_sheet($sheet_id) {
     $member_sums = $result["member_sums"];
     $all_transactions_sum = $result["all_transactions_sum"];
     $bad_lambda_norm = $result["bad_lambda_norm"];
+    $avg_spendings = $result["avg_spendings"];
 
     ?>
 
@@ -184,7 +185,6 @@ function fe_edit_sheet($sheet_id) {
             $member_sum_rounded = (integer)($member_sum * 100) / 100;
             echo "<td>$member_sum_rounded</td>\n ";
         }
-        $avg_spendings = ((integer)(100.0 * $all_transactions_sum / count($members))) / 100;
         echo "<td><b>$all_transactions_sum</b> ($avg_spendings&nbsp;/&nbsp;<i>чел</i>)</td>\n";
         echo "</tr>";
         ?>
