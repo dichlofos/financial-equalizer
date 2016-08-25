@@ -9,6 +9,9 @@ www_user="root:root"
 if echo $host | grep -q lambda ; then
     root="/var/www/vhosts/fe"
     www_user="www-data:www-data"
+elif echo $host | grep -q blackbox ; then
+    root="/var/www/vhosts/fe"
+    www_user="www-data:www-data"
 elif echo $host | grep -q dmvn ; then
     root="/srv/www/communism"
     www_user="www-data:www-data"
