@@ -189,6 +189,16 @@ function fe_edit_sheet($sheet_id) {
         }
         // Total
         ?>
+        <tr>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        <?php
+        foreach ($members as $member_id => $member_name) {
+            echo "<th>$member_name</th>\n";
+        }
+        ?>
+        <th>&nbsp;</th>
+        </tr>
         <tr class="info">
             <td>Итоговые расходы участника (RUR)</td>
             <td>&nbsp;</td>
@@ -199,8 +209,8 @@ function fe_edit_sheet($sheet_id) {
             echo "<td>$member_sum_rounded</td>\n ";
         }
         echo "<td><b>$all_transactions_sum</b> ($avg_spendings&nbsp;/&nbsp;<i>чел</i>)</td>\n";
-        echo "</tr>";
         ?>
+        </tr>
         </table>
         <div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
