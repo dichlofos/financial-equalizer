@@ -132,6 +132,19 @@ function fe_edit_sheet($sheet_id) {
         <button type="submit" class="btn btn-primary">Добавить</button>
         </div>
     </form>
+    <?php
+
+    // See issue https://bitbucket.org/dichlofos/financial-equalizer/issues/13
+    $max_input_vars = (integer)(ini_get('max_input_vars'));
+    if (count($members) * count($transactions) * 4 > $max_input_vars) {
+        ?>
+        <div class="tip bg-warning">
+            Есть вероятность превышения количества входных переменных <tt>max_input_vars</tt>.
+            Пожалуйста, для корректной работы увеличьте лимит (по умолчанию значение равно 1000).
+            Детали можно уточнить в <a href="http://php.net/manual/en/info.configuration.php#ini.max-input-vars">документации</a>.
+        </div><?php
+    }
+    ?>
 
     <form class="form-inline" method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
