@@ -49,8 +49,20 @@ function fe_print_transaction_input(
         echo "<td>";
         $charge_int = fe_get_charge($transaction, $member_id);
         $transaction_sum += $charge_int;
-        echo "<input class=\"form-control input-sm amount\" name=\"tr${transaction_id}_${member_id}\" value=\"$charge_int\" type=\"text\"
-            title=\"Сколько потратил данный участник в указанной валюте\" />";
+
+        $amount_class = "";
+        if ($charge_int > 0) {
+            $amount_class = "positive";
+        } elseif ($charge_int < 0) {
+            $amount_class = "negative";
+        }
+
+        echo "<input class=\"form-control input-sm amount $amount_class\"
+            name=\"tr${transaction_id}_${member_id}\"
+            value=\"$charge_int\"
+            type=\"text\"
+            title=\"Сколько потратил данный участник в указанной валюте\"
+        />";
         $member_spent = fe_get_spent($transaction, $member_id);
         $spent_class = "no-use";
         if ($member_spent > 0.01 && $member_spent < 0.99) {
