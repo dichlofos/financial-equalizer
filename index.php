@@ -44,6 +44,8 @@ function fe_print_transaction_input(
     fe_currency_selector($currency, "cur$transaction_id", $exchange_rates);
     echo "</td>\n ";
     $transaction_sum = 0;
+    $transaction_member_count = 0;
+
     foreach ($members as $member_id => $member_name) {
         $delta = $transaction_deltas[$member_id];
         echo "<td>";
@@ -72,11 +74,16 @@ function fe_print_transaction_input(
         } elseif ($member_spent > 1.01) {
             $spent_class = "high-use";
         }
+
+        if ($member_spent > 0.01) {
+            ++$transaction_member_count;
+        }
+
         echo "&nbsp;<input class=\"form-control input-sm spent $spent_class\" name=\"sp${transaction_id}_${member_id}\" value=\"$member_spent\" type=\"text\"
             title=\"Коэффициент пользования данной услугой для данного участника\" />";
         echo "</td>\n ";
     }
-    echo "<td>$transaction_sum</td>\n ";
+    echo "<td>$transaction_sum / $transaction_member_count</td>\n ";
     echo "</tr>";
 }
 
@@ -186,7 +193,7 @@ function fe_edit_sheet($sheet_id) {
             echo "<th>$member_name</th>\n";
         }
         ?>
-        <th class="non-member">Сумма</th>
+        <th class="non-member">Сумма / Чел</th>
         </tr>
         <?php
         foreach ($transactions as $transaction_id => $transaction) {
