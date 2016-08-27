@@ -185,6 +185,7 @@ function fe_edit_sheet($sheet_id) {
         </div><?php
         }?>
 
+        <div id="transactions" style="height: 500px; overflow-y: scroll;">
         <table class="table table-condensed" style="margin-top: 10px">
         <tr>
         <th class="non-member">Статья расхода или сбора</th>
@@ -231,11 +232,17 @@ function fe_edit_sheet($sheet_id) {
         ?>
         </tr>
         </table>
+        </div><!-- transactions scroller -->
         <div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
         </div>
-        </div>
     </form>
+    <script>
+        $(function() {
+            var transactions = document.getElementById("transactions");
+            transactions.scrollTop = transactions.scrollHeight;
+        });
+    </script>
 
     <div class="tip bg-info">
     <?php
