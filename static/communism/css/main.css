@@ -25,18 +25,24 @@ input.transaction-title {
 .input-sm.amount {
     width: 3.5em;
 }
+.input-sm.amount.positive {
+    background-color: #eeffee;
+}
+.input-sm.amount.negative {
+    background-color: #ffeeee;
+}
 
 .input-sm.spent {
     width: 2em;
 }
 .input-sm.spent.no-use {
-    background-color: #ffffff;
-}
-.input-sm.spent.lower-use {
     background-color: #ccffcc;
 }
-.input-sm.spent.normal-use {
+.input-sm.spent.lower-use {
     background-color: #ffffcc;
+}
+.input-sm.spent.normal-use {
+    background-color: #ffffff;
 }
 .input-sm.spent.high-use {
     background-color: #ffcccc;
