@@ -110,8 +110,8 @@ function fe_edit_sheet($sheet_id) {
             <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_member">
                 <div class="form-group">
                     <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-                    <label for="member_name">Новый участник:&nbsp;</label>
-                    <input type="text" class="form-control" name="member_name" value="" placeholder="Иван Человеков" />
+                    <label for="member_name-input">Новый участник:&nbsp;</label>
+                    <input type="text" class="form-control" name="member_name" id="member_name-input" value="" placeholder="Иван Человеков" />
                     <button type="submit" class="btn btn-primary">Добавить участника</button>
                 </div>
             </form>
@@ -121,9 +121,8 @@ function fe_edit_sheet($sheet_id) {
             <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_currency">
                 <div class="form-group">
                 <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-                <label for="description">Новая валюта:&nbsp;</label>
-
-                <select class="form-control" name="currency"><?php
+                <label for="currency-select">Новая валюта:&nbsp;</label>
+                <select class="form-control" name="currency" id="currency-select"><?php
                 $all_currencies = array(
                     "EUR",
                     "KGS",
@@ -146,8 +145,8 @@ function fe_edit_sheet($sheet_id) {
     <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_transaction">
         <div class="form-group">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-        <label for="description">Новая статья расходов:&nbsp;</label>
-        <input class="form-control" type="text" name="description" value="" placeholder="Скинулись на шаурму" />
+        <label for="description-input">Новая статья расходов:&nbsp;</label>
+        <input class="form-control" type="text" name="description" id="description-input" value="" placeholder="Скинулись на шаурму" />
         <button type="submit" class="btn btn-primary">Добавить</button>
         </div>
     </form>
@@ -170,14 +169,14 @@ function fe_edit_sheet($sheet_id) {
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
         <label>Участники:</label><br/><?php
         foreach ($members as $member_id => $member_name) {
-            echo "<div class=\"form-group member-list\"><label for=\"m$member_id\" style=\"width: 30px\">$member_id:&nbsp;</label>";
-            echo "<input class=\"form-control\" type=\"text\" name=\"m$member_id\" value=\"$member_name\" /></div>\n";
+            echo "<div class=\"form-group member-list\"><label for=\"m$member_id-input\" style=\"width: 30px\">$member_id:&nbsp;</label>";
+            echo "<input class=\"form-control\" type=\"text\" name=\"m$member_id\" id=\"m$member_id-input\" value=\"$member_name\" /></div>\n";
         }
         ?><br/>
         <label>Курсы валют:&nbsp;</label><br/><?php
         foreach ($exchange_rates as $currency => $rate) {
-            echo "<div class=\"form-group member-list\"><label for=\"e$currency\" style=\"width: 40px\">$currency:&nbsp;</label>";
-            echo "<input class=\"form-control rate\" type=\"text\" name=\"e$currency\" value=\"$rate\" /></div>\n";
+            echo "<div class=\"form-group member-list\"><label for=\"e$currency-input\" style=\"width: 40px\">$currency:&nbsp;</label>";
+            echo "<input class=\"form-control rate\" type=\"text\" name=\"e$currency\" id=\"e$currency-input\" value=\"$rate\" /></div>\n";
         }
 
         if (count($bad_lambda_norm)) {?>
