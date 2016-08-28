@@ -235,6 +235,7 @@ function fe_edit_sheet($sheet_id) {
         </div><!-- transactions scroller -->
         <div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
+            Транзакций: <?php echo count($transactions); ?> шт.
         </div>
     </form>
     <script>
