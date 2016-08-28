@@ -186,7 +186,7 @@ function fe_edit_sheet($sheet_id) {
         }?>
 
         <div id="transactions" class="transactions">
-        <table class="table table-condensed" class="transactions">
+        <table class="table table-condensed transactions">
         <tr>
         <th class="non-member">Статья расхода или сбора</th>
         <th class="non-member">Валюта</th><?php
@@ -392,7 +392,7 @@ if ($action == "new_sheet") {
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="/static/communism/css/main.css" />
     <link rel="icon" sizes="128x128" type="image/png" href="/favicon.png">
-    <link rel="icon" sizes="128x128" type="x-icon" href="/favicon.ico">
+    <link rel="icon" sizes="128x128" type="image/x-icon" href="/favicon.ico">
     <script src="/static/jquery/jquery-1.11.3.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.js"></script>
 </head>
