@@ -147,6 +147,58 @@ function fe_test_currency() {
     fe_print("fe_test_currency PASSED");
 }
 
+/**
+ * Check that depts are not affect other users with non-negative weights
+ **/
+function fe_test_depts() {
+    $sheet_data = array(
+        "members"=>array(
+            "Вася",
+            "Петя",
+            "Костя",
+        ),
+        "exchange_rates"=>array(
+            "RUR"=>1,
+        ),
+        "transactions"=>array(
+            array(
+                "currency"=>"RUR",
+                "charges"=>array(
+                    "100",
+                    "200",
+                    "300",
+                ),
+                "spent"=>array(
+                    "1",
+                    "1",
+                    "1",
+                ),
+            ),
+            array(
+                "currency"=>"RUR",
+                "charges"=>array(
+                    "-50",
+                    "50",
+                    "0",
+                ),
+                "spent"=>array(
+                    "1",
+                    "1",
+                    "1",
+                ),
+            ),
+        ),
+    );
+    $result = fe_calc_sheet($sheet_data);
+
+    $member_sums = $result["member_sums"];
+    fe_assert_equal($member_sums[0], -100 - 50, "Member sums check 0");
+    fe_assert_equal($member_sums[1], 0 + 50, "Member sums check 1");
+    fe_assert_equal($member_sums[2], 100 + 0, "Member sums check 2");
+
+    fe_print("fe_test_depts PASSED");
+}
+
 function fe_test_avg_spendings() {
     $sheet_data = array(
         "members"=>array(
@@ -174,5 +226,6 @@ function fe_test_avg_spendings() {
 fe_print("equalizer unittest STARTED");
 fe_test_deltas();
 fe_test_currency();
+fe_test_depts();
 fe_test_avg_spendings();
 fe_print("equalizer unittest FINISHED");
