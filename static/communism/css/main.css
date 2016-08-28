@@ -117,3 +117,11 @@ th.non-member {
     margin-top: 5px;
     margin-bottom: 0px;
 }
+
+div.transactions {
+    height: 500px;
+    overflow-y: scroll;
+    border: 1px solid #cfcfcf;
+    border-radius: 3px;
+    margin: 5px 0px;
+}

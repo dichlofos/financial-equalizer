@@ -185,7 +185,7 @@ function fe_edit_sheet($sheet_id) {
         </div><?php
         }?>
 
-        <div id="transactions" style="height: 500px; overflow-y: scroll;">
+        <div id="transactions" class="transactions">
         <table class="table table-condensed" style="margin-top: 10px">
         <tr>
         <th class="non-member">Статья расхода или сбора</th>
