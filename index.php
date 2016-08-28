@@ -159,8 +159,9 @@ function fe_edit_sheet($sheet_id) {
         ?>
         <div class="tip bg-warning">
             Есть вероятность превышения количества входных переменных <tt>max_input_vars</tt>.
-            Пожалуйста, для корректной работы увеличьте лимит (по умолчанию значение равно 1000).
-            Детали можно уточнить в <a href="http://php.net/manual/en/info.configuration.php#ini.max-input-vars">документации</a>.
+            Пожалуйста, для корректной работы увеличьте лимит (по умолчанию значение равно&nbsp;1000).
+            Детали можно уточнить
+            в&nbsp;<a href="http://php.net/manual/en/info.configuration.php#ini.max-input-vars">документации</a>.
         </div><?php
     }
     ?>
@@ -186,7 +187,7 @@ function fe_edit_sheet($sheet_id) {
         }?>
 
         <div id="transactions" class="transactions">
-        <table class="table table-condensed" style="margin-top: 10px">
+        <table class="table table-condensed" class="transactions">
         <tr>
         <th class="non-member">Статья расхода или сбора</th>
         <th class="non-member">Валюта</th><?php
@@ -385,7 +386,7 @@ if ($action == "new_sheet") {
 }
 
 ?><!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Финансовый коммунизм</title>
@@ -402,31 +403,7 @@ if ($action == "new_sheet") {
 $host = fe_get_or($_SERVER, "HTTP_HOST");
 if (strpos($host, "communism.dmvn.net") !== false) {?>
     <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function (d, w, c) {
-            (w[c] = w[c] || []).push(function() {
-                try {
-                    w.yaCounter32864640 = new Ya.Metrika({
-                        id:32864640,
-                        clickmap:true,
-                        trackLinks:true,
-                        accurateTrackBounce:true
-                    });
-                } catch(e) { }
-            });
-
-            var n = d.getElementsByTagName("script")[0],
-                s = d.createElement("script"),
-                f = function () { n.parentNode.insertBefore(s, n); };
-            s.type = "text/javascript";
-            s.async = true;
-            s.src = "https://mc.yandex.ru/metrika/watch.js";
-
-            if (w.opera == "[object Opera]") {
-                d.addEventListener("DOMContentLoaded", f, false);
-            } else { f(); }
-        })(document, window, "yandex_metrika_callbacks");
-    </script>
+    <script type="text/javascript" src="/static/communism/js/metrika.js"></script>
     <noscript><div><img src="https://mc.yandex.ru/watch/32864640" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
 <?php
@@ -438,7 +415,8 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
         }
         ?>
         С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.<br/>
-        Исходный код <a href="https://bitbucket.org/dichlofos/financial-equalizer">на BitBucket</a>.
+        Исходный код <a href="https://bitbucket.org/dichlofos/financial-equalizer">на BitBucket</a>,
+        список <a href="https://bitbucket.org/dichlofos/financial-equalizer/issues?status=new&amp;status=open">известных багов</a>.
     </div><?php
 
 if (fe_empty($sheet_id)) {
