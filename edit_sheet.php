@@ -17,7 +17,7 @@ function fe_edit_sheet($sheet_id) {
     $all_transactions_sum = $result["all_transactions_sum"];
     $bad_lambda_norm = $result["bad_lambda_norm"];
     $avg_spendings = $result["avg_spendings"];
-    $width_percent = count($members) ? (integer)(69.0 / count($members)) : "69";
+    $width_percent = count($members) ? (integer)(68.0 / count($members)) : "68";
 
     ?>
 
@@ -39,14 +39,8 @@ function fe_edit_sheet($sheet_id) {
                 <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
                 <label for="currency-select">Новая валюта:&nbsp;</label>
                 <select class="form-control" name="currency" id="currency-select"><?php
-                $all_currencies = array(
-                    "EUR",
-                    "KGS",
-                    "RUR",
-                    "USD",
-                    "UZS",
-                );
-                foreach ($all_currencies as $curr) {
+                global $FE_ALL_CURRENCIES;
+                foreach ($FE_ALL_CURRENCIES as $curr) {
                     echo "<option value=\"$curr\">$curr</option>\n";
                 }?>
                 </select>

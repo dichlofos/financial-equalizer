@@ -1,5 +1,6 @@
 <?php
 require_once('utils.php');
+require_once('static_config.php');
 require_once('equalizer.php');
 
 require_once('new_sheet.php');
@@ -30,11 +31,7 @@ if ($action == "new_sheet") {
     $sheet_data["members"] = $members;
     $transactions = array();
     $sheet_data["transactions"] = $transactions;
-    $sheet_data["exchange_rates"] = array(
-        'USD'=>"67",
-        'RUR'=>"1",
-        'EUR'=>"77",
-    );
+    $sheet_data["exchange_rates"] = $FE_DEFAULT_EXCHANGE_RATES;
     fe_save_sheet($sheet_id, $sheet_data);
     $_SESSION["sheet_id"] = $sheet_id;
     header("Location: /?sheet_id=$sheet_id");
