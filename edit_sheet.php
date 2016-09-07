@@ -17,6 +17,7 @@ function fe_edit_sheet($sheet_id) {
     $all_transactions_sum = $result["all_transactions_sum"];
     $bad_lambda_norm = $result["bad_lambda_norm"];
     $avg_spendings = $result["avg_spendings"];
+    $width_percent = count($members) ? (integer)(69.0 / count($members)) : "69";
 
     ?>
 
@@ -100,17 +101,21 @@ function fe_edit_sheet($sheet_id) {
         </div><?php
         }?>
 
-        <div id="transactions" class="transactions">
+
         <table class="table table-condensed transactions">
         <tr>
-        <th class="non-member">Статья расхода или сбора</th>
-        <th class="non-member">Валюта</th><?php
+        <th class="non-member transaction-description">Статья расхода или сбора</th>
+        <th class="non-member transaction-currency">Валюта</th><?php
         foreach ($members as $member_id => $member_name) {
-            echo "<th>$member_name</th>\n";
+            echo "<th style=\"width: $width_percent%;\">$member_name</th>\n";
         }
         ?>
-        <th class="non-member">Сумма / Чел</th>
+        <th class="non-member transaction-stats">Сумма / Чел</th>
         </tr>
+        </table>
+
+        <div id="transactions" class="transactions"><!-- scroller -->
+        <table class="table table-condensed transactions">
         <?php
         foreach ($transactions as $transaction_id => $transaction) {
             fe_print_transaction_input(
@@ -119,7 +124,8 @@ function fe_edit_sheet($sheet_id) {
                 $transaction,
                 fe_get_or($deltas, $transaction_id, array()),
                 $exchange_rates,
-                fe_get_or($bad_lambda_norm, $transaction_id)
+                fe_get_or($bad_lambda_norm, $transaction_id),
+                $width_percent
             );
         }
         // Total

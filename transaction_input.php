@@ -15,7 +15,8 @@ function fe_print_transaction_input(
     $transaction,
     $transaction_deltas,
     $exchange_rates,
-    $bad_lambda_norm
+    $bad_lambda_norm,
+    $width_percent
 ) {
     $currency = fe_get_currency($transaction);
     $description = fe_get_or($transaction, "description");
@@ -23,10 +24,10 @@ function fe_print_transaction_input(
     $bad_lambda_norm_class = $bad_lambda_norm ? "warning" : "";
 
     echo "<tr class=\"$bad_lambda_norm_class\">";
-    echo "<td>";
+    echo "<td class=\"transaction-description\">";
     echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\"
         title=\"Товар или оказанная услуга\" placeholder=\"Трансфер из пункта А в пункт Б\" />";
-    echo "<td>";
+    echo "<td class=\"transaction-currency\">";
     fe_currency_selector($currency, "cur$transaction_id", $exchange_rates);
     echo "</td>\n ";
     $transaction_sum = 0;
@@ -34,7 +35,7 @@ function fe_print_transaction_input(
 
     foreach ($members as $member_id => $member_name) {
         $delta = $transaction_deltas[$member_id];
-        echo "<td>";
+        echo "<td style=\"width: $width_percent%;\">";
         $charge_int = fe_get_charge($transaction, $member_id);
         $transaction_sum += $charge_int;
 
@@ -69,6 +70,6 @@ function fe_print_transaction_input(
             title=\"Коэффициент пользования данной услугой для данного участника\" />";
         echo "</td>\n ";
     }
-    echo "<td>$transaction_sum / $transaction_member_count</td>\n ";
+    echo "<td class=\"transaction-stats\">$transaction_sum / $transaction_member_count</td>\n ";
     echo "</tr>";
 }

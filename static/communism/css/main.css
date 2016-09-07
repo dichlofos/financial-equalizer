@@ -48,7 +48,7 @@ input.transaction-title {
     background-color: #ffcccc;
 }
 
-.form-inline .form-control.transaction-description {
+.form-inline input.form-control.transaction-description {
     width: 30em;
 }
 
@@ -127,5 +127,22 @@ div.transactions {
 }
 
 table.transactions {
+    table-layout: fixed;
     margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+th.transaction-description,
+td.transaction-description {
+    width: 19%;
+}
+
+th.transaction-currency,
+td.transaction-currency {
+    width: 5%;
+}
+
+th.transaction-stats,
+td.transaction-stats {
+    width: 7%;
 }
