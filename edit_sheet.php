@@ -21,6 +21,7 @@ function fe_edit_sheet($sheet_id) {
 
     ?>
 
+    <div class="container-fluid">
     <div class="row">
         <div class="col-md-4">
             <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_member">
@@ -147,8 +148,8 @@ function fe_edit_sheet($sheet_id) {
             $member_sum_rounded = (integer)($member_sum * 100) / 100;
             echo "<td>$member_sum_rounded</td>\n ";
         }
-        echo "<td class=\"transaction-stats\"><b>$all_transactions_sum</b><br/>\n".
-            "($avg_spendings&nbsp;/&nbsp;<i>чел</i>)</td>\n";
+        echo "<td class=\"transaction-stats\"><b>$all_transactions_sum</b>&nbsp;р,<br/>\n".
+            "${avg_spendings}&nbsp;/&nbsp;<i>чел</i></td>\n";
         ?>
         </tr>
         </table>
@@ -190,5 +191,6 @@ function fe_edit_sheet($sheet_id) {
             </form>
         </div>
     </div>
+    </div><!-- class="container-fluid" -->
     <?php
 }
