@@ -122,11 +122,15 @@ function fe_edit_sheet($sheet_id) {
                 $width_percent
             );
         }
-        // Total
         ?>
+        </table>
+        </div><!-- transactions scroller -->
+
+        <!-- footer (Total) -->
+        <table class="table table-condensed transactions transactions-footer">
         <tr>
-            <th>&nbsp;</th>
-            <th>&nbsp;</th>
+            <th class="transaction-description">&nbsp;</th>
+            <th class="transaction-currency">&nbsp;</th>
         <?php
         foreach ($members as $member_id => $member_name) {
             echo "<th>$member_name</th>\n";
@@ -143,11 +147,12 @@ function fe_edit_sheet($sheet_id) {
             $member_sum_rounded = (integer)($member_sum * 100) / 100;
             echo "<td>$member_sum_rounded</td>\n ";
         }
-        echo "<td><b>$all_transactions_sum</b> ($avg_spendings&nbsp;/&nbsp;<i>чел</i>)</td>\n";
+        echo "<td class=\"transaction-stats\"><b>$all_transactions_sum</b><br/>\n".
+            "($avg_spendings&nbsp;/&nbsp;<i>чел</i>)</td>\n";
         ?>
         </tr>
         </table>
-        </div><!-- transactions scroller -->
+
         <div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
             Транзакций: <?php echo count($transactions); ?> шт.
