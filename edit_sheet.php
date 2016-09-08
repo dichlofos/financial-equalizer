@@ -17,8 +17,11 @@ function fe_edit_sheet($sheet_id) {
     $all_transactions_sum = $result["all_transactions_sum"];
     $bad_lambda_norm = $result["bad_lambda_norm"];
     $avg_spendings = $result["avg_spendings"];
-    $width_percent = count($members) ? (integer)(68.0 / count($members)) : "68";
-
+    global $FE_TRANSACTION_CELL_WIDTH;
+    $float_width = (float)($FE_TRANSACTION_CELL_WIDTH);
+    $width_percent = count($members)
+        ? (integer)($float_width / count($members))
+        : (integer)($float_width);
     ?>
 
     <div class="container-fluid">
