@@ -105,7 +105,7 @@ function fe_edit_sheet($sheet_id) {
         <th class="non-member transaction-description">Статья расхода или сбора</th>
         <th class="non-member transaction-currency">Валюта</th><?php
         foreach ($members as $member_id => $member_name) {
-            echo "<th style=\"width: $width_percent%;\">$member_name</th>\n";
+            echo "<th class=\"transaction-amount\" style=\"width: $width_percent%;\">$member_name</th>\n";
         }
         ?>
         <th class="non-member transaction-stats">Сумма / Чел</th>

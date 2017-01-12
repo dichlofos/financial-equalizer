@@ -49,7 +49,8 @@ input.transaction-title {
 }
 
 .form-inline input.form-control.transaction-description {
-    width: 30em;
+    width: 280px;
+    margin-left: 5px;
 }
 
 table {
@@ -144,19 +145,36 @@ table.transactions-footer td,
 table.transactions-footer th {
     /* remove borders */
     border-top: 0px !important;
+    white-space: nowrap;
 }
 
 th.transaction-description,
 td.transaction-description {
-    width: 21%;
+    width: 300px;
+    /* for proper width calculation, remove padding */
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 th.transaction-currency,
 td.transaction-currency {
-    width: 5%;
+    width: 70px;
+    /* for proper width calculation, remove padding */
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 th.transaction-stats,
 td.transaction-stats {
-    width: 7%;
+    width: 80px;
+    /* for proper width calculation, remove padding */
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+th.transaction-amount,
+td.transaction-amount {
+    /* for proper width calculation, remove padding */
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }

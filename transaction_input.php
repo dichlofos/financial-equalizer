@@ -35,7 +35,7 @@ function fe_print_transaction_input(
 
     foreach ($members as $member_id => $member_name) {
         $delta = $transaction_deltas[$member_id];
-        echo "<td style=\"width: $width_percent%;\">";
+        echo "<td class=\"transaction-amount\" style=\"width: $width_percent%;\">";
         $charge_int = fe_get_charge($transaction, $member_id);
         $transaction_sum += $charge_int;
 

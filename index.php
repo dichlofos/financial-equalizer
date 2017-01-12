@@ -124,6 +124,7 @@ if ($action == "new_sheet") {
     <link rel="icon" sizes="128x128" type="image/x-icon" href="/favicon.ico">
     <script src="/static/jquery/jquery-1.11.3.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.js"></script>
+    <script src="/static/communism/js/communism.js"></script>
 </head>
 <body>
 <?php
