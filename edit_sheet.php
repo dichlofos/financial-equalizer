@@ -79,6 +79,10 @@ function fe_edit_sheet($sheet_id) {
     }
     ?>
 
+    <input id="member_count" type="hidden" value="<?php echo count($members); ?>"/>
+    <input id="spent_min" type="hidden" value="<?php echo strlen($result["spent_min"]); ?>"/>
+    <input id="spent_max" type="hidden" value="<?php echo strlen($result["spent_max"]); ?>"/>
+
     <form class="form-inline" method="post" action="<?php echo $PHP_SELF; ?>?action=update_sheet">
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
         <label>Участники:</label><br/><?php

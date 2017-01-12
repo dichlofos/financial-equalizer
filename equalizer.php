@@ -56,6 +56,10 @@ function fe_calc_sheet($sheet_data) {
     foreach ($members as $member_id => $member_name) {
         $member_sums[$member_id] = 0;
     }
+
+    $spent_min = 0;
+    $spent_max = 0;
+
     $all_transactions_sum = 0;
     $bad_lambda_norm = array();
     foreach ($transactions as $transaction_id => $transaction) {
@@ -65,8 +69,18 @@ function fe_calc_sheet($sheet_data) {
         $transaction_sum = 0;
         $lambda_norm = 0.0;
         foreach ($members as $member_id => $member_name) {
-            $transaction_sum += fe_get_charge($transaction, $member_id) * $rate;
-            $lambda_norm += fe_get_spent($transaction, $member_id);
+            $member_charge = fe_get_charge($transaction, $member_id);
+            echo " $member_charge ";
+            $transaction_sum += $member_charge * $rate;
+            $member_spent = fe_get_spent($transaction, $member_id);
+
+            // get min/max
+            if ($spent_min > $member_charge)
+                $spent_min = $member_charge;
+            if ($spent_max < $member_charge)
+                $spent_max = $member_charge;
+
+            $lambda_norm += $member_spent;
         }
         if ($lambda_norm < 0.01) {
             $bad_lambda_norm[$transaction_id] = true;
@@ -96,6 +110,8 @@ function fe_calc_sheet($sheet_data) {
         "all_transactions_sum"=>$all_transactions_sum,
         "bad_lambda_norm"=>$bad_lambda_norm,
         "avg_spendings"=>$avg_spendings,
+        "spent_min"=>$spent_min,
+        "spent_max"=>$spent_max,
     );
 }
 
