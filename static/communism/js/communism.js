@@ -33,14 +33,14 @@ function _set_transaction_description_width(total_width) {
 
 function _set_transaction_amount_width(total_width) {
     var member_count = parseInt($('#member_count').val());
-    var spent_max_length = parseInt($('#spent_max').val());
+    var spent_max_length = $('#spent_max').val().length;
 
     var sums = $('td.transaction-amount');
     var amount_width = 50;
     if (member_count > 0) {
         amount_width = Math.trunc(total_width / member_count);
-        if (amount_width < 40)
-            amount_width = 40;
+        if (amount_width < 50)
+            amount_width = 50;
     }
     console.log("amount width: " + amount_width);
     for (var i = 0; i < sums.length; ++i) {
@@ -51,6 +51,6 @@ function _set_transaction_amount_width(total_width) {
     var inputs = $('input.amount');
     for (var i = 0; i < inputs.length; ++i) {
         console.log(spent_max_length);
-        $(inputs[i]).width((spent_max_length * 0.4) + 'ex');
+        $(inputs[i]).width((spent_max_length * 8) + 'px');
     }
 }
