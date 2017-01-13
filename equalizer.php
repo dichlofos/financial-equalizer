@@ -70,7 +70,6 @@ function fe_calc_sheet($sheet_data) {
         $lambda_norm = 0.0;
         foreach ($members as $member_id => $member_name) {
             $member_charge = fe_get_charge($transaction, $member_id);
-            echo " $member_charge ";
             $transaction_sum += $member_charge * $rate;
             $member_spent = fe_get_spent($transaction, $member_id);
 
