@@ -34,6 +34,8 @@ function _set_transaction_description_width(total_width) {
 function _set_transaction_amount_width(total_width) {
     var member_count = parseInt($('#member_count').val());
     var spent_max_length = $('#spent_max').val().length;
+    var spent_min_length = $('#spent_min').val().length;
+    var digit_count = Math.max(spent_max_length, spent_min_length);
 
     var sums = $('td.transaction-amount');
     var amount_width = 50;
@@ -50,7 +52,6 @@ function _set_transaction_amount_width(total_width) {
 
     var inputs = $('input.amount');
     for (var i = 0; i < inputs.length; ++i) {
-        console.log(spent_max_length);
-        $(inputs[i]).width((spent_max_length * 8) + 'px');
+        $(inputs[i]).width((digit_count * 8) + 'px');
     }
 }
