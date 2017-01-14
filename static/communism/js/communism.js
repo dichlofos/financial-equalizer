@@ -1,5 +1,13 @@
 
 $(document).ready(function () {
+    fe_on_resize();
+});
+
+$(document).resize(function () {
+    fe_on_resize();
+});
+
+function fe_on_resize() {
     var total_width = $('#transactions').innerWidth();
 
     // console.log("total width: " + total_width);
@@ -9,25 +17,22 @@ $(document).ready(function () {
     // console.log("total width rest: " + total_width);
 
     _set_transaction_amount_width(total_width);
+}
 
-});
+function _set_width_by_selector(selector, width) {
+    var elements = $(selector);
+    for (var i = 0; i < elements.length; ++i) {
+        $(elements[i]).innerWidth(width);
+    }
+}
 
 function _set_transaction_description_width(total_width) {
-    var descriptions = $('td.transaction-description');
     var descr_width = Math.trunc(total_width / 6);
-    total_width -= descr_width;
-    for (var i = 0; i < descriptions.length; ++i) {
-        // 2px is for border
-        $(descriptions[i]).innerWidth(descr_width - 2);
-    }
     // console.log("descr width: " + descr_width);
-
-    var inputs = $('input.transaction-description');
-    for (i = 0; i < inputs.length; ++i) {
-        // 2px is for border
-        $(inputs[i]).innerWidth(descr_width - 15);
-    }
-
+    total_width -= descr_width;
+    _set_width_by_selector('td.transaction-description', descr_width - 2); // 2px border
+    _set_width_by_selector('input.transaction-description', descr_width - 15);
+    _set_width_by_selector('th.transaction-description', descr_width);
     return total_width;
 }
 
@@ -37,21 +42,13 @@ function _set_transaction_amount_width(total_width) {
     var spent_min_length = $('#spent_min').val().length;
     var digit_count = Math.max(spent_max_length, spent_min_length);
 
-    var sums = $('td.transaction-amount');
     var amount_width = 50;
     if (member_count > 0) {
         amount_width = Math.trunc(total_width / member_count);
         if (amount_width < 50)
             amount_width = 50;
     }
-    // console.log("amount width: " + amount_width);
-    for (var i = 0; i < sums.length; ++i) {
-        // 2px is for border
-        $(sums[i]).width(amount_width - 2);
-    }
-
-    var inputs = $('input.amount');
-    for (var i = 0; i < inputs.length; ++i) {
-        $(inputs[i]).width((digit_count * 8) + 'px');
-    }
+    _set_width_by_selector('td.transaction-amount', amount_width - 2);
+    _set_width_by_selector('input.amount', (digit_count * 8) + 'px');
+    _set_width_by_selector('th.transaction-amount', amount_width);
 }

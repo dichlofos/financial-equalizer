@@ -145,7 +145,16 @@ table.transactions-footer td,
 table.transactions-footer th {
     /* remove borders */
     border-top: 0px !important;
+}
+
+table.transactions td,
+table.transactions-footer td {
     white-space: nowrap;
+}
+
+table.transactions th {
+    white-space: normal;
+    word-break: break-all;
 }
 
 th.transaction-description,
