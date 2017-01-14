@@ -175,7 +175,7 @@ td.transaction-currency {
 
 th.transaction-stats,
 td.transaction-stats {
-    width: 80px;
+    width: 85px;
     /* for proper width calculation, remove padding */
     padding-left: 0px !important;
     padding-right: 0px !important;

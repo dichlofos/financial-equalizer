@@ -13,7 +13,7 @@ function fe_on_resize() {
     // console.log("total width: " + total_width);
     total_width = _set_transaction_description_width(total_width);
     total_width -= 70; // currency, see CSS
-    total_width -= 80; // total stats, see CSS
+    total_width -= 85; // total stats, see CSS
     // console.log("total width rest: " + total_width);
 
     _set_transaction_amount_width(total_width);
