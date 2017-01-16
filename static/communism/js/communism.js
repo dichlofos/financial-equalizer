@@ -42,6 +42,12 @@ function _set_transaction_amount_width(total_width) {
     var spent_min_length = $('#spent_min').val().length;
     var digit_count = Math.max(spent_max_length, spent_min_length);
 
+    // initial values are too narrow
+    var amount_input_width = 30;
+    if (digit_count >= 3) {
+        amount_input_width = digit_count * 8 + 4;
+    }
+
     var amount_width = 50;
     if (member_count > 0) {
         amount_width = Math.trunc(total_width / member_count);
@@ -49,6 +55,6 @@ function _set_transaction_amount_width(total_width) {
             amount_width = 50;
     }
     _set_width_by_selector('td.transaction-amount', amount_width - 2);
-    _set_width_by_selector('input.amount', (digit_count * 8) + 'px');
+    _set_width_by_selector('input.amount', amount_input_width + 'px');
     _set_width_by_selector('th.transaction-amount', amount_width);
 }
