@@ -24,6 +24,7 @@ input.transaction-title {
 
 .input-sm.amount {
     width: 3.5em;
+    text-align: right;
 }
 .input-sm.amount.positive {
     background-color: #eeffee;
