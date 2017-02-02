@@ -20,11 +20,13 @@ function fe_print_transaction_input(
 ) {
     $currency = fe_get_currency($transaction);
     $description = fe_get_or($transaction, "description");
+    $timestamp = fe_get_or($transaction, "timestamp");
 
     $bad_lambda_norm_class = $bad_lambda_norm ? "warning" : "";
 
     echo "<tr class=\"$bad_lambda_norm_class\">";
     echo "<td class=\"transaction-description\">";
+    echo "<input type=\"hidden\" name=\"ts${transaction_id}\" value=\"$timestamp\"/>";
     echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\"
         title=\"Товар или оказанная услуга\" placeholder=\"Трансфер из пункта А в пункт Б\" />";
     echo "<td class=\"transaction-currency\">";
@@ -70,6 +72,8 @@ function fe_print_transaction_input(
             title=\"Коэффициент пользования данной услугой для данного участника\" />";
         echo "</td>\n ";
     }
-    echo "<td class=\"transaction-stats\">$transaction_sum / $transaction_member_count</td>\n ";
+    echo "<td class=\"transaction-stats\">";
+    echo    "<img title=\"$timestamp\" src=\"/static/communism/images/clock.png\" border=\"0\"/>&nbsp;";
+    echo    "$transaction_sum / $transaction_member_count</td>\n ";
     echo "</tr>";
 }

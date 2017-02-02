@@ -64,6 +64,9 @@ if ($action == "new_sheet") {
         } elseif (fe_startswith($key, "dtr")) {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["description"] = $value;
+        } elseif (fe_startswith($key, "ts")) {
+            $transaction_id = substr($key, 4);
+            $transactions[$transaction_id]["timestamp"] = $value;
         } elseif (fe_startswith($key, "m")) {
             if (fe_empty($value)) {
                 continue;  // skip empty members
@@ -103,8 +106,9 @@ if ($action == "new_sheet") {
 } elseif ($action == "add_transaction") {
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_data["transactions"][] = array(
-        "description"=>$description,
-        "currency"=>FE_DEFAULT_CURRENCY,
+        "description" => $description,
+        "currency" => FE_DEFAULT_CURRENCY,
+        "timestamp" => fe_datetime(),
     );
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");

@@ -30,3 +30,30 @@ function fe_startswith($str, $prefix) {
 }
 
 
+/**
+  * YYYY-MM-DD HH:MM:SS
+  * Human-readable timestamp
+  **/
+function fe_datetime($timestamp = false)
+{
+    if ($timestamp === false)
+        return date("Y-m-d H:i:s");
+    if (xu_empty($timestamp))
+        return "";
+    return date("Y-m-d H:i:s", $timestamp);
+}
+
+/**
+  * YYYY-MM-DD.HH-MM-SS
+  * Human-readable timestamp without spaces, suitable for filenames
+  **/
+function fe_datetime_ns($timestamp = false)
+{
+    if ($timestamp === false)
+        return date("Y-m-d.H-i-s");
+    if (xu_empty($timestamp))
+        return "";
+    return date("Y-m-d.H-i-s", $timestamp);
+}
+
+
