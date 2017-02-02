@@ -38,7 +38,7 @@ function fe_datetime($timestamp = false)
 {
     if ($timestamp === false)
         return date("Y-m-d H:i:s");
-    if (xu_empty($timestamp))
+    if (fe_empty($timestamp))
         return "";
     return date("Y-m-d H:i:s", $timestamp);
 }
@@ -51,7 +51,7 @@ function fe_datetime_ns($timestamp = false)
 {
     if ($timestamp === false)
         return date("Y-m-d.H-i-s");
-    if (xu_empty($timestamp))
+    if (fe_empty($timestamp))
         return "";
     return date("Y-m-d.H-i-s", $timestamp);
 }

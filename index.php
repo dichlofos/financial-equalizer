@@ -84,6 +84,10 @@ if ($action == "new_sheet") {
     $sheet_data["transactions"] = $transactions;
     $sheet_data["members"] = $members;
     $sheet_data["exchange_rates"] = $exchange_rates;
+    $sheet_old_data = fe_load_sheet($sheet_id);
+    # issue #22: calculate transaction update times
+    fe_calculate_sheet_diff($sheet_old_data, $sheet_data);
+
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();

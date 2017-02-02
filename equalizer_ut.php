@@ -7,9 +7,36 @@ function fe_assert_equal($first, $second, $message) {
     }
 }
 
-function fe_test_saveload() {
 
+function fe_test_saveload() {
+    $sheet_id = "test";
+    unlink("data/$sheet_id.json");
+    $sheet_data = fe_load_sheet($sheet_id);
+    fe_assert_equal(count($sheet_data), 0, "Non-existent sheet must be empty when loading");
+
+    $sheet_data = array(
+        "members"=>array(
+            "Вася",
+            "Петя",
+        ),
+        "transactions"=>array(
+            array(
+                "currency"=>"RUR",
+                "charges"=>array(
+                    "100",
+                    "200",
+                    "300",
+                ),
+            ),
+        ),
+    );
+    fe_save_sheet($sheet_id, $sheet_data);
+    $sheet_data = fe_load_sheet($sheet_id);
+    fe_assert_equal($sheet_data["transactions"][0]["charges"][1], "200", "Charges does not match");
+
+    fe_print("fe_test_saveload PASSED");
 }
+
 
 function fe_test_deltas() {
     $sheet_data = array(
@@ -66,6 +93,7 @@ function fe_test_deltas() {
 
     fe_print("fe_test_deltas PASSED");
 }
+
 
 function fe_test_currency() {
     $sheet_data = array(
@@ -147,6 +175,7 @@ function fe_test_currency() {
     fe_print("fe_test_currency PASSED");
 }
 
+
 /**
  * Check that depts are not affect other users with non-negative weights
  **/
@@ -199,6 +228,7 @@ function fe_test_depts() {
     fe_print("fe_test_depts PASSED");
 }
 
+
 function fe_test_avg_spendings() {
     $sheet_data = array(
         "members"=>array(
@@ -213,6 +243,65 @@ function fe_test_avg_spendings() {
     fe_print("fe_test_avg_spendings PASSED");
 }
 
+
+function fe_test_calculate_sheet_diff() {
+    $old_sheet_data = array(
+        "members"=>array(
+            "Васян",
+            "Петро",
+        ),
+        "transactions"=>array(
+            array(
+                "currency"=>"RUR",
+                "charges"=>array(
+                    "100",
+                    "2000",
+                    "300",
+                ),
+            ),
+            array(
+                "currency"=>"USD",
+                "charges"=>array(
+                    "10",
+                    "20",
+                    "30",
+                ),
+            ),
+        ),
+    );
+    $sheet_data = array(
+        "members"=>array(
+            "Вася",
+            "Петя",
+        ),
+        "transactions"=>array(
+            array(
+                "currency"=>"RUR",
+                "charges"=>array(
+                    "100",
+                    "200",
+                    "300",
+                ),
+            ),
+            array(
+                "currency"=>"USD",
+                "charges"=>array(
+                    "10",
+                    "20",
+                    "30",
+                ),
+            ),
+        ),
+    );
+
+    $timestamp = 1234567890;
+    fe_calculate_sheet_diff($old_sheet_data, $sheet_data, $timestamp);
+    fe_assert_equal($sheet_data["transactions"][0]["timestamp"], "2009-02-14 02:31:30", "Timestamp does not match");
+    fe_assert_equal(array_key_exists("timestamp", $sheet_data["transactions"][1]), false, "Timestamp should not exist here");
+
+    fe_print("fe_test_calculate_sheet_diff PASSED");
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -224,8 +313,10 @@ function fe_test_avg_spendings() {
 <?php
 
 fe_print("equalizer unittest STARTED");
+fe_test_saveload();
 fe_test_deltas();
 fe_test_currency();
 fe_test_depts();
 fe_test_avg_spendings();
+fe_test_calculate_sheet_diff();
 fe_print("equalizer unittest FINISHED");
