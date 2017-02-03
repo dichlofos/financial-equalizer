@@ -87,8 +87,9 @@ function fe_edit_sheet($sheet_id) {
         <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
         <label>Участники:</label><br/><?php
         foreach ($members as $member_id => $member_name) {
-            echo "<div class=\"form-group member-list\"><label for=\"m$member_id-input\" style=\"width: 30px\">$member_id:&nbsp;</label>";
-            echo "<input class=\"form-control\" type=\"text\" name=\"m$member_id\" id=\"m$member_id-input\" value=\"$member_name\" /></div>\n";
+            echo "<div class=\"form-group member-list\">";
+            echo "<input class=\"form-control\" type=\"text\" name=\"m$member_id\" id=\"m$member_id-input\" value=\"$member_name\" />";
+            echo "</div>\n";
         }
         ?><br/>
         <label>Курсы валют:&nbsp;</label><br/><?php

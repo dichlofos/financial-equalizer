@@ -3,6 +3,7 @@ body {
 }
 div.member-list {
     margin-top: 5px;
+    padding-right: 30px;
 }
 div.form {
     padding: 5px;
@@ -35,6 +36,7 @@ input.transaction-title {
 
 .input-sm.spent {
     width: 2em;
+    text-align: right;
 }
 .input-sm.spent.no-use {
     background-color: #ccffcc;
