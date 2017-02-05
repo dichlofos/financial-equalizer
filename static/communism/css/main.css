@@ -1,5 +1,7 @@
 body {
     padding: 10px;
+    background-image: url('../images/noise.jpg');
+    background-repeat: repeat;
 }
 div.member-list {
     margin-top: 5px;
@@ -88,6 +90,10 @@ input[type="checkbox"] {
     z-index: 1;
 }
 
+tr.info {
+    border: 1px solid #afafaf;
+}
+
 tr.info > td {
     background-color: #fcf8e3;
 }
@@ -99,7 +105,7 @@ div.copyright {
 }
 
 div.tip {
-    border-radius: 3px;
+    /*border-radius: 3px;*/
     padding: 5px;
     margin-top: 5px;
     margin-bottom: 10px;
@@ -110,7 +116,7 @@ div.tip.bg-warning {
 }
 
 div.tip.bg-info {
-    border: 1px solid #aaaadd;
+    border: 1px solid #afafaf;
 }
 
 th.non-member {
@@ -125,8 +131,9 @@ th.non-member {
 div.transactions {
     height: 500px;
     overflow-y: scroll;
-    border: 1px solid #cfcfcf;
-    border-radius: 3px;
+    border: 1px solid #afafaf;
+    background-color: #f7f7f7;
+    /*border-radius: 3px;*/
     margin: 5px 0px;
 }
 
