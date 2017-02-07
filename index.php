@@ -23,7 +23,6 @@ $member_name = fe_get_or($_REQUEST, "member_name");
 $description = fe_get_or($_REQUEST, "description");
 
 $currency = fe_get_or($_REQUEST, "currency");
-$currency = preg_replace("/[^A-Z]/", "", strtoupper($currency));
 
 if ($action == "new_sheet") {
     $sheet_data = array();
@@ -99,7 +98,11 @@ if ($action == "new_sheet") {
     exit();
 } elseif ($action == "add_currency") {
     $sheet_data = fe_load_sheet($sheet_id);
-    $sheet_data["exchange_rates"][$currency] = "1";
+    $currency = trim($currency);
+    if (fe_not_empty($currency)) {
+        // allow non-empty currencies
+        $sheet_data["exchange_rates"][$currency] = "1";
+    }
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();

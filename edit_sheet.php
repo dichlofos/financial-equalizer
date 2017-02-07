@@ -42,12 +42,7 @@ function fe_edit_sheet($sheet_id) {
                 <div class="form-group">
                 <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
                 <label for="currency-select">Новая валюта:&nbsp;</label>
-                <select class="form-control" name="currency" id="currency-select"><?php
-                global $FE_ALL_CURRENCIES;
-                foreach ($FE_ALL_CURRENCIES as $curr) {
-                    echo "<option value=\"$curr\">$curr</option>\n";
-                }?>
-                </select>
+                <input name="currency" class="form-control" id="currency-input" />
                 <button type="submit" class="btn btn-primary">Добавить</button>
                 </div>
             </form>
@@ -94,7 +89,7 @@ function fe_edit_sheet($sheet_id) {
         ?><br/>
         <label>Курсы валют:&nbsp;</label><br/><?php
         foreach ($exchange_rates as $currency => $rate) {
-            echo "<div class=\"form-group member-list\"><label for=\"e$currency-input\" style=\"width: 40px\">$currency:&nbsp;</label>";
+            echo "<div class=\"form-group member-list\"><label for=\"e$currency-input\">$currency:&nbsp;</label>";
             echo "<input class=\"form-control rate\" type=\"text\" name=\"e$currency\" id=\"e$currency-input\" value=\"$rate\" /></div>\n";
         }
 

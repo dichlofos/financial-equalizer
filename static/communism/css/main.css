@@ -77,11 +77,12 @@ input[type="checkbox"] {
 
 .form-inline .form-control.rate {
     width: 60px;
+    text-align: right;
 }
+
 .form-inline .form-control.currency-select {
     height: 20px;
 }
-
 
 .sheet-link {
     position: absolute;
@@ -177,7 +178,7 @@ td.transaction-description {
 
 th.transaction-currency,
 td.transaction-currency {
-    width: 70px;
+    width: 90px;
     /* for proper width calculation, remove padding */
     padding-left: 0px !important;
     padding-right: 0px !important;

@@ -12,7 +12,7 @@ function fe_on_resize() {
 
     // console.log("total width: " + total_width);
     total_width = _set_transaction_description_width(total_width);
-    total_width -= 70; // currency, see CSS
+    total_width -= 100; // currency, see CSS
     total_width -= 85; // total stats, see CSS
     // console.log("total width rest: " + total_width);
 
@@ -55,6 +55,6 @@ function _set_transaction_amount_width(total_width) {
             amount_width = 50;
     }
     _set_width_by_selector('td.transaction-amount', amount_width - 2);
+    _set_width_by_selector('th.transaction-amount', amount_width - 2);
     _set_width_by_selector('input.amount', amount_input_width + 'px');
-    _set_width_by_selector('th.transaction-amount', amount_width);
 }
