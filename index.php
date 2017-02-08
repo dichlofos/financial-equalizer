@@ -168,7 +168,7 @@ $version = file_get_contents('version');
         С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.
         Исходный <a href="https://bitbucket.org/dichlofos/financial-equalizer">код</a>,
         список <a href="https://bitbucket.org/dichlofos/financial-equalizer/issues?status=new&amp;status=open">известных багов</a>.
-
+        <br/>
         All rights reversed. This software is provided AS IS, without any warranty about your data safety.
     </div>
 </body>
