@@ -154,9 +154,6 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
             Поделиться листом: <a href="/?sheet_id=<?php echo $sheet_id; ?>"><?php echo $sheet_id; ?></a><br /><?php
         }
         ?>
-        С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.<br/>
-        Исходный код <a href="https://bitbucket.org/dichlofos/financial-equalizer">на BitBucket</a>,
-        список <a href="https://bitbucket.org/dichlofos/financial-equalizer/issues?status=new&amp;status=open">известных багов</a>.
     </div><?php
 
 if (fe_empty($sheet_id)) {
@@ -167,7 +164,11 @@ if (fe_empty($sheet_id)) {
 $version = file_get_contents('version');
 ?>
     <div class="copyright">
-        Financial Equalizer v<?php echo $version; ?> &copy; 2015&#8212;<?php echo date('Y'); ?>, Mikhail Veltishchev aka <a href="https://dichlofos.tumblr.com">DichlofoS</a>.
+        Financial Equalizer v<?php echo $version; ?> &copy; 2015&#8212;<?php echo date('Y'); ?>, <a href="https://vk.com/dichlofos">Mikhail Veltishchev</a>.
+        С вопросами и предложениями обращаться <a href="mailto:dichlofos-mv@yandex.ru">к автору</a>.
+        Исходный <a href="https://bitbucket.org/dichlofos/financial-equalizer">код</a>,
+        список <a href="https://bitbucket.org/dichlofos/financial-equalizer/issues?status=new&amp;status=open">известных багов</a>.
+
         All rights reversed. This software is provided AS IS, without any warranty about your data safety.
     </div>
 </body>
