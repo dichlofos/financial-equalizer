@@ -79,6 +79,7 @@ function fe_calc_sheet($sheet_data) {
 
     $deltas = array();
     $member_sums = array();
+    $transaction_sums = array();
     foreach ($members as $member_id => $member_name) {
         $member_sums[$member_id] = 0;
     }
@@ -110,6 +111,7 @@ function fe_calc_sheet($sheet_data) {
         if ($lambda_norm < 0.01) {
             $bad_lambda_norm[$transaction_id] = true;
         }
+        $transaction_sums[$transaction_id] = $transaction_sum;
         $all_transactions_sum += $transaction_sum;
 
         $deltas[$transaction_id] = array();
@@ -130,13 +132,14 @@ function fe_calc_sheet($sheet_data) {
         $avg_spendings = ((integer)(100.0 * $all_transactions_sum / count($members))) / 100;
     }
     return array(
-        "deltas"=>$deltas,
-        "member_sums"=>$member_sums,
-        "all_transactions_sum"=>$all_transactions_sum,
-        "bad_lambda_norm"=>$bad_lambda_norm,
-        "avg_spendings"=>$avg_spendings,
-        "spent_min"=>$spent_min,
-        "spent_max"=>$spent_max,
+        "deltas" => $deltas,
+        "member_sums" => $member_sums,
+        "transaction_sums" => $transaction_sums,
+        "all_transactions_sum" => $all_transactions_sum,
+        "bad_lambda_norm" => $bad_lambda_norm,
+        "avg_spendings" => $avg_spendings,
+        "spent_min" => $spent_min,
+        "spent_max" => $spent_max,
     );
 }
 

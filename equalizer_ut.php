@@ -91,6 +91,9 @@ function fe_test_deltas() {
     fe_assert_equal($member_sums[1], 0, "Member sums check 1");
     fe_assert_equal($member_sums[2], 50, "Member sums check 2");
 
+    $transaction_sums = $result["transaction_sums"];
+    fe_assert_equal($transaction_sums[0], 600, "Transaction sums check 1");
+
     fe_print("fe_test_deltas PASSED");
 }
 
