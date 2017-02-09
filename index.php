@@ -5,9 +5,11 @@ require_once('equalizer.php');
 
 require_once('new_sheet.php');
 require_once('edit_sheet.php');
+require_once('export.php');
 
 session_start();
 
+// Parse some global variables
 $sheet_id = fe_get_or($_REQUEST, "sheet_id");
 $sheet_id = preg_replace("/[^0-9a-f-]/", "", $sheet_id);
 if (fe_empty($sheet_id)) {
@@ -19,10 +21,6 @@ if (fe_empty($sheet_id)) {
 }
 
 $action = fe_get_or($_REQUEST, "action");
-$member_name = fe_get_or($_REQUEST, "member_name");
-$description = fe_get_or($_REQUEST, "description");
-
-$currency = fe_get_or($_REQUEST, "currency");
 
 if ($action == "new_sheet") {
     $sheet_data = array();
@@ -91,12 +89,14 @@ if ($action == "new_sheet") {
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "add_member") {
+    $member_name = fe_get_or($_REQUEST, "member_name");
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_data["members"][] = $member_name;
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "add_currency") {
+    $currency = fe_get_or($_REQUEST, "currency");
     $sheet_data = fe_load_sheet($sheet_id);
     $currency = trim($currency);
     if (fe_not_empty($currency)) {
@@ -111,6 +111,7 @@ if ($action == "new_sheet") {
     header("Location: /");
     exit();
 } elseif ($action == "add_transaction") {
+    $description = fe_get_or($_REQUEST, "description");
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_data["transactions"][] = array(
         "description" => $description,
@@ -120,6 +121,16 @@ if ($action == "new_sheet") {
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
+} elseif ($action == "export") {
+    $format = fe_get_or($_REQUEST, "format");
+    $sheet_data = fe_load_sheet($sheet_id);
+    if ($format == "csv") {
+        fe_export_sheet_to_csv($sheet_data);
+    } else {
+        die("Invalid format: $format");
+    }
+    exit();
+
 } elseif (fe_not_empty($action)) {
     die("Unknown action: '$action'");
 }
@@ -151,7 +162,9 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
     <div class="sheet-link">
         <?php
         if (fe_not_empty($sheet_id)) {?>
-            Поделиться листом: <a href="/?sheet_id=<?php echo $sheet_id; ?>"><?php echo $sheet_id; ?></a><br /><?php
+            Поделиться листом: <a href="/?sheet_id=<?php echo $sheet_id; ?>"><?php echo $sheet_id; ?></a><br />
+            Экспорт <a href="/?action=export&amp;format=csv&amp;sheet_id=<?php echo $sheet_id; ?>">в CSV</a><br />
+            <?php
         }
         ?>
     </div><?php
