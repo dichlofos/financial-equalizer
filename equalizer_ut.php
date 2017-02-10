@@ -298,9 +298,15 @@ function fe_test_calculate_sheet_diff() {
     );
 
     $timestamp = 1234567890;
+    $timestamp_str = "2009-02-14 02:31:30";
     fe_calculate_sheet_diff($old_sheet_data, $sheet_data, $timestamp);
-    fe_assert_equal($sheet_data["transactions"][0]["timestamp"], "2009-02-14 02:31:30", "Timestamp does not match");
+    fe_assert_equal($sheet_data["transactions"][0]["timestamp"], $timestamp_str, "Timestamp does not match");
     fe_assert_equal(array_key_exists("timestamp", $sheet_data["transactions"][1]), false, "Timestamp should not exist here");
+    fe_assert_equal($sheet_data["modified"], $timestamp_str, "Sheet timestamp does not match");
+
+    $empty_sheet_data = array();
+    fe_calculate_sheet_diff(array(), $empty_sheet_data, $timestamp);
+    fe_assert_equal(array_key_exists("modified", $empty_sheet_data), false, "Empty sheet timestamp does not match");
 
     fe_print("fe_test_calculate_sheet_diff PASSED");
 }

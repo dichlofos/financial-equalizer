@@ -54,6 +54,9 @@ function fe_get_currency($transaction) {
 function fe_calculate_sheet_diff($old_sheet_data, &$sheet_data, $timestamp = false) {
     $transactions = fe_get_or($sheet_data, "transactions", array());
     $old_transactions = fe_get_or($old_sheet_data, "transactions", array());
+    $timestamp_str = fe_datetime($timestamp);
+    $modified = false;
+
     foreach ($transactions as $transaction_id => $transaction) {
         if (array_key_exists($transaction_id, $old_transactions)) {
             // transaction exists in both sheets
@@ -61,13 +64,19 @@ function fe_calculate_sheet_diff($old_sheet_data, &$sheet_data, $timestamp = fal
             $old_transaction = $old_transactions[$transaction_id];
             $old_transaction_str = json_encode($old_transaction);
             if ($old_transaction_str != $transaction_str) {
-                $sheet_data["transactions"][$transaction_id]["timestamp"] = fe_datetime($timestamp);
+                $sheet_data["transactions"][$transaction_id]["timestamp"] = $timestamp_str;
+                $modified = true;
             }
         } else {
             // new transaction: just set timestamp
             // This should actually never happen
-            $sheet_data["transactions"][$transaction_id]["timestamp"] = fe_datetime($timestamp);
+            $sheet_data["transactions"][$transaction_id]["timestamp"] = $timestamp_str;
+            $modified = true;
         }
+    }
+
+    if ($modified) {
+        $sheet_data["modified"] = $timestamp_str;
     }
 }
 

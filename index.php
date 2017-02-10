@@ -161,8 +161,17 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
 }?>
     <div class="sheet-link">
         <?php
-        if (fe_not_empty($sheet_id)) {?>
+        if (fe_not_empty($sheet_id)) {
+            // FIXME(mvel): Multiple read per page
+            $sheet_data = fe_load_sheet($sheet_id);
+            $modified = fe_get_or($sheet_data, "modified");
+            if (fe_empty($modified)) {
+                $modified = "&ndash;";
+            }
+        ?>
             Поделиться листом: <a href="/?sheet_id=<?php echo $sheet_id; ?>"><?php echo $sheet_id; ?></a><br />
+            Последняя модификация: <?php echo $modified; ?><br />
+
             Экспорт <a href="/?action=export&amp;format=csv&amp;sheet_id=<?php echo $sheet_id; ?>">в CSV</a><br />
             <?php
         }
