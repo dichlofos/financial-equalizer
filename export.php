@@ -44,7 +44,16 @@ function fe_export_sheet_to_csv($sheet_data) {
 
         fe_print_csv_line($row);
     }
-
     echo "\r\n";
+
+    fe_print_csv_line(array("Валюта", "Курс"));
+    foreach ($exchange_rates as $currency => $rate) {
+        $row = array($currency, $rate);
+        fe_print_csv_line($row);
+    }
+    echo "\r\n";
+
+    fe_print_csv_line(array("Идентификатор листа"));
+    fe_print_csv_line(array("$sheet_id"));
 
 }
