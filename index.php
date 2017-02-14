@@ -38,6 +38,10 @@ if ($action == "new_sheet") {
     if (fe_empty($sheet_id)) {
         die("Invalid request: sheet_id is empty");
     }
+    // FIXME(mvel): При сохранении листа теряется timestamp
+    // (и вообще любые поля, которые не присутствуют в формах).
+    // Выглядит так, что надо уметь накатывать update на существующий лист,
+    // а не воссоздавать его с нуля.
     $sheet_data = array();
     $transactions = array();
     $members = array();
