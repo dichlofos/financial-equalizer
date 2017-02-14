@@ -30,6 +30,7 @@ if ($action == "new_sheet") {
     $sheet_data["transactions"] = $transactions;
     $sheet_data["exchange_rates"] = $FE_DEFAULT_EXCHANGE_RATES;
     fe_save_sheet($sheet_id, $sheet_data);
+    // TODO(mvel): add creation date
     $_SESSION["sheet_id"] = $sheet_id;
     header("Location: /?sheet_id=$sheet_id");
     exit();
@@ -63,7 +64,7 @@ if ($action == "new_sheet") {
             $transactions[$transaction_id]["description"] = $value;
         } elseif (fe_startswith($key, "ts")) {
             $transaction_id = substr($key, 4);
-            $transactions[$transaction_id]["timestamp"] = $value;
+            $transactions[$transaction_id][FE_KEY_TIMESTAMP_MODIFIED] = $value;
         } elseif (fe_startswith($key, "m")) {
             if (fe_empty($value)) {
                 continue;  // skip empty members
@@ -90,20 +91,26 @@ if ($action == "new_sheet") {
     exit();
 } elseif ($action == "add_member") {
     $member_name = fe_get_or($_REQUEST, "member_name");
-    $sheet_data = fe_load_sheet($sheet_id);
-    $sheet_data["members"][] = $member_name;
-    fe_save_sheet($sheet_id, $sheet_data);
+    $member_name = trim($member_name);
+    if (fe_not_empty($member_name)) {
+        // allow non-empty member names only
+        $sheet_data = fe_load_sheet($sheet_id);
+        $sheet_data["members"][] = $member_name;
+        $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = fe_datetime();
+        fe_save_sheet($sheet_id, $sheet_data);
+    }
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "add_currency") {
     $currency = fe_get_or($_REQUEST, "currency");
-    $sheet_data = fe_load_sheet($sheet_id);
     $currency = trim($currency);
     if (fe_not_empty($currency)) {
-        // allow non-empty currencies
+        // allow non-empty currencies only
+        $sheet_data = fe_load_sheet($sheet_id);
         $sheet_data["exchange_rates"][$currency] = "1";
+        $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = fe_datetime();
+        fe_save_sheet($sheet_id, $sheet_data);
     }
-    fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "clear_session") {
@@ -113,11 +120,13 @@ if ($action == "new_sheet") {
 } elseif ($action == "add_transaction") {
     $description = fe_get_or($_REQUEST, "description");
     $sheet_data = fe_load_sheet($sheet_id);
+    $timestamp_str = fe_datetime();
     $sheet_data["transactions"][] = array(
         "description" => $description,
         "currency" => FE_DEFAULT_CURRENCY,
-        "timestamp" => fe_datetime(),
+        FE_KEY_TIMESTAMP_MODIFIED => $timestamp_str,
     );
+    $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = $timestamp_str;
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
@@ -164,7 +173,7 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
         if (fe_not_empty($sheet_id)) {
             // FIXME(mvel): Multiple read per page
             $sheet_data = fe_load_sheet($sheet_id);
-            $modified = fe_get_or($sheet_data, "modified");
+            $modified = fe_get_or($sheet_data, FE_KEY_TIMESTAMP_MODIFIED);
             if (fe_empty($modified)) {
                 $modified = "&ndash;";
             }

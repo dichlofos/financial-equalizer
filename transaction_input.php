@@ -1,5 +1,8 @@
 <?php
 
+require_once('equalizer.php');
+
+
 function fe_currency_selector($currency, $id, $exchange_rates) {
     echo "<select class=\"form-control input-sm currency-select\" name=\"$id\">";
     foreach ($exchange_rates as $curr => $rate) {
@@ -20,7 +23,7 @@ function fe_print_transaction_input(
 ) {
     $currency = fe_get_currency($transaction);
     $description = fe_get_or($transaction, "description");
-    $timestamp = fe_get_or($transaction, "timestamp");
+    $timestamp = fe_get_or($transaction, FE_KEY_TIMESTAMP_MODIFIED);
 
     $bad_lambda_norm_class = $bad_lambda_norm ? "warning" : "";
 

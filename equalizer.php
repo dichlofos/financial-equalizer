@@ -2,7 +2,11 @@
 require_once('utils.php');
 
 
-define('FE_DEFAULT_CURRENCY', 'RUR');
+define('FE_DEFAULT_CURRENCY', "RUR");
+
+define('FE_KEY_TIMESTAMP_CREATED', "timestamp_created");
+define('FE_KEY_TIMESTAMP_MODIFIED', "timestamp_modified");
+
 
 function fe_save_sheet($sheet_id, $sheet_data) {
     $sheet_f = fopen("data/$sheet_id.json", "w");
@@ -19,6 +23,7 @@ function fe_load_sheet($sheet_id) {
     $sheet_data = file_get_contents($name);
     return json_decode($sheet_data, true);
 }
+
 
 function fe_get_charge($transaction, $member_id) {
     $charges = fe_get_or($transaction, "charges", array());
@@ -64,19 +69,19 @@ function fe_calculate_sheet_diff($old_sheet_data, &$sheet_data, $timestamp = fal
             $old_transaction = $old_transactions[$transaction_id];
             $old_transaction_str = json_encode($old_transaction);
             if ($old_transaction_str != $transaction_str) {
-                $sheet_data["transactions"][$transaction_id]["timestamp"] = $timestamp_str;
+                $sheet_data["transactions"][$transaction_id][FE_KEY_TIMESTAMP_MODIFIED] = $timestamp_str;
                 $modified = true;
             }
         } else {
             // new transaction: just set timestamp
             // This should actually never happen
-            $sheet_data["transactions"][$transaction_id]["timestamp"] = $timestamp_str;
+            $sheet_data["transactions"][$transaction_id][FE_KEY_TIMESTAMP_MODIFIED] = $timestamp_str;
             $modified = true;
         }
     }
 
     if ($modified) {
-        $sheet_data["modified"] = $timestamp_str;
+        $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = $timestamp_str;
     }
 }
 
