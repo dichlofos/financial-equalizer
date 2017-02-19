@@ -25,14 +25,14 @@ function fe_action_new_sheet($sheet_id) {
   * Transactions form update handler
   * @param sheet_id Sheet identifier
   **/
-function fe_action_update_sheet($sheet_id) {
+function fe_action_update_sheet($sheet_id, $request) {
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_old_data = $sheet_data;
 
     $transactions = array();
     $members = array();
     $exchange_rates = array();
-    foreach ($_REQUEST as $key => $value) {
+    foreach ($request as $key => $value) {
         $value = trim($value);
         if (fe_startswith($key, "tr")) {
             $amount_key = substr($key, 2);
@@ -52,9 +52,6 @@ function fe_action_update_sheet($sheet_id) {
         } elseif (fe_startswith($key, "dtr")) {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["description"] = $value;
-        } elseif (fe_startswith($key, "ts")) {
-            $transaction_id = substr($key, 4);
-            $transactions[$transaction_id][FE_KEY_TIMESTAMP_MODIFIED] = $value;
         } elseif (fe_startswith($key, "m")) {
             if (fe_empty($value)) {
                 continue;  // skip empty members

@@ -9,6 +9,11 @@ define('FE_KEY_TIMESTAMP_MODIFIED', "timestamp_modified");
 
 
 function fe_save_sheet($sheet_id, $sheet_data) {
+    if (fe_empty($sheet_id)) {
+        // FIXME(mvel) Add logging here
+        die("[fe_save_sheet] Sheet identifier cannot be empty. Please report a bug to developers");
+        return;
+    }
     $sheet_f = fopen("data/$sheet_id.json", "w");
     fwrite($sheet_f, json_encode($sheet_data));
     fclose($sheet_f);
@@ -16,12 +21,34 @@ function fe_save_sheet($sheet_id, $sheet_data) {
 
 
 function fe_load_sheet($sheet_id) {
+    if (fe_empty($sheet_id)) {
+        // FIXME(mvel) Add logging here
+        die("[fe_load_sheet] Sheet id cannot be empty. Please report a bug to developers");
+        return;
+    }
+
     $name = "data/$sheet_id.json";
     if (!file_exists($name)) {
         return array();
     }
     $sheet_data = file_get_contents($name);
     return json_decode($sheet_data, true);
+}
+
+
+function fe_remove_sheet($sheet_id) {
+    if (fe_empty($sheet_id)) {
+        // FIXME(mvel) Add logging here
+        die("[fe_remove_sheet] Sheet id cannot be empty. Please report a bug to developers");
+        return;
+    }
+
+    $name = "data/$sheet_id.json";
+    if (!file_exists($name)) {
+        return false;
+    }
+    unlink($name);
+    return true;
 }
 
 

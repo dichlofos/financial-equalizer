@@ -30,7 +30,7 @@ if ($action == "new_sheet") {
     if (fe_empty($sheet_id)) {
         die("Invalid request: sheet_id is empty");
     }
-    fe_action_update_sheet($sheet_id);
+    fe_action_update_sheet($sheet_id, $_REQUEST);
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "add_member") {

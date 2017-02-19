@@ -1,9 +1,22 @@
 <?php
 require_once('equalizer.php');
+require_once('action_handlers.php');
+
+function fe_uprint($object) {
+    print_r($object);
+    print_r("\n");
+}
 
 function fe_assert_equal($first, $second, $message) {
     if ($first != $second) {
-        fe_print("Assertion failed: $first != $second [$message]");
+        fe_uprint("Assertion failed: $first != $second [$message]");
+    }
+}
+
+
+function fe_assert_inequal($first, $second, $message) {
+    if ($first == $second) {
+        fe_uprint("Assertion failed: $first == $second [$message]");
     }
 }
 
@@ -34,7 +47,7 @@ function fe_test_saveload() {
     $sheet_data = fe_load_sheet($sheet_id);
     fe_assert_equal($sheet_data["transactions"][0]["charges"][1], "200", "Charges does not match");
 
-    fe_print("fe_test_saveload PASSED");
+    fe_uprint("fe_test_saveload PASSED");
 }
 
 
@@ -94,7 +107,7 @@ function fe_test_deltas() {
     $transaction_sums = $result["transaction_sums"];
     fe_assert_equal($transaction_sums[0], 600, "Transaction sums check 1");
 
-    fe_print("fe_test_deltas PASSED");
+    fe_uprint("fe_test_deltas PASSED");
 }
 
 
@@ -175,7 +188,7 @@ function fe_test_currency() {
     $avg_spendings = $result["avg_spendings"];
     fe_assert_equal($avg_spendings, 14400, "Average spendings");
 
-    fe_print("fe_test_currency PASSED");
+    fe_uprint("fe_test_currency PASSED");
 }
 
 
@@ -228,7 +241,7 @@ function fe_test_depts() {
     fe_assert_equal($member_sums[1], 0 + 50, "Member sums check 1");
     fe_assert_equal($member_sums[2], 100 + 0, "Member sums check 2");
 
-    fe_print("fe_test_depts PASSED");
+    fe_uprint("fe_test_depts PASSED");
 }
 
 
@@ -243,7 +256,7 @@ function fe_test_avg_spendings() {
     $avg_spendings = $result["avg_spendings"];
     fe_assert_equal($avg_spendings, 0, "Average spendings");
 
-    fe_print("fe_test_avg_spendings PASSED");
+    fe_uprint("fe_test_avg_spendings PASSED");
 }
 
 
@@ -308,8 +321,68 @@ function fe_test_calculate_sheet_diff() {
     fe_calculate_sheet_diff(array(), $empty_sheet_data, $timestamp);
     fe_assert_equal(array_key_exists(FE_KEY_TIMESTAMP_MODIFIED, $empty_sheet_data), false, "Empty sheet timestamp does not match");
 
-    fe_print("fe_test_calculate_sheet_diff PASSED");
+    fe_uprint("fe_test_calculate_sheet_diff PASSED");
 }
+
+
+function fe_test_action_update_sheet() {
+    $sheet_id = "test";
+    fe_remove_sheet($sheet_id);
+
+    // arbitrary fixed timestamps in the past
+    $tr0_ts = "2017-01-01 11:20:00";
+    $tr1_ts = "2017-01-01 12:30:00";
+
+    $request = array(
+        // tran 0
+        "tr0_0" => "100",
+        "tr0_1" => "200",
+        "tr0_2" => "300",
+
+        "sp0_0" => "1",
+        "sp0_1" => "0.5",
+        "sp0_2" => "1",
+
+        "ts0" => $tr0_ts,
+
+        // tran 1
+        "tr1_0" => "0",
+        "tr1_1" => "200",
+        "tr1_2" => "300",
+
+        "sp1_0" => "0",
+        "sp1_1" => "1",
+        "sp1_2" => "1",
+
+        "ts0" => $tr1_ts,
+
+    );
+
+    fe_action_update_sheet($sheet_id, $request);
+    $sheet_data = fe_load_sheet($sheet_id);
+    $transactions = $sheet_data["transactions"];
+    // submisson was done with empty sheet, so diff calcer should override timestamps
+    // and they cannot be equal.
+    $new_tr0_ts = $transactions[0][FE_KEY_TIMESTAMP_MODIFIED];
+    $new_tr1_ts = $transactions[1][FE_KEY_TIMESTAMP_MODIFIED];
+    fe_assert_inequal($new_tr0_ts, $tr0_ts, "Timestamps cannot match here (0th transaction)");
+    fe_assert_inequal($new_tr1_ts, $tr1_ts, "Timestamps cannot match here (1st transaction)");
+
+    // update sheet second time without modifications,
+    // should get zero diff
+    fe_action_update_sheet($sheet_id, $request);
+    $sheet_data = fe_load_sheet($sheet_id);
+    $transactions = $sheet_data["transactions"];
+
+    $zerodiff_tr0_ts = $transactions[0][FE_KEY_TIMESTAMP_MODIFIED];
+    $zerodiff_tr1_ts = $transactions[1][FE_KEY_TIMESTAMP_MODIFIED];
+
+    fe_assert_equal($new_tr0_ts, $zerodiff_tr0_ts, "Timestamps should match here (0th transaction)");
+    fe_assert_equal($new_tr1_ts, $zerodiff_tr1_ts, "Timestamps should match here (1st transaction)");
+
+    fe_uprint("fe_test_action_update_sheet PASSED");
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -319,13 +392,19 @@ function fe_test_calculate_sheet_diff() {
     <title>Финансовый коммунизм :: Тесты</title>
 </head>
 <body>
+<pre>
 <?php
 
-fe_print("equalizer unittest STARTED");
+fe_uprint("equalizer unittest STARTED");
 fe_test_saveload();
 fe_test_deltas();
 fe_test_currency();
 fe_test_depts();
 fe_test_avg_spendings();
 fe_test_calculate_sheet_diff();
-fe_print("equalizer unittest FINISHED");
+fe_test_action_update_sheet();
+fe_uprint("equalizer unittest FINISHED");
+?>
+</pre>
+</body>
+</html>
