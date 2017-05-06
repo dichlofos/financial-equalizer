@@ -12,6 +12,31 @@ function fe_currency_selector($currency, $id, $exchange_rates) {
     echo "</select>";
 }
 
+
+function fe_calc_amount_class($charge_int) {
+    $amount_class = "";
+    if ($charge_int > 0) {
+        $amount_class = "positive";
+    } elseif ($charge_int < 0) {
+        $amount_class = "negative";
+    }
+    return $amount_class;
+}
+
+
+function fe_calc_spent_class($member_spent) {
+    $spent_class = "no-use";
+    if ($member_spent > 0.01 && $member_spent < 0.99) {
+        $spent_class = "lower-use";
+    } elseif ($member_spent >= 0.99 && $member_spent <= 1.01) {
+        $spent_class = "normal-use";
+    } elseif ($member_spent > 1.01) {
+        $spent_class = "high-use";
+    }
+    return $spent_class;
+}
+
+
 function fe_print_transaction_input(
     $members,
     $transaction_id,
@@ -19,15 +44,17 @@ function fe_print_transaction_input(
     $transaction_deltas,
     $exchange_rates,
     $bad_lambda_norm,
-    $width_percent
+    $width_percent,
+    $member_id_filter
 ) {
     $currency = fe_get_currency($transaction);
     $description = fe_get_or($transaction, "description");
     $timestamp = fe_get_or($transaction, FE_KEY_TIMESTAMP_MODIFIED);
 
     $bad_lambda_norm_class = $bad_lambda_norm ? "warning" : "";
+    $visibility_class = "";  // TODO(mvel) control row visibility
 
-    echo "<tr class=\"$bad_lambda_norm_class\">";
+    echo "<tr class=\"$bad_lambda_norm_class $visibility_class\">";
     echo "<td class=\"transaction-description\">";
     echo "<input type=\"hidden\" name=\"ts${transaction_id}\" value=\"$timestamp\"/>";
     echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\"
@@ -44,13 +71,7 @@ function fe_print_transaction_input(
         $charge_int = fe_get_charge($transaction, $member_id);
         $transaction_sum += $charge_int;
 
-        $amount_class = "";
-        if ($charge_int > 0) {
-            $amount_class = "positive";
-        } elseif ($charge_int < 0) {
-            $amount_class = "negative";
-        }
-
+        $amount_class = fe_calc_amount_class($charge_int);
         echo "<input class=\"form-control input-sm amount $amount_class\"
             name=\"tr${transaction_id}_${member_id}\"
             value=\"$charge_int\"
@@ -58,14 +79,7 @@ function fe_print_transaction_input(
             title=\"Сколько потратил данный участник в указанной валюте\"
         />";
         $member_spent = fe_get_spent($transaction, $member_id);
-        $spent_class = "no-use";
-        if ($member_spent > 0.01 && $member_spent < 0.99) {
-            $spent_class = "lower-use";
-        } elseif ($member_spent >= 0.99 && $member_spent <= 1.01) {
-            $spent_class = "normal-use";
-        } elseif ($member_spent > 1.01) {
-            $spent_class = "high-use";
-        }
+        $spent_class = fe_calc_spent_class($member_spent);
 
         if ($member_spent > 0.01) {
             ++$transaction_member_count;

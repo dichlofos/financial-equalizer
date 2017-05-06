@@ -3,7 +3,7 @@
 require_once('transaction_input.php');
 
 
-function fe_edit_sheet($sheet_id) {
+function fe_edit_sheet($sheet_id, $member_id_filter) {
     global $PHP_SELF;
     $sheet_data = fe_load_sheet($sheet_id);
 
@@ -137,6 +137,7 @@ function fe_edit_sheet($sheet_id) {
         <table class="table table-condensed transactions">
         <?php
         foreach ($transactions as $transaction_id => $transaction) {
+
             fe_print_transaction_input(
                 $members,
                 $transaction_id,
@@ -144,7 +145,8 @@ function fe_edit_sheet($sheet_id) {
                 fe_get_or($deltas, $transaction_id, array()),
                 $exchange_rates,
                 fe_get_or($bad_lambda_norm, $transaction_id),
-                $width_percent
+                $width_percent,
+                $member_id_filter
             );
         }
         ?>

@@ -22,6 +22,17 @@ if (fe_empty($sheet_id)) {
 
 $action = fe_get_or($_REQUEST, "action");
 
+// TODO: wrap into PSS (or refactor out PSS from lesh repo)
+$member_id_filter = fe_get_or($_REQUEST, "member_id_filter");
+if (fe_empty($member_id_filter)) {
+    // use member filter from session if available
+    $session_member_filter_id = fe_get_or($_SESSION, "member_id_filter");
+    if (fe_not_empty($session_member_filter_id)) {
+        $member_id_filter = $session_member_filter_id;
+    }
+}
+
+
 if ($action == "new_sheet") {
     fe_action_new_sheet($sheet_id);
     header("Location: /?sheet_id=$sheet_id");
@@ -148,7 +159,7 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
 if (fe_empty($sheet_id)) {
     fe_new_sheet();
 } else {
-    fe_edit_sheet($sheet_id);
+    fe_edit_sheet($sheet_id, $member_id_filter);
 }
 $version = file_get_contents('version');
 ?>
