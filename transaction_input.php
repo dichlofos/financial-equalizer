@@ -53,6 +53,12 @@ function fe_print_transaction_input(
 
     $bad_lambda_norm_class = $bad_lambda_norm ? "warning" : "";
     $visibility_class = "";  // TODO(mvel) control row visibility
+    if (fe_not_empty($member_id_filter)) {
+        $charge_int = fe_get_charge($transaction, $member_id_filter);
+        if (abs($charge_int) < 0.01) {
+            $visibility_class = "transaction-row-filtered";
+        }
+    }
 
     echo "<tr class=\"$bad_lambda_norm_class $visibility_class\">";
     echo "<td class=\"transaction-description\">";

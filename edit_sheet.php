@@ -25,6 +25,9 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
         : (integer)($float_width);
 
     $sheet_title_ht = htmlspecialchars(fe_get_or($sheet_data, "title"));
+
+    $request_url = "/?sheet_id=$sheet_id";
+
     ?>
 
     <div class="container-fluid">
@@ -126,7 +129,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
         <th class="non-member transaction-description">Статья расхода или сбора</th>
         <th class="non-member transaction-currency">Валюта</th><?php
         foreach ($members as $member_id => $member_name) {
-            echo "<th class=\"transaction-amount\" style=\"width: $width_percent%;\">$member_name</th>\n";
+            echo "<th class=\"transaction-amount\" style=\"width: $width_percent%;\"><a href=\"$request_url&amp;member_id_filter=$member_id\">$member_name</a></th>\n";
         }
         ?>
         <th class="non-member transaction-stats">Сумма / Чел</th>
