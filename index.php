@@ -74,6 +74,15 @@ if ($action == "new_sheet") {
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
+} elseif ($action == "set_sheet_title") {
+    $title = fe_get_or($_REQUEST, "title");
+    $title = trim($title);
+    $sheet_data = fe_load_sheet($sheet_id);
+    $sheet_data["title"] = $title;
+    $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = fe_datetime();
+    fe_save_sheet($sheet_id, $sheet_data);
+    header("Location: /?sheet_id=$sheet_id");
+    exit();
 } elseif ($action == "export") {
     $format = fe_get_or($_REQUEST, "format");
     $sheet_data = fe_load_sheet($sheet_id);
@@ -88,11 +97,18 @@ if ($action == "new_sheet") {
     die("Unknown action: '$action'");
 }
 
+$sheet_title_ht_title = "";
+if (fe_not_empty($sheet_id)) {
+    // FIXME(mvel): Multiple read per page
+    $sheet_data = fe_load_sheet($sheet_id);
+    $sheet_title_ht_title = htmlspecialchars(fe_get_or($sheet_data, "title"))." &mdash; ";
+}
+
 ?><!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Финансовый коммунизм</title>
+    <title><?php echo $sheet_title_ht_title; ?>Финансовый коммунизм</title>
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="/static/communism/css/main.css" />
     <link rel="icon" sizes="128x128" type="image/png" href="/favicon.png">
@@ -115,11 +131,9 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
     <div class="sheet-link">
         <?php
         if (fe_not_empty($sheet_id)) {
-            // FIXME(mvel): Multiple read per page
-            $sheet_data = fe_load_sheet($sheet_id);
             $modified = fe_get_or($sheet_data, FE_KEY_TIMESTAMP_MODIFIED);
             if (fe_empty($modified)) {
-                $modified = "&ndash;";
+                $modified = "&mdash;";
             }
         ?>
             Поделиться листом: <a href="/?sheet_id=<?php echo $sheet_id; ?>"><?php echo $sheet_id; ?></a><br />

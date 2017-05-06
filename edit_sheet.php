@@ -17,14 +17,18 @@ function fe_edit_sheet($sheet_id) {
     $all_transactions_sum = $result["all_transactions_sum"];
     $bad_lambda_norm = $result["bad_lambda_norm"];
     $avg_spendings = $result["avg_spendings"];
+
     global $FE_TRANSACTION_CELL_WIDTH;
     $float_width = (float)($FE_TRANSACTION_CELL_WIDTH);
     $width_percent = count($members)
         ? (integer)($float_width / count($members))
         : (integer)($float_width);
+
+    $sheet_title_ht = htmlspecialchars(fe_get_or($sheet_data, "title"));
     ?>
 
     <div class="container-fluid">
+
     <div class="row">
         <div class="col-md-4">
             <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_member">
@@ -51,14 +55,31 @@ function fe_edit_sheet($sheet_id) {
         <div class="col-md-4">&nbsp;</div>
     </div>
 
-    <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_transaction">
-        <div class="form-group">
-        <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-        <label for="description-input">Новая статья расходов:&nbsp;</label>
-        <input class="form-control" type="text" name="description" id="description-input" value="" placeholder="Скинулись на шаурму" />
-        <button type="submit" class="btn btn-primary">Добавить</button>
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_transaction">
+                <div class="form-group">
+                <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
+                <label for="description-input">Новая статья расходов:&nbsp;</label>
+                <input class="form-control" type="text" name="description" id="description-input" value="" placeholder="Скинулись на шаурму" />
+                <button type="submit" class="btn btn-primary">Добавить</button>
+                </div>
+            </form>
         </div>
-    </form>
+
+        <div class="col-md-4">
+            <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=set_sheet_title">
+                <div class="form-group">
+                <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
+                <label for="sheet_title-input">Название листа:&nbsp;</label>
+                <input class="form-control" type="text" name="title" id="sheet_title-input"
+                    value="<?php echo $sheet_title_ht; ?>" placeholder="Поход по Монголии" />
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <?php
 
     // See issue https://bitbucket.org/dichlofos/financial-equalizer/issues/13
