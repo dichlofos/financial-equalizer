@@ -63,8 +63,8 @@ function fe_print_transaction_input(
     echo "<tr class=\"$bad_lambda_norm_class $visibility_class\">";
     echo "<td class=\"transaction-description\">";
     echo "<input type=\"hidden\" name=\"ts${transaction_id}\" value=\"$timestamp\"/>";
-    echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\"
-        title=\"Товар или оказанная услуга\" placeholder=\"Трансфер из пункта А в пункт Б\" />";
+    echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\" ".
+        "title=\"Товар или оказанная услуга\" placeholder=\"Трансфер из пункта А в пункт Б\" />";
     echo "<td class=\"transaction-currency\">";
     fe_currency_selector($currency, "cur$transaction_id", $exchange_rates);
     echo "</td>\n ";
@@ -78,12 +78,12 @@ function fe_print_transaction_input(
         $transaction_sum += $charge_int;
 
         $amount_class = fe_calc_amount_class($charge_int);
-        echo "<input class=\"form-control input-sm amount $amount_class\"
-            name=\"tr${transaction_id}_${member_id}\"
-            value=\"$charge_int\"
-            type=\"text\"
-            title=\"Сколько потратил данный участник в указанной валюте\"
-        />";
+        echo "<input class=\"form-control input-sm amount $amount_class\" ".
+            "name=\"tr${transaction_id}_${member_id}\" ".
+            "value=\"$charge_int\" ".
+            "type=\"text\" ".
+            "title=\"Сколько потратил данный участник в указанной валюте\" ".
+            "/>";
         $member_spent = fe_get_spent($transaction, $member_id);
         $spent_class = fe_calc_spent_class($member_spent);
 
@@ -91,8 +91,9 @@ function fe_print_transaction_input(
             ++$transaction_member_count;
         }
 
-        echo "&nbsp;<input class=\"form-control input-sm spent $spent_class\" name=\"sp${transaction_id}_${member_id}\" value=\"$member_spent\" type=\"text\"
-            title=\"Коэффициент пользования данной услугой для данного участника\" />";
+        echo "&nbsp;<input class=\"form-control input-sm spent $spent_class\" name=\"sp${transaction_id}_${member_id}\" ".
+            "value=\"$member_spent\" type=\"text\" ".
+            "title=\"Коэффициент пользования данной услугой для данного участника\" />";
         echo "</td>\n ";
     }
     echo "<td class=\"transaction-stats\">";
