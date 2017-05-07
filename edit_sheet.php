@@ -28,7 +28,7 @@ function fe_check_bad_lambda_norm($bad_lambda_norm) {
 }
 
 
-function fe_scroll_transactions() {?>
+function fe_draw_scroll_transactions() {?>
     <script>
         $(function() {
             var transactions = document.getElementById("transactions");
@@ -229,7 +229,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
     </form>
     <?php
     fe_draw_scroll_transactions();
-    fe_draw_tips();
+    fe_draw_transaction_tips();
     ?>
     <div class="row">
         <div class="col-md-12">
