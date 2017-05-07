@@ -168,7 +168,11 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
         <th class="non-member transaction-description">Статья расхода или сбора (<?php echo count($transactions); ?>&nbsp;шт.)</th>
         <th class="non-member transaction-currency">Валюта</th><?php
         foreach ($members as $member_id => $member_name) {
-            echo "<th class=\"transaction-amount\" style=\"width: $width_percent%;\"><a href=\"$request_url&amp;member_id_filter=$member_id\">$member_name</a></th>\n";
+            $inner_member_html = "<a href=\"$request_url&amp;member_id_filter=$member_id\" title=\"Фильтр расходов по участнику\">$member_name</a>";
+            if ((string)($member_id_filter) === (string)($member_id)) {
+                $inner_member_html = "$member_name&nbsp[<a href=\"$request_url&amp;member_id_filter=&amp;\" title=\"Очистить фильтр по участнику\">x</a>]";
+            }
+            echo "<th class=\"transaction-amount\" style=\"width: $width_percent%;\">$inner_member_html</th>\n";
         }
         ?>
         <th class="non-member transaction-stats">Сумма / Чел</th>

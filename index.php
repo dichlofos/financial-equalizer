@@ -32,7 +32,6 @@ if (fe_empty($member_id_filter)) {
     }
 }
 
-
 if ($action == "new_sheet") {
     fe_action_new_sheet($sheet_id);
     header("Location: /?sheet_id=$sheet_id");
