@@ -3,6 +3,22 @@
 require_once('transaction_input.php');
 
 
+function fe_check_max_input_vars($members, $transactions) {
+    // See issue https://bitbucket.org/dichlofos/financial-equalizer/issues/13
+    $max_input_vars = (integer)(ini_get('max_input_vars'));
+    if (count($members) * count($transactions) * 4 <= $max_input_vars) {
+        return;
+    }
+    ?>
+    <div class="tip bg-warning">
+        Есть вероятность превышения количества входных переменных <tt>max_input_vars</tt>.
+        Пожалуйста, для корректной работы увеличьте лимит (по умолчанию значение равно&nbsp;1000).
+        Детали можно уточнить
+        в&nbsp;<a href="http://php.net/manual/en/info.configuration.php#ini.max-input-vars">документации</a>.
+    </div><?php
+}
+
+
 function fe_edit_sheet($sheet_id, $member_id_filter) {
     global $PHP_SELF;
     $sheet_data = fe_load_sheet($sheet_id);
@@ -84,18 +100,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
     </div>
 
     <?php
-
-    // See issue https://bitbucket.org/dichlofos/financial-equalizer/issues/13
-    $max_input_vars = (integer)(ini_get('max_input_vars'));
-    if (count($members) * count($transactions) * 4 > $max_input_vars) {
-        ?>
-        <div class="tip bg-warning">
-            Есть вероятность превышения количества входных переменных <tt>max_input_vars</tt>.
-            Пожалуйста, для корректной работы увеличьте лимит (по умолчанию значение равно&nbsp;1000).
-            Детали можно уточнить
-            в&nbsp;<a href="http://php.net/manual/en/info.configuration.php#ini.max-input-vars">документации</a>.
-        </div><?php
-    }
+    fe_check_max_input_vars($members, $transactions);
     ?>
 
     <input id="member_count" type="hidden" value="<?php echo count($members); ?>"/>
