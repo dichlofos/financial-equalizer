@@ -19,6 +19,44 @@ function fe_check_max_input_vars($members, $transactions) {
 }
 
 
+function fe_check_bad_lambda_norm($bad_lambda_norm) {
+    if (count($bad_lambda_norm)) {?>
+    <div class="tip bg-warning">
+        В ведомости присутствуют статьи расходов, которые ни на кого не были потрачены (выделены цветом)
+    </div><?php
+    }
+}
+
+
+function fe_scroll_transactions() {?>
+    <script>
+        $(function() {
+            var transactions = document.getElementById("transactions");
+            transactions.scrollTop = transactions.scrollHeight;
+        });
+    </script><?php
+}
+
+
+function fe_draw_transaction_tips() {?>
+    <div class="tip bg-info">
+    <?php
+    $tip_rnd = rand(0, 1);
+    echo "<b>Совет $tip_rnd</b>: ";
+    if ($tip_rnd == 0) {?>
+        Сборы в &laquo;кассу&raquo; удобно считать следующим образом. Всем, кто сдавал деньги, пишем их как обычные расходы,
+        а кассиру пишем суммарное количество этих собранных денег со знаком <b>минус</b>. Таким образом, сумма по данной транзакции
+        в правой колонке будет равна нулю. Точно так же можно учитывать, например, событие типа &laquo;Вася одолжил у Пети 500р на
+        пиво и мороженое&raquo;: Васе пишем&nbsp;-500, а Пете&nbsp;&#8212;&nbsp;500.<?php
+    } elseif ($tip_rnd == 1) {?>
+        Чтобы удалить валюту, сотрите её курс обмена и нажмите Enter. Чтобы удалить участника, сотрите его имя и нажмите Enter.
+        При удалении участника все суммы, связанные с ним, также будут удалены!
+        <?php
+    }?>
+    </div><?php
+}
+
+
 function fe_edit_sheet($sheet_id, $member_id_filter) {
     global $PHP_SELF;
     $sheet_data = fe_load_sheet($sheet_id);
@@ -122,12 +160,8 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
             echo "<input class=\"form-control rate\" type=\"text\" name=\"e$currency\" id=\"e$currency-input\" value=\"$rate\" /></div>\n";
         }
 
-        if (count($bad_lambda_norm)) {?>
-        <div class="tip bg-warning">
-            В ведомости присутствуют статьи расходов, которые ни на кого не были потрачены (выделены цветом)
-        </div><?php
-        }?>
-
+        fe_check_bad_lambda_norm($bad_lambda_norm);
+        ?>
 
         <table class="table table-condensed transactions">
         <tr>
@@ -193,29 +227,10 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
             Транзакций: <?php echo count($transactions); ?> шт.
         </div>
     </form>
-    <script>
-        $(function() {
-            var transactions = document.getElementById("transactions");
-            transactions.scrollTop = transactions.scrollHeight;
-        });
-    </script>
-
-    <div class="tip bg-info">
     <?php
-    $tip_rnd = rand(0, 1);
-    echo "<b>Совет $tip_rnd</b>: ";
-    if ($tip_rnd == 0) {?>
-        Сборы в &laquo;кассу&raquo; удобно считать следующим образом. Всем, кто сдавал деньги, пишем их как обычные расходы,
-        а кассиру пишем суммарное количество этих собранных денег со знаком <b>минус</b>. Таким образом, сумма по данной транзакции
-        в правой колонке будет равна нулю. Точно так же можно учитывать, например, событие типа &laquo;Вася одолжил у Пети 500р на
-        пиво и мороженое&raquo;: Васе пишем&nbsp;-500, а Пете&nbsp;&#8212;&nbsp;500.<?php
-    } elseif ($tip_rnd == 1) {?>
-        Чтобы удалить валюту, сотрите её курс обмена и нажмите Enter. Чтобы удалить участника, сотрите его имя и нажмите Enter.
-        При удалении участника все суммы, связанные с ним, также будут удалены!
-        <?php
-    }?>
-    </div>
-
+    fe_draw_scroll_transactions();
+    fe_draw_tips();
+    ?>
     <div class="row">
         <div class="col-md-12">
             <form method="post" class="form-inline" action="/?action=clear_session">
