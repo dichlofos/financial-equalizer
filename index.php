@@ -111,7 +111,10 @@ $sheet_title_ht_title = "";
 if (fe_not_empty($sheet_id)) {
     // FIXME(mvel): Multiple read per page
     $sheet_data = fe_load_sheet($sheet_id);
-    $sheet_title_ht_title = htmlspecialchars(fe_get_or($sheet_data, "title"))." &mdash; ";
+    $sheet_title = fe_get_or($sheet_data, "title");
+    if (fe_not_empty($sheet_title)) {
+        $sheet_title_ht_title = htmlspecialchars($sheet_title)." &mdash; ";
+    }
 }
 
 ?><!DOCTYPE html>
