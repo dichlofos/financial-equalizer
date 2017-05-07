@@ -37,6 +37,19 @@ function fe_calc_spent_class($member_spent) {
 }
 
 
+function fe_calc_row_visibility_class($transaction, $member_id_filter) {
+    if (fe_empty($member_id_filter)) {
+        return "";
+    }
+
+    $charge_int = fe_get_charge($transaction, $member_id_filter);
+    if (abs($charge_int) < 0.01) {
+        return "transaction-row-filtered";
+    }
+    return "";
+}
+
+
 function fe_print_transaction_input(
     $members,
     $transaction_id,
@@ -52,13 +65,8 @@ function fe_print_transaction_input(
     $timestamp = fe_get_or($transaction, FE_KEY_TIMESTAMP_MODIFIED);
 
     $bad_lambda_norm_class = $bad_lambda_norm ? "warning" : "";
-    $visibility_class = "";  // TODO(mvel) control row visibility
-    if (fe_not_empty($member_id_filter)) {
-        $charge_int = fe_get_charge($transaction, $member_id_filter);
-        if (abs($charge_int) < 0.01) {
-            $visibility_class = "transaction-row-filtered";
-        }
-    }
+
+    $visibility_class = fe_calc_row_visibility_class($transaction, $member_id_filter);
 
     echo "<tr class=\"$bad_lambda_norm_class $visibility_class\">";
     echo "<td class=\"transaction-description\">";
