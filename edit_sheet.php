@@ -165,7 +165,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
 
         <table class="table table-condensed transactions">
         <tr>
-        <th class="non-member transaction-description">Статья расхода или сбора</th>
+        <th class="non-member transaction-description">Статья расхода или сбора (<?php echo count($transactions); ?>&nbsp;шт.)</th>
         <th class="non-member transaction-currency">Валюта</th><?php
         foreach ($members as $member_id => $member_name) {
             echo "<th class=\"transaction-amount\" style=\"width: $width_percent%;\"><a href=\"$request_url&amp;member_id_filter=$member_id\">$member_name</a></th>\n";
@@ -224,7 +224,6 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
 
         <div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
-            Транзакций: <?php echo count($transactions); ?> шт.
         </div>
     </form>
     <?php
