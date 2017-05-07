@@ -28,14 +28,14 @@ function fe_test_saveload() {
     fe_assert_equal(count($sheet_data), 0, "Non-existent sheet must be empty when loading");
 
     $sheet_data = array(
-        "members"=>array(
+        "members" => array(
             "Вася",
             "Петя",
         ),
-        "transactions"=>array(
+        "transactions" => array(
             array(
-                "currency"=>"RUR",
-                "charges"=>array(
+                "currency" => "RUR",
+                "charges" => array(
                     "100",
                     "200",
                     "300",
@@ -53,33 +53,33 @@ function fe_test_saveload() {
 
 function fe_test_deltas() {
     $sheet_data = array(
-        "members"=>array(
+        "members" => array(
             "Вася",
             "Петя",
             "Костя",
         ),
-        "transactions"=>array(
+        "transactions" => array(
             array(
-                "currency"=>"RUR",
-                "charges"=>array(
+                "currency" => "RUR",
+                "charges" => array(
                     "100",
                     "200",
                     "300",
                 ),
-                "spent"=>array(
+                "spent" => array(
                     "1",
                     "1",
                     "1",
                 ),
             ),
             array(
-                "currency"=>"RUR",
-                "charges"=>array(
+                "currency" => "RUR",
+                "charges" => array(
                     "50",
                     "200",
                     "350",
                 ),
-                "spent"=>array(
+                "spent" => array(
                     "0",
                     "1",
                     "2.0",
@@ -113,50 +113,50 @@ function fe_test_deltas() {
 
 function fe_test_currency() {
     $sheet_data = array(
-        "members"=>array(
+        "members" => array(
             "Вася",
             "Петя",
             "Костя",
         ),
-        "exchange_rates"=>array(
-            "RUR"=>1,
-            "EUR"=>70,
+        "exchange_rates" => array(
+            "RUR" => 1,
+            "EUR" => 70,
         ),
-        "transactions"=>array(
+        "transactions" => array(
             array(
-                "currency"=>"RUR",
-                "charges"=>array(
+                "currency" => "RUR",
+                "charges" => array(
                     "100",
                     "200",
                     "300",
                 ),
-                "spent"=>array(
+                "spent" => array(
                     "1",
                     "1",
                     "1",
                 ),
             ),
             array(
-                "currency"=>"EUR",
-                "charges"=>array(
+                "currency" => "EUR",
+                "charges" => array(
                     "50",
                     "200",
                     "350",
                 ),
-                "spent"=>array(
+                "spent" => array(
                     "0",
                     "1",
                     "2.0",
                 ),
             ),
             array(
-                "currency"=>"USD",  // unknown currency
-                "charges"=>array(
+                "currency" => "USD",  // unknown currency
+                "charges" => array(
                     "50",
                     "200",
                     "350",
                 ),
-                "spent"=>array(
+                "spent" => array(
                     "0",
                     "1",
                     "2.0",
@@ -197,36 +197,36 @@ function fe_test_currency() {
  **/
 function fe_test_depts() {
     $sheet_data = array(
-        "members"=>array(
+        "members" => array(
             "Вася",
             "Петя",
             "Костя",
         ),
-        "exchange_rates"=>array(
-            "RUR"=>1,
+        "exchange_rates" => array(
+            "RUR" => 1,
         ),
-        "transactions"=>array(
+        "transactions" => array(
             array(
-                "currency"=>"RUR",
-                "charges"=>array(
+                "currency" => "RUR",
+                "charges" => array(
                     "100",
                     "200",
                     "300",
                 ),
-                "spent"=>array(
+                "spent" => array(
                     "1",
                     "1",
                     "1",
                 ),
             ),
             array(
-                "currency"=>"RUR",
-                "charges"=>array(
+                "currency" => "RUR",
+                "charges" => array(
                     "-50",
                     "50",
                     "0",
                 ),
-                "spent"=>array(
+                "spent" => array(
                     "1",
                     "1",
                     "1",
@@ -247,9 +247,9 @@ function fe_test_depts() {
 
 function fe_test_avg_spendings() {
     $sheet_data = array(
-        "members"=>array(
+        "members" => array(
         ),
-        "transactions"=>array(
+        "transactions" => array(
         ),
     );
     $result = fe_calc_sheet($sheet_data);
@@ -262,22 +262,22 @@ function fe_test_avg_spendings() {
 
 function fe_test_calculate_sheet_diff() {
     $old_sheet_data = array(
-        "members"=>array(
+        "members" => array(
             "Васян",
             "Петро",
         ),
-        "transactions"=>array(
+        "transactions" => array(
             array(
-                "currency"=>"RUR",
-                "charges"=>array(
+                "currency" => "RUR",
+                "charges" => array(
                     "100",
                     "2000",
                     "300",
                 ),
             ),
             array(
-                "currency"=>"USD",
-                "charges"=>array(
+                "currency" => "USD",
+                "charges" => array(
                     "10",
                     "20",
                     "30",
@@ -286,22 +286,22 @@ function fe_test_calculate_sheet_diff() {
         ),
     );
     $sheet_data = array(
-        "members"=>array(
+        "members" => array(
             "Вася",
             "Петя",
         ),
-        "transactions"=>array(
+        "transactions" => array(
             array(
-                "currency"=>"RUR",
-                "charges"=>array(
+                "currency" => "RUR",
+                "charges" => array(
                     "100",
                     "200",
                     "300",
                 ),
             ),
             array(
-                "currency"=>"USD",
-                "charges"=>array(
+                "currency" => "USD",
+                "charges" => array(
                     "10",
                     "20",
                     "30",
