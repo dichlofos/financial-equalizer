@@ -20,11 +20,6 @@ function fe_empty($value) {
 }
 
 
-function fe_not_empty($value) {
-    return strlen($value) > 0;
-}
-
-
 function fe_startswith($str, $prefix) {
     return (substr($str, 0, strlen($prefix)) == $prefix);
 }

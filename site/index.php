@@ -1,4 +1,7 @@
 <?php
+$engine_dir = "engine/";
+
+require_once("${engine_dir}sys/string.php");
 require_once('utils.php');
 require_once('static_config.php');
 require_once('equalizer.php');
@@ -15,7 +18,7 @@ $sheet_id = preg_replace("/[^0-9a-f-]/", "", $sheet_id);
 if (fe_empty($sheet_id)) {
     // use sheet id from session if available
     $session_sheet_id = fe_get_or($_SESSION, "sheet_id");
-    if (fe_not_empty($session_sheet_id)) {
+    if (xu_not_empty($session_sheet_id)) {
         $sheet_id = $session_sheet_id;
     }
 }
@@ -27,7 +30,7 @@ $member_id_filter = fe_get_or($_REQUEST, "member_id_filter");
 if (fe_empty($member_id_filter)) {
     // use member filter from session if available
     $session_member_filter_id = fe_get_or($_SESSION, "member_id_filter");
-    if (fe_not_empty($session_member_filter_id)) {
+    if (xu_not_empty($session_member_filter_id)) {
         $member_id_filter = $session_member_filter_id;
     }
 }
@@ -46,7 +49,7 @@ if ($action == "new_sheet") {
 } elseif ($action == "add_member") {
     $member_name = fe_get_or($_REQUEST, "member_name");
     $member_name = trim($member_name);
-    if (fe_not_empty($member_name)) {
+    if (xu_not_empty($member_name)) {
         // allow non-empty member names only
         $sheet_data = fe_load_sheet($sheet_id);
         $sheet_data["members"][] = $member_name;
@@ -58,7 +61,7 @@ if ($action == "new_sheet") {
 } elseif ($action == "add_currency") {
     $currency = fe_get_or($_REQUEST, "currency");
     $currency = trim($currency);
-    if (fe_not_empty($currency)) {
+    if (xu_not_empty($currency)) {
         // allow non-empty currencies only
         $sheet_data = fe_load_sheet($sheet_id);
         $sheet_data["exchange_rates"][$currency] = "1";
@@ -103,16 +106,16 @@ if ($action == "new_sheet") {
     }
     exit();
 
-} elseif (fe_not_empty($action)) {
+} elseif (xu_not_empty($action)) {
     die("Unknown action: '$action'");
 }
 
 $sheet_title_ht_title = "";
-if (fe_not_empty($sheet_id)) {
+if (xu_not_empty($sheet_id)) {
     // FIXME(mvel): Multiple read per page
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_title = fe_get_or($sheet_data, "title");
-    if (fe_not_empty($sheet_title)) {
+    if (xu_not_empty($sheet_title)) {
         $sheet_title_ht_title = htmlspecialchars($sheet_title)." &mdash; ";
     }
 }
@@ -143,7 +146,7 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
 }?>
     <div class="sheet-link">
         <?php
-        if (fe_not_empty($sheet_id)) {
+        if (xu_not_empty($sheet_id)) {
             $modified = fe_get_or($sheet_data, FE_KEY_TIMESTAMP_MODIFIED);
             if (fe_empty($modified)) {
                 $modified = "&mdash;";
