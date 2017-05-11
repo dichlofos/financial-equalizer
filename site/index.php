@@ -13,23 +13,23 @@ require_once('export.php');
 session_start();
 
 // Parse some global variables
-$sheet_id = fe_get_or($_REQUEST, "sheet_id");
+$sheet_id = xcms_get_key_or($_REQUEST, "sheet_id");
 $sheet_id = preg_replace("/[^0-9a-f-]/", "", $sheet_id);
 if (xu_empty($sheet_id)) {
     // use sheet id from session if available
-    $session_sheet_id = fe_get_or($_SESSION, "sheet_id");
+    $session_sheet_id = xcms_get_key_or($_SESSION, "sheet_id");
     if (xu_not_empty($session_sheet_id)) {
         $sheet_id = $session_sheet_id;
     }
 }
 
-$action = fe_get_or($_REQUEST, "action");
+$action = xcms_get_key_or($_REQUEST, "action");
 
 // TODO: wrap into PSS (or refactor out PSS from lesh repo)
-$member_id_filter = fe_get_or($_REQUEST, "member_id_filter");
+$member_id_filter = xcms_get_key_or($_REQUEST, "member_id_filter");
 if (xu_empty($member_id_filter)) {
     // use member filter from session if available
-    $session_member_filter_id = fe_get_or($_SESSION, "member_id_filter");
+    $session_member_filter_id = xcms_get_key_or($_SESSION, "member_id_filter");
     if (xu_not_empty($session_member_filter_id)) {
         $member_id_filter = $session_member_filter_id;
     }
@@ -47,7 +47,7 @@ if ($action == "new_sheet") {
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "add_member") {
-    $member_name = fe_get_or($_REQUEST, "member_name");
+    $member_name = xcms_get_key_or($_REQUEST, "member_name");
     $member_name = trim($member_name);
     if (xu_not_empty($member_name)) {
         // allow non-empty member names only
@@ -59,7 +59,7 @@ if ($action == "new_sheet") {
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "add_currency") {
-    $currency = fe_get_or($_REQUEST, "currency");
+    $currency = xcms_get_key_or($_REQUEST, "currency");
     $currency = trim($currency);
     if (xu_not_empty($currency)) {
         // allow non-empty currencies only
@@ -75,7 +75,7 @@ if ($action == "new_sheet") {
     header("Location: /");
     exit();
 } elseif ($action == "add_transaction") {
-    $description = fe_get_or($_REQUEST, "description");
+    $description = xcms_get_key_or($_REQUEST, "description");
     $sheet_data = fe_load_sheet($sheet_id);
     $timestamp_str = fe_datetime();
     $sheet_data["transactions"][] = array(
@@ -88,7 +88,7 @@ if ($action == "new_sheet") {
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "set_sheet_title") {
-    $title = fe_get_or($_REQUEST, "title");
+    $title = xcms_get_key_or($_REQUEST, "title");
     $title = trim($title);
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_data["title"] = $title;
@@ -97,7 +97,7 @@ if ($action == "new_sheet") {
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "export") {
-    $format = fe_get_or($_REQUEST, "format");
+    $format = xcms_get_key_or($_REQUEST, "format");
     $sheet_data = fe_load_sheet($sheet_id);
     if ($format == "csv") {
         fe_export_sheet_to_csv($sheet_data);
@@ -114,7 +114,7 @@ $sheet_title_ht_title = "";
 if (xu_not_empty($sheet_id)) {
     // FIXME(mvel): Multiple read per page
     $sheet_data = fe_load_sheet($sheet_id);
-    $sheet_title = fe_get_or($sheet_data, "title");
+    $sheet_title = xcms_get_key_or($sheet_data, "title");
     if (xu_not_empty($sheet_title)) {
         $sheet_title_ht_title = htmlspecialchars($sheet_title)." &mdash; ";
     }
@@ -136,7 +136,7 @@ if (xu_not_empty($sheet_id)) {
 <body>
 <?php
 
-$host = fe_get_or($_SERVER, "HTTP_HOST");
+$host = xcms_get_key_or($_SERVER, "HTTP_HOST");
 if (strpos($host, "communism.dmvn.net") !== false) {?>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript" src="/static/communism/js/metrika.js"></script>
@@ -147,7 +147,7 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
     <div class="sheet-link">
         <?php
         if (xu_not_empty($sheet_id)) {
-            $modified = fe_get_or($sheet_data, FE_KEY_TIMESTAMP_MODIFIED);
+            $modified = xcms_get_key_or($sheet_data, FE_KEY_TIMESTAMP_MODIFIED);
             if (xu_empty($modified)) {
                 $modified = "&mdash;";
             }

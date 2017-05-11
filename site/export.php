@@ -13,9 +13,9 @@ function fe_print_csv_line($row) {
 }
 
 function fe_export_sheet_to_csv($sheet_data) {
-    $members = fe_get_or($sheet_data, "members", array());
-    $transactions = fe_get_or($sheet_data, "transactions", array());
-    $exchange_rates = fe_get_or($sheet_data, "exchange_rates", array());
+    $members = xcms_get_key_or($sheet_data, "members", array());
+    $transactions = xcms_get_key_or($sheet_data, "transactions", array());
+    $exchange_rates = xcms_get_key_or($sheet_data, "exchange_rates", array());
 
     global $sheet_id;
     $calc_result = fe_calc_sheet($sheet_data);
@@ -33,7 +33,7 @@ function fe_export_sheet_to_csv($sheet_data) {
 
     foreach ($transactions as $transaction_id => $transaction) {
         $transaction_currency = fe_get_currency($transaction);
-        $transaction_description = fe_get_or($transaction, "description");
+        $transaction_description = xcms_get_key_or($transaction, "description");
         $row = array($transaction_description, $transaction_currency);
         foreach ($members as $member_id => $member_name) {
             $charge = fe_get_charge($transaction, $member_id);

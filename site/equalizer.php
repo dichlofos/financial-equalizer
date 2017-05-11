@@ -53,16 +53,16 @@ function fe_remove_sheet($sheet_id) {
 
 
 function fe_get_charge($transaction, $member_id) {
-    $charges = fe_get_or($transaction, "charges", array());
-    $charge = fe_get_or($charges, $member_id, "0");
+    $charges = xcms_get_key_or($transaction, "charges", array());
+    $charge = xcms_get_key_or($charges, $member_id, "0");
     $charge_int = (integer)($charge);
     return $charge_int;
 }
 
 
 function fe_get_spent($transaction, $member_id) {
-    $spent = fe_get_or($transaction, "spent", array());
-    $member_spent = fe_get_or($spent, $member_id, "1.0");
+    $spent = xcms_get_key_or($transaction, "spent", array());
+    $member_spent = xcms_get_key_or($spent, $member_id, "1.0");
     if ($member_spent == "yes") {
         // backwards compatibility
         $member_spent = "1.0";
@@ -74,7 +74,7 @@ function fe_get_spent($transaction, $member_id) {
 
 
 function fe_get_currency($transaction) {
-    return fe_get_or($transaction, "currency", FE_DEFAULT_CURRENCY);
+    return xcms_get_key_or($transaction, "currency", FE_DEFAULT_CURRENCY);
 }
 
 
@@ -84,8 +84,8 @@ function fe_get_currency($transaction) {
  * @param [in] timestamp: Timestamp to set (useful for mocks)
  **/
 function fe_calculate_sheet_diff($old_sheet_data, &$sheet_data, $timestamp = false) {
-    $transactions = fe_get_or($sheet_data, "transactions", array());
-    $old_transactions = fe_get_or($old_sheet_data, "transactions", array());
+    $transactions = xcms_get_key_or($sheet_data, "transactions", array());
+    $old_transactions = xcms_get_key_or($old_sheet_data, "transactions", array());
     $timestamp_str = fe_datetime($timestamp);
     $modified = false;
 
@@ -114,9 +114,9 @@ function fe_calculate_sheet_diff($old_sheet_data, &$sheet_data, $timestamp = fal
 
 
 function fe_calc_sheet($sheet_data) {
-    $members = fe_get_or($sheet_data, "members", array());
-    $transactions = fe_get_or($sheet_data, "transactions", array());
-    $exchange_rates = fe_get_or($sheet_data, "exchange_rates", array());
+    $members = xcms_get_key_or($sheet_data, "members", array());
+    $transactions = xcms_get_key_or($sheet_data, "transactions", array());
+    $exchange_rates = xcms_get_key_or($sheet_data, "exchange_rates", array());
 
     $deltas = array();
     $member_sums = array();
@@ -132,7 +132,7 @@ function fe_calc_sheet($sheet_data) {
     $bad_lambda_norm = array();
     foreach ($transactions as $transaction_id => $transaction) {
         $transaction_currency = fe_get_currency($transaction);
-        $rate = (integer)fe_get_or($exchange_rates, $transaction_currency, "1");
+        $rate = (integer)xcms_get_key_or($exchange_rates, $transaction_currency, "1");
         // calc transaction sum and spenders count
         $transaction_sum = 0;
         $lambda_norm = 0.0;

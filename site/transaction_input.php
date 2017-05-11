@@ -61,8 +61,8 @@ function fe_print_transaction_input(
     $member_id_filter
 ) {
     $currency = fe_get_currency($transaction);
-    $description = fe_get_or($transaction, "description");
-    $timestamp = fe_get_or($transaction, FE_KEY_TIMESTAMP_MODIFIED);
+    $description = xcms_get_key_or($transaction, "description");
+    $timestamp = xcms_get_key_or($transaction, FE_KEY_TIMESTAMP_MODIFIED);
 
     $bad_lambda_norm_class = $bad_lambda_norm ? "warning" : "";
 

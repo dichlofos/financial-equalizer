@@ -61,9 +61,9 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
     global $PHP_SELF;
     $sheet_data = fe_load_sheet($sheet_id);
 
-    $members = fe_get_or($sheet_data, "members", array());
-    $transactions = fe_get_or($sheet_data, "transactions", array());
-    $exchange_rates = fe_get_or($sheet_data, "exchange_rates", array());
+    $members = xcms_get_key_or($sheet_data, "members", array());
+    $transactions = xcms_get_key_or($sheet_data, "transactions", array());
+    $exchange_rates = xcms_get_key_or($sheet_data, "exchange_rates", array());
 
     $result = fe_calc_sheet($sheet_data);
     $deltas = $result["deltas"];
@@ -78,7 +78,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
         ? (integer)($float_width / count($members))
         : (integer)($float_width);
 
-    $sheet_title_ht = htmlspecialchars(fe_get_or($sheet_data, "title"));
+    $sheet_title_ht = htmlspecialchars(xcms_get_key_or($sheet_data, "title"));
 
     $request_url = "/?sheet_id=$sheet_id";
 
@@ -188,9 +188,9 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
                 $members,
                 $transaction_id,
                 $transaction,
-                fe_get_or($deltas, $transaction_id, array()),
+                xcms_get_key_or($deltas, $transaction_id, array()),
                 $exchange_rates,
-                fe_get_or($bad_lambda_norm, $transaction_id),
+                xcms_get_key_or($bad_lambda_norm, $transaction_id),
                 $width_percent,
                 $member_id_filter
             );
