@@ -34,31 +34,31 @@ function fe_action_update_sheet($sheet_id, $request) {
     $exchange_rates = array();
     foreach ($request as $key => $value) {
         $value = trim($value);
-        if (fe_startswith($key, "tr")) {
+        if (xu_startswith($key, "tr")) {
             $amount_key = substr($key, 2);
             $amount_key = explode("_", $amount_key);
             $transaction_id = $amount_key[0];
             $member_id = $amount_key[1];
             $transactions[$transaction_id]["charges"][$member_id] = $value;
-        } elseif (fe_startswith($key, "sp")) {
+        } elseif (xu_startswith($key, "sp")) {
             $spent_key = substr($key, 2);
             $spent_key = explode("_", $spent_key);
             $transaction_id = $spent_key[0];
             $member_id = $spent_key[1];
             $transactions[$transaction_id]["spent"][$member_id] = $value;
-        } elseif (fe_startswith($key, "cur")) {
+        } elseif (xu_startswith($key, "cur")) {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["currency"] = $value;
-        } elseif (fe_startswith($key, "dtr")) {
+        } elseif (xu_startswith($key, "dtr")) {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["description"] = $value;
-        } elseif (fe_startswith($key, "m")) {
+        } elseif (xu_startswith($key, "m")) {
             if (xu_empty($value)) {
                 continue;  // skip empty members
             }
             $member_id = substr($key, 1);
             $members[$member_id] = $value;
-        } elseif (fe_startswith($key, "e")) {
+        } elseif (xu_startswith($key, "e")) {
             if (xu_empty($value)) {
                 continue;  // skip empty currencies
             }
