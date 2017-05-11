@@ -53,7 +53,7 @@ if ($action == "new_sheet") {
         // allow non-empty member names only
         $sheet_data = fe_load_sheet($sheet_id);
         $sheet_data["members"][] = $member_name;
-        $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = fe_datetime();
+        $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = xcms_datetime();
         fe_save_sheet($sheet_id, $sheet_data);
     }
     header("Location: /?sheet_id=$sheet_id");
@@ -65,7 +65,7 @@ if ($action == "new_sheet") {
         // allow non-empty currencies only
         $sheet_data = fe_load_sheet($sheet_id);
         $sheet_data["exchange_rates"][$currency] = "1";
-        $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = fe_datetime();
+        $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = xcms_datetime();
         fe_save_sheet($sheet_id, $sheet_data);
     }
     header("Location: /?sheet_id=$sheet_id");
@@ -77,7 +77,7 @@ if ($action == "new_sheet") {
 } elseif ($action == "add_transaction") {
     $description = xcms_get_key_or($_REQUEST, "description");
     $sheet_data = fe_load_sheet($sheet_id);
-    $timestamp_str = fe_datetime();
+    $timestamp_str = xcms_datetime();
     $sheet_data["transactions"][] = array(
         "description" => $description,
         "currency" => FE_DEFAULT_CURRENCY,
@@ -92,7 +92,7 @@ if ($action == "new_sheet") {
     $title = trim($title);
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_data["title"] = $title;
-    $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = fe_datetime();
+    $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = xcms_datetime();
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();

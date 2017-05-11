@@ -86,7 +86,7 @@ function fe_get_currency($transaction) {
 function fe_calculate_sheet_diff($old_sheet_data, &$sheet_data, $timestamp = false) {
     $transactions = xcms_get_key_or($sheet_data, "transactions", array());
     $old_transactions = xcms_get_key_or($old_sheet_data, "transactions", array());
-    $timestamp_str = fe_datetime($timestamp);
+    $timestamp_str = xcms_datetime($timestamp);
     $modified = false;
 
     foreach ($transactions as $transaction_id => $transaction) {
