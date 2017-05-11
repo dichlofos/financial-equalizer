@@ -14,6 +14,9 @@ fi
 set -xe
 
 mode="$1"
+if [ -z "$mode" ] ; then
+    mode="default"
+fi
 
 unalias grep 2>/dev/null || true
 
@@ -39,6 +42,7 @@ elif echo $host | grep -q dmvn ; then
 fi
 sudo mkdir -p $root
 sudo cp -a ./site/* $root/
+sudo cp version $root/
 sudo mkdir -p $root/data
 sudo chmod -R 777 $root/data
 sudo chown -R $www_user $root
