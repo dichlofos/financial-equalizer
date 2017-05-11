@@ -38,7 +38,7 @@ function fe_calc_spent_class($member_spent) {
 
 
 function fe_calc_row_visibility_class($transaction, $member_id_filter) {
-    if (fe_empty($member_id_filter)) {
+    if (xu_empty($member_id_filter)) {
         return "";
     }
 

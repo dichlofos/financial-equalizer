@@ -53,13 +53,13 @@ function fe_action_update_sheet($sheet_id, $request) {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["description"] = $value;
         } elseif (fe_startswith($key, "m")) {
-            if (fe_empty($value)) {
+            if (xu_empty($value)) {
                 continue;  // skip empty members
             }
             $member_id = substr($key, 1);
             $members[$member_id] = $value;
         } elseif (fe_startswith($key, "e")) {
-            if (fe_empty($value)) {
+            if (xu_empty($value)) {
                 continue;  // skip empty currencies
             }
             $currency = substr($key, 1);

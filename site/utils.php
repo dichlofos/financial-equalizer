@@ -15,11 +15,6 @@ function fe_get_or($array, $key, $default_value = "") {
 }
 
 
-function fe_empty($value) {
-    return strlen($value) == 0;
-}
-
-
 function fe_startswith($str, $prefix) {
     return (substr($str, 0, strlen($prefix)) == $prefix);
 }
@@ -33,7 +28,7 @@ function fe_datetime($timestamp = false)
 {
     if ($timestamp === false)
         return date("Y-m-d H:i:s");
-    if (fe_empty($timestamp))
+    if (xu_empty($timestamp))
         return "";
     return date("Y-m-d H:i:s", $timestamp);
 }
@@ -46,7 +41,7 @@ function fe_datetime_ns($timestamp = false)
 {
     if ($timestamp === false)
         return date("Y-m-d.H-i-s");
-    if (fe_empty($timestamp))
+    if (xu_empty($timestamp))
         return "";
     return date("Y-m-d.H-i-s", $timestamp);
 }

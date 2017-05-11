@@ -9,7 +9,7 @@ define('FE_KEY_TIMESTAMP_MODIFIED', "timestamp_modified");
 
 
 function fe_save_sheet($sheet_id, $sheet_data) {
-    if (fe_empty($sheet_id)) {
+    if (xu_empty($sheet_id)) {
         // FIXME(mvel) Add logging here
         die("[fe_save_sheet] Sheet identifier cannot be empty. Please report a bug to developers");
         return;
@@ -21,7 +21,7 @@ function fe_save_sheet($sheet_id, $sheet_data) {
 
 
 function fe_load_sheet($sheet_id) {
-    if (fe_empty($sheet_id)) {
+    if (xu_empty($sheet_id)) {
         // FIXME(mvel) Add logging here
         die("[fe_load_sheet] Sheet id cannot be empty. Please report a bug to developers");
         return;
@@ -37,7 +37,7 @@ function fe_load_sheet($sheet_id) {
 
 
 function fe_remove_sheet($sheet_id) {
-    if (fe_empty($sheet_id)) {
+    if (xu_empty($sheet_id)) {
         // FIXME(mvel) Add logging here
         die("[fe_remove_sheet] Sheet id cannot be empty. Please report a bug to developers");
         return;
@@ -66,7 +66,7 @@ function fe_get_spent($transaction, $member_id) {
     if ($member_spent == "yes") {
         // backwards compatibility
         $member_spent = "1.0";
-    } elseif (fe_empty($member_spent)) {
+    } elseif (xu_empty($member_spent)) {
         $member_spent = "0.0";
     }
     return (float)$member_spent;

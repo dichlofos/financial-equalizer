@@ -15,7 +15,7 @@ session_start();
 // Parse some global variables
 $sheet_id = fe_get_or($_REQUEST, "sheet_id");
 $sheet_id = preg_replace("/[^0-9a-f-]/", "", $sheet_id);
-if (fe_empty($sheet_id)) {
+if (xu_empty($sheet_id)) {
     // use sheet id from session if available
     $session_sheet_id = fe_get_or($_SESSION, "sheet_id");
     if (xu_not_empty($session_sheet_id)) {
@@ -27,7 +27,7 @@ $action = fe_get_or($_REQUEST, "action");
 
 // TODO: wrap into PSS (or refactor out PSS from lesh repo)
 $member_id_filter = fe_get_or($_REQUEST, "member_id_filter");
-if (fe_empty($member_id_filter)) {
+if (xu_empty($member_id_filter)) {
     // use member filter from session if available
     $session_member_filter_id = fe_get_or($_SESSION, "member_id_filter");
     if (xu_not_empty($session_member_filter_id)) {
@@ -40,7 +40,7 @@ if ($action == "new_sheet") {
     header("Location: /?sheet_id=$sheet_id");
     exit();
 } elseif ($action == "update_sheet") {
-    if (fe_empty($sheet_id)) {
+    if (xu_empty($sheet_id)) {
         die("Invalid request: sheet_id is empty");
     }
     fe_action_update_sheet($sheet_id, $_REQUEST);
@@ -148,7 +148,7 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
         <?php
         if (xu_not_empty($sheet_id)) {
             $modified = fe_get_or($sheet_data, FE_KEY_TIMESTAMP_MODIFIED);
-            if (fe_empty($modified)) {
+            if (xu_empty($modified)) {
                 $modified = "&mdash;";
             }
         ?>
@@ -161,7 +161,7 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
         ?>
     </div><?php
 
-if (fe_empty($sheet_id)) {
+if (xu_empty($sheet_id)) {
     fe_new_sheet();
 } else {
     fe_edit_sheet($sheet_id, $member_id_filter);
