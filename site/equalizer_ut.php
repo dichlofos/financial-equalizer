@@ -1,4 +1,7 @@
 <?php
+$engine_dir = "engine/";
+
+require_once("${engine_dir}sys/string.php");
 require_once('equalizer.php');
 require_once('action_handlers.php');
 
@@ -23,7 +26,10 @@ function fe_assert_inequal($first, $second, $message) {
 
 function fe_test_saveload() {
     $sheet_id = "test";
-    unlink("data/$sheet_id.json");
+    $sheet_file = "data/$sheet_id.json";
+    if (file_exists($sheet_file)) {
+        unlink($sheet_file);
+    }
     $sheet_data = fe_load_sheet($sheet_id);
     fe_assert_equal(count($sheet_data), 0, "Non-existent sheet must be empty when loading");
 
