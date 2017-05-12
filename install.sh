@@ -7,7 +7,9 @@ program_name="Financial Equalizer"
 
 if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]] ; then
     echo "$program_name deployment script"
-    echo "Usage: $0 [(empty)|production|testing]"
+    echo "Usage: $0 <mode>"
+    echo
+    echo "    <mode>      (empty)|production|testing"
     exit 0
 fi
 
