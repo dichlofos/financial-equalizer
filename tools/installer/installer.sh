@@ -4,6 +4,7 @@ deploy_service() {
 
     service_name="$1"
     target_server="$2"
+    mode="$3"
 
     work_dir="deploy/$1"
     production_workdir=$HOME/$work_dir
