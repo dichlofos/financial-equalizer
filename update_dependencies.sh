@@ -9,7 +9,7 @@ engine="site/engine"
 
 if [ -x $engine/.hg ] ; then
     echo "Obtaining latest version"
-    cd $my_dir/$engine && hg pull
+    cd $my_dir/$engine && hg pull && hg update
 else
     hg clone /home/mvel/work/xengine $engine
 fi
