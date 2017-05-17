@@ -6,8 +6,7 @@ deploy_service() {
     target_server="$2"
     mode="$3"
 
-    work_dir="deploy/$1"
-    production_workdir=$HOME/$work_dir
+    production_workdir="$HOME/deploy/$1"
 
     # prepare repo on remote
     ssh $target_server bash -xe <<EOF
