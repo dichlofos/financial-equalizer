@@ -10,6 +10,7 @@ deploy_service() {
 
     # prepare repo on remote
     ssh $target_server bash -xe <<EOF
+
         if ! [ -e $production_workdir ] ; then
             mkdir -p $production_workdir
             cd $production_workdir
