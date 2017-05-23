@@ -12,8 +12,8 @@ if [ -z "$destination" ] ; then
 fi
 
 # bootstrap project into current directory
-hg clone ssh://hg@bitbucket.org/dichlofos/$project_name $destination
-hg clone ssh://hg@bitbucket.org/dichlofos/xengine $destination/site/engine
-hg clone ssh://hg@bitbucket.org/dichlofos/deploy-tools $destination/deploy-tools
+hg clone /srv/hg/$project_name $destination
+hg clone /srv/hg/xengine $destination/site/engine
+hg clone /srv/hg/deploy-tools $destination/deploy-tools
 
 echo "Bootstrapping '$project_name' with dependencies done to '$destination'"
