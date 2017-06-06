@@ -12,7 +12,7 @@ if [ -z "$destination" ] ; then
 fi
 
 common_repo_path="ssh://hg@bitbucket.org/dichlofos"
-if $(hostname) | grep -q dmvn ; then
+if echo $(hostname) | grep -q dmvn ; then
     # production host
     common_repo_path="/srv/hg"
 fi
