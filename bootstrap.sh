@@ -19,7 +19,7 @@ fi
 
 # bootstrap project into current directory
 hg clone $common_repo_path/$project_name $destination
-hg clone $common_repo_path/xengine $destination/site/engine
+hg clone $common_repo_path/xengine $destination/site/xengine
 hg clone $common_repo_path/deploy-tools $destination/deploy-tools
 
 echo "Bootstrapping '$project_name' with dependencies done to '$destination'"
