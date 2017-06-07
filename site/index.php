@@ -157,6 +157,13 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
 
             Экспорт <a href="/?action=export&amp;format=csv&amp;sheet_id=<?php echo $sheet_id; ?>">в CSV</a><br />
             <?php
+            $host_name = xcms_hostname();
+            $is_production = ($host_name == "communism.dmvn.net");
+            $is_testing = ($host_name == "test.communism.dmvn.net");
+            if (!$is_production) {
+                echo "<b style=\"color: red\">WARNING: This is a TEST instance!<br/>Your data can be LOST!</b>";
+            }
+            ?><br/><?php
         }
         ?>
     </div><?php
