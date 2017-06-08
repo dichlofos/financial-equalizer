@@ -1,5 +1,5 @@
 <?php
-$engine_dir = "engine/";
+$engine_dir = "xengine/";
 
 require_once("${engine_dir}sys/string.php");
 require_once('equalizer.php');
