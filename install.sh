@@ -3,7 +3,11 @@
 # Deployment script.
 # Contains configuration for all deploy places
 
+. deploy-tools/installer/installer.sh
+
 program_name="Financial Equalizer"
+
+print_message "Installing $program_name"
 
 if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]] ; then
     echo "$program_name deployment script"
@@ -37,7 +41,7 @@ elif echo $host | grep -q dmvn ; then
     elif [ "$mode" = "testing" ] ; then
         root="/srv/www/communism.test"
     else
-        echo "Invalid mode '$mode'. Specify it, please"
+        print_error "Invalid mode '$mode'. Specify it, please"
         exit 1
     fi
     www_user="www-data:www-data"
@@ -51,4 +55,4 @@ sudo chown -R $www_user $root
 
 set +x
 
-echo "$program_name was successfully deployed to '$root' in mode '$mode'"
+print_message "$program_name was successfully deployed to '$root' in mode '$mode'"
