@@ -5,7 +5,7 @@ my_dir="$(dirname "$my_self")"
 
 set -e
 
-engine="site/engine"
+engine="site/xengine"
 
 if [ -x $engine/.hg ] ; then
     echo "Obtaining latest version"
