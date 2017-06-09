@@ -202,3 +202,11 @@ td.transaction-amount {
 .transaction-row-filtered {
     display: none;
 }
+
+label.new_item-label {
+    width: 150px;
+}
+
+button.new_item-button {
+    width: 160px;
+}

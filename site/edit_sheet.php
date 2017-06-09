@@ -87,13 +87,13 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
     <div class="container-fluid">
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_member">
                 <div class="form-group">
                     <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-                    <label for="member_name-input">Новый участник:&nbsp;</label>
-                    <input type="text" class="form-control" name="member_name" id="member_name-input" value="" placeholder="Иван Человеков" />
-                    <button type="submit" class="btn btn-primary">Добавить участника</button>
+                    <label for="member_name-input" class="new_item-label">Новый участник:&nbsp;</label>
+                    <input type="text" class="form-control" name="member_name" id="member_name-input" value="" placeholder="Иван Человеков" style="width: 350px;" />
+                    <button type="submit" class="btn btn-primary new_item-button">Добавить участника</button>
                 </div>
             </form>
         </div>
@@ -102,24 +102,24 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
             <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_currency">
                 <div class="form-group">
                 <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-                <label for="currency-select">Новая валюта:&nbsp;</label>
+                <label for="currency-select" class="new_item-label">Новая валюта:&nbsp;</label>
                 <input name="currency" class="form-control" id="currency-input" />
-                <button type="submit" class="btn btn-primary">Добавить</button>
+                <button type="submit" class="btn btn-primary new_item-button">Добавить</button>
                 </div>
             </form>
         </div>
 
-        <div class="col-md-4">&nbsp;</div>
+        <div class="col-md-3">&nbsp;</div>
     </div>
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=add_transaction">
                 <div class="form-group">
                 <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-                <label for="description-input">Новая статья расходов:&nbsp;</label>
-                <input class="form-control" type="text" name="description" id="description-input" value="" placeholder="Скинулись на шаурму" />
-                <button type="submit" class="btn btn-primary">Добавить</button>
+                <label for="description-input" class="new_item-label">Статья расходов:&nbsp;</label>
+                <input class="form-control" type="text" name="description" id="description-input" value="" placeholder="Скинулись на шаурму" style="width: 350px;" />
+                <button type="submit" class="btn btn-primary new_item-button">Добавить</button>
                 </div>
             </form>
         </div>
@@ -128,13 +128,16 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
             <form method="post" class="form-inline" action="<?php echo $PHP_SELF; ?>?action=set_sheet_title">
                 <div class="form-group">
                 <input type="hidden" name="sheet_id" value="<?php echo $sheet_id; ?>" />
-                <label for="sheet_title-input">Название листа:&nbsp;</label>
+                <label for="sheet_title-input" class="new_item-label">Название листа:&nbsp;</label>
                 <input class="form-control" type="text" name="title" id="sheet_title-input"
                     value="<?php echo $sheet_title_ht; ?>" placeholder="Поход по Монголии" />
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <button type="submit" class="btn btn-primary new_item-button">Сохранить</button>
                 </div>
             </form>
         </div>
+
+        <div class="col-md-3">&nbsp;</div>
+
     </div>
 
     <?php
