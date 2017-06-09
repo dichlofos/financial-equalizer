@@ -37,7 +37,13 @@ function _set_transaction_description_width(total_width) {
 }
 
 function _set_transaction_amount_width(total_width) {
-    var member_count = parseInt($('#member_count').val());
+    var member_count_ele = $('#member_count');
+    if (!member_count_ele.length) {
+        // main page does not contain this element
+        return;
+    }
+
+    var member_count = parseInt(member_count_ele.val());
     var spent_max_length = $('#spent_max').val().length;
     var spent_min_length = $('#spent_min').val().length;
     var digit_count = Math.max(spent_max_length, spent_min_length);
