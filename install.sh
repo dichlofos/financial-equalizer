@@ -24,8 +24,6 @@ if [ -z "$mode" ] ; then
     mode="default"
 fi
 
-unalias grep 2>/dev/null || true
-
 host="$( hostname )"
 root="/var/www/html"
 www_user="root:root"
