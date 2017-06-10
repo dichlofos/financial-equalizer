@@ -17,8 +17,8 @@ fi
 common_repo_path="ssh://dmvn.net//srv/hg"
 
 # bootstrap project into current directory
-hg push $common_repo_path/$project_name
-( cd site/xengine && hg push $common_repo_path/xengine )
-( cd deploy-tools && hg push $common_repo_path/deploy-tools )
+( cd . && ( hg push $common_repo_path/$project_name || true ) )
+( cd site/xengine && ( hg push $common_repo_path/xengine || true ) )
+( cd deploy-tools && ( hg push $common_repo_path/deploy-tools || true ) )
 
 print_message "'$project_name' is synced with production $common_repo_path"
