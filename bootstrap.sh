@@ -22,4 +22,10 @@ hg clone $common_repo_path/$project_name $destination
 hg clone $common_repo_path/xengine $destination/site/xengine
 hg clone $common_repo_path/deploy-tools $destination/deploy-tools
 
+. $destination/deploy-tools/installer/installer.sh
+
+fix_hgrc $destination $project_name
+fix_hgrc $destination/site/xengine xengine
+fix_hgrc $destination/deploy-tools deploy-tools
+
 echo "Bootstrapping '$project_name' with dependencies done to '$destination'"
