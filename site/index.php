@@ -1,7 +1,7 @@
 <?php
-$engine_dir = "xengine/";
+$xengine_dir = "xengine/";
 
-require_once("${engine_dir}sys/string.php");
+require_once("${xengine_dir}sys/string.php");
 require_once('utils.php');
 require_once('static_config.php');
 require_once('equalizer.php');

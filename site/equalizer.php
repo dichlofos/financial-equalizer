@@ -1,6 +1,6 @@
 <?php
 require_once('utils.php');
-require_once("${engine_dir}sys/util.php");
+require_once("${xengine_dir}sys/util.php");
 
 define('FE_DEFAULT_CURRENCY', "RUR");
 
