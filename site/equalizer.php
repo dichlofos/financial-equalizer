@@ -132,7 +132,7 @@ function fe_calc_sheet($sheet_data) {
     $bad_lambda_norm = array();
     foreach ($transactions as $transaction_id => $transaction) {
         $transaction_currency = fe_get_currency($transaction);
-        $rate = (integer)xcms_get_key_or($exchange_rates, $transaction_currency, "1");
+        $rate = (float)xcms_get_key_or($exchange_rates, $transaction_currency, "1");
         // calc transaction sum and spenders count
         $transaction_sum = 0;
         $lambda_norm = 0.0;

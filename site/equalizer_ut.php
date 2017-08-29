@@ -127,6 +127,7 @@ function fe_test_currency() {
         "exchange_rates" => array(
             "RUR" => 1,
             "EUR" => 70,
+            "KGS" => 0.5,
         ),
         "transactions" => array(
             array(
@@ -168,12 +169,26 @@ function fe_test_currency() {
                     "2.0",
                 ),
             ),
+            array(
+                "currency" => "KGS",
+                "charges" => array(
+                    "50",
+                    "200",
+                    "350",
+                ),
+                "spent" => array(
+                    "1",
+                    "1",
+                    "1",
+                ),
+            ),
+
         ),
     );
     $result = fe_calc_sheet($sheet_data);
     $deltas = $result["deltas"];
 
-    fe_assert_equal(count($deltas), 3, "Deltas count = transactions count");
+    fe_assert_equal(count($deltas), 4, "Deltas count = transactions count");
     fe_assert_equal($deltas[0][0], -100, "Tr 0 deltas check 0");
     fe_assert_equal($deltas[0][1], 0, "Tr 0 deltas check 1");
     fe_assert_equal($deltas[0][2], 100, "Tr 0 deltas check 2");
@@ -187,12 +202,12 @@ function fe_test_currency() {
     fe_assert_equal($deltas[2][2], -50, "Tr 2 deltas check 2");
 
     $member_sums = $result["member_sums"];
-    fe_assert_equal($member_sums[0], -100 + 50*70 + 50, "Member sums check 0");
+    fe_assert_equal($member_sums[0], -100 + 50*70 + 50 - 75, "Member sums check 0");
     fe_assert_equal($member_sums[1], 0, "Member sums check 1");
-    fe_assert_equal($member_sums[2],  100 - 50*70 - 50, "Member sums check 2");
+    fe_assert_equal($member_sums[2],  100 - 50*70 - 50 + 75, "Member sums check 2");
 
     $avg_spendings = $result["avg_spendings"];
-    fe_assert_equal($avg_spendings, 14400, "Average spendings");
+    fe_assert_equal($avg_spendings, 14400 + 200 * 0.5, "Average spendings");
 
     fe_uprint("fe_test_currency PASSED");
 }
