@@ -5,6 +5,7 @@ Main Financial Equalizer core
 """
 
 import os
+import json
 
 import flask as f
 
@@ -50,7 +51,7 @@ def index():
 
 @app.route('/sheets')
 def sheets():
-    return f.render_template('content.html')
+    return f.render_template('sheets.html')
     # return f.render_template("sheets.html")
 
 
@@ -58,7 +59,8 @@ def sheets():
 def sheet(sheet_id):
     add_member_form = AddMemberForm(f.request.form)
 
-    add_spendings_form = AddSpendingForm(f.request.form)
+    add_spending_form = AddSpendingForm(f.request.form)
+    print(json.dumps(add_member_form.data, indent=4))
     if f.request.method == 'POST' and add_member_form.validate():
         print(add_member_form.name.data)
 
@@ -69,7 +71,7 @@ def sheet(sheet_id):
         return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 
     return f.render_template(
-        'content.html',
+        'sheet.html',
         add_member_form=add_member_form,
-        add_spendings_form=add_spendings_form,
+        add_spending_form=add_spending_form,
     )
