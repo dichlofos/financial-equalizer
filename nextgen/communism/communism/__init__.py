@@ -1,1 +1,1 @@
-from .communism import app
+from .communism import app  # noqa
