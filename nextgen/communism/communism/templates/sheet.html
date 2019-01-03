@@ -1,13 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
 <div style="background-color: #f5f5f5; padding: 10px">
+    <div id="add_member_form">
     <form action="" method="post">
         <div>
         {{ add_member_form.name.label }}: {{ add_member_form.name(placeholder="Иван Человеков") }}
         </div>
         {{ add_member_form.csrf_token }}
     </form>
+    </div>
 
+    <div style="padding: 5px">&nbsp;</div>
+    <div id="add_spending_form">
     <form action="" method="post">
         <div>
             {{ add_spending_form.description.label }}: {{ add_spending_form.description(placeholder="Шаурма в ларьке") }}
@@ -22,6 +26,7 @@
     -   -->
         {{ add_spending_form.csrf_token }}
     </form>
+    </div>
 
 </div>
 {% endblock %}
