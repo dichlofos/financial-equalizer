@@ -107,9 +107,24 @@ class AddSpendingForm(wtf.Form):
     member_id = wtf.SelectField('Участник', coerce=int)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     add_sheet_form = AddSheetForm(f.request.form)
+
+    if f.request.method == 'POST' and add_sheet_form.validate():
+        print(add_sheet_form.description.data)
+
+        sheet = Sheet(
+            description=add_sheet_form.description.data,
+        )
+        x = db.session.add(sheet)
+        db.session.commit()
+        print(repr(x))
+        f.flash('Лист добавлен')
+        # FIXME(mvel) hc sheet id
+        sheet_id = 100
+        return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
+
     return f.render_template(
         'main.html',
         add_sheet_form=add_sheet_form,
@@ -118,8 +133,9 @@ def index():
 
 @app.route('/sheets')
 def sheets():
-    return f.render_template('sheets.html')
-    # return f.render_template("sheets.html")
+    sheets = Sheet.query.all()
+    print(len(sheets))
+    return f.render_template('sheets.html', sheets=sheets)
 
 
 @app.route('/sheet/<int:sheet_id>', methods=['GET', 'POST'])
@@ -132,8 +148,11 @@ def sheet(sheet_id):
     if f.request.method == 'POST' and add_member_form.validate():
         print(add_member_form.name.data)
 
-        member = Member(add_member_form.display_name.data)
+        member = Member(
+            display_name=add_member_form.display_name.data,
+        )
         db.session.add(member)
+        db.session.commit()
         f.flash('Участник добавлен')
         return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 

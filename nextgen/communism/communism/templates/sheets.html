@@ -7,10 +7,11 @@
                 <th>Sheet</th><th>Link</th>
             </tr>
         <tbody>
+            {% for sheet in sheets %}
             <tr>
-                <td>Sheet1</td><td>Link1</td>
-                <td>Sheet2</td><td>Link2</td>
+                <td>{{ sheet.id }}</td><td>{{ sheet.description }}</td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>

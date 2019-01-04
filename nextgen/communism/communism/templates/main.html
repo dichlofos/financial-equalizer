@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<div style="background-color: #f5f5f5; padding: 10px">
+    <div id="add_sheet_form">
+    <form action="" method="post">
+        <div>
+        {{ add_sheet_form.description.label }}: {{ add_sheet_form.description(placeholder="Памир-2018") }}
+        </div>
+        {{ add_sheet_form.csrf_token }}
+    </form>
+    </div>
+</div>
+<div>
+    <a href="/sheets">Все листы</a>
+</div>
+{% endblock %}
+

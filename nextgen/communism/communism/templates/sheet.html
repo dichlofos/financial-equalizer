@@ -4,7 +4,7 @@
     <div id="add_member_form">
     <form action="" method="post">
         <div>
-        {{ add_member_form.name.label }}: {{ add_member_form.name(placeholder="Иван Человеков") }}
+        {{ add_member_form.display_name.label }}: {{ add_member_form.display_name(placeholder="Иван Человеков") }}
         </div>
         {{ add_member_form.csrf_token }}
     </form>
