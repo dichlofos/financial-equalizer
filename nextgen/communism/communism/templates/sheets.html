@@ -9,7 +9,7 @@
         <tbody>
             {% for sheet in sheets %}
             <tr>
-                <td>{{ sheet.id }}</td><td>{{ sheet.description }}</td>
+                <td>{{ sheet.id }}</td><td><a href="/sheet/{{ sheet.id }}">{{ sheet.description }}</a></td>
             </tr>
             {% endfor %}
         </tbody>
