@@ -4,15 +4,15 @@
 Main Financial Equalizer core
 """
 
-import os
 import json
 import logging
+import os
 
 import flask as f
 
-import wtforms as wtf
-
 import flask_sqlalchemy as fsql
+
+import wtforms as wtf
 
 
 app = f.Flask(__name__)
@@ -144,7 +144,7 @@ def sheet(sheet_id):
 
     add_spending_form = AddSpendingForm(f.request.form)
 
-    logging.info("add_member_form: %s", json.dumps(add_member_form.data, indent=4))
+    logging.info('add_member_form: %s', json.dumps(add_member_form.data, indent=4))
     if f.request.method == 'POST' and add_member_form.validate():
         print(add_member_form.name.data)
 
