@@ -46,9 +46,14 @@ class Sheet(db.Model):
     """
 
 
+class AddSheetForm(wtf.Form):
+    description = wtf.StringField('Название листа', [wtf.validators.Length(min=1, max=256)])
+
+
 class Member(db.Model):
     """
-    A member of Sheet
+    A member of Sheet.
+    Do not mix with user. Members can be linked to users.
     """
     id = db.Column(db.Integer, primary_key=True)
     display_name = db.Column(db.String(80), nullable=True)
@@ -77,6 +82,10 @@ class Member(db.Model):
         return '<Member #{}: {} {} {}>'.format(self.id, self.display_name, self.sheet_id, self.user_id)
 
 
+class AddMemberForm(wtf.Form):
+    display_name = wtf.StringField('Имя участника', [wtf.validators.Length(min=1, max=25)])
+
+
 class User(db.Model):
     # For registered users
     id = db.Column(db.Integer, primary_key=True)
@@ -86,13 +95,6 @@ class User(db.Model):
     def __repr__(self):
         return '<User #{}: {}, {}>'.format(self.id, self.user_name, self.email)
 
-
-class AddSheetForm(wtf.Form):
-    description = wtf.StringField('Название листа', [wtf.validators.Length(min=1, max=256)])
-
-
-class AddMemberForm(wtf.Form):
-    display_name = wtf.StringField('Имя участника', [wtf.validators.Length(min=1, max=25)])
 
 
 class AddSpendingForm(wtf.Form):
@@ -104,6 +106,7 @@ class AddSpendingForm(wtf.Form):
         ],
         places=2,
     )
+    # TODO(mvel): currency
     member_id = wtf.SelectField('Участник', coerce=int)
 
 
@@ -134,7 +137,6 @@ def index():
 @app.route('/sheets')
 def sheets():
     sheets = Sheet.query.all()
-    print(len(sheets))
     return f.render_template('sheets.html', sheets=sheets)
 
 
@@ -144,11 +146,14 @@ def sheet(sheet_id):
 
     add_spending_form = AddSpendingForm(f.request.form)
 
+    sheet_members = Member.query.filter(Member.sheet_id == sheet_id)
+
     logging.info('add_member_form: %s', json.dumps(add_member_form.data, indent=4))
     if f.request.method == 'POST' and add_member_form.validate():
-        print(add_member_form.name.data)
+        print(add_member_form.display_name.data)
 
         member = Member(
+            sheet_id=sheet_id,
             display_name=add_member_form.display_name.data,
         )
         db.session.add(member)
@@ -164,4 +169,5 @@ def sheet(sheet_id):
         'sheet.html',
         add_member_form=add_member_form,
         add_spending_form=add_spending_form,
+        sheet_members=sheet_members,
     )

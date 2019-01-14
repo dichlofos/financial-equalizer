@@ -9,6 +9,14 @@
         {{ add_member_form.csrf_token }}
     </form>
     </div>
+    <table>
+        {% for member in sheet_members %}
+        <tr>
+            <td>{{ member.id }}</td>
+            <td>{{ member.display_name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
     <div style="padding: 5px">&nbsp;</div>
     <div id="add_spending_form">
