@@ -21,17 +21,12 @@
     <div style="padding: 5px">&nbsp;</div>
     <div id="add_spending_form">
     <form action="" method="post">
-        <div>
             {{ add_spending_form.description.label }}: {{ add_spending_form.description(placeholder="Шаурма в ларьке") }}
         </div>
         <div>
-            {{ add_spending_form.amount.label }}: {{ add_spending_form.amount(placeholder="105") }}
+            {{ add_spending_form.amount.label }}:
+                {{ add_spending_form.amount(placeholder="105.2") }}
         </div>
-        <!--
-        <div>
-            {{ add_spending_form.amount.label }}: {{ add_spending_form.amount(placeholder="105") }}
-        </div>
-    -   -->
         {{ add_spending_form.csrf_token }}
     </form>
     </div>

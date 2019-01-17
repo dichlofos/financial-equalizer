@@ -4,6 +4,7 @@
 Main Financial Equalizer core
 """
 
+import datetime
 import json
 import logging
 import os
@@ -96,8 +97,38 @@ class User(db.Model):
         return '<User #{}: {}, {}>'.format(self.id, self.user_name, self.email)
 
 
+class Spending(db.Model):
+    """
+    Статья расходов
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    sheet_id = db.Column(
+        db.Integer,
+        db.ForeignKey('sheet.id'),
+        nullable=False,
+    )
+    sheet = db.relationship(
+        'Sheet',
+        backref=db.backref('sheets', lazy=True),
+    )
+    description = db.Column(db.String(256), nullable=False)
+    amount = db.Column(db.Numeric(10, 3), nullable=False)
+    date_time = db.Column(
+        db.DateTime,
+        nullable=True,
+        default=datetime.datetime.utcnow,
+    )
+
+    def __repr__(self):
+        return '<Spending #{} of sheet #{}: {}, {}>'.format(
+            self.id, self.sheet_id, self.description, self.amount,
+        )
+
 
 class AddSpendingForm(wtf.Form):
+    """
+    Форма добавления статьи расходов
+    """
     description = wtf.StringField('Статья расхода', [wtf.validators.Length(min=2, max=256)])
     amount = wtf.DecimalField(
         'Сумма расходов',
@@ -147,6 +178,7 @@ def sheet(sheet_id):
     add_spending_form = AddSpendingForm(f.request.form)
 
     sheet_members = Member.query.filter(Member.sheet_id == sheet_id)
+    sheet_spendings = Spending.query.filter(Spending.sheet_id == sheet_id)
 
     logging.info('add_member_form: %s', json.dumps(add_member_form.data, indent=4))
     if f.request.method == 'POST' and add_member_form.validate():
@@ -162,12 +194,20 @@ def sheet(sheet_id):
         return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 
     if f.request.method == 'POST' and add_spending_form.validate():
-        print(add_spending_form.description.data)
-        print(add_spending_form.amount.data)
+        spending = Spending(
+            sheet_id=sheet_id,
+            description=add_spending_form.description.data,
+            amount=add_spending_form.amount.data,
+        )
+        db.session.add(spending)
+        db.session.commit()
+        f.flash('Статья расходов добавлена')
+        return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 
     return f.render_template(
         'sheet.html',
         add_member_form=add_member_form,
         add_spending_form=add_spending_form,
         sheet_members=sheet_members,
+        sheet_spendings=sheet_spendings,
     )
