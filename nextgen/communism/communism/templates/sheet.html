@@ -6,9 +6,13 @@
         <div>
         {{ add_member_form.display_name.label }}: {{ add_member_form.display_name(placeholder="Иван Человеков") }}
         </div>
+        <div>
+            <button name="add_member_form">Добавить</button>
+        </div>
         {{ add_member_form.csrf_token }}
     </form>
     </div>
+
     <table>
         {% for member in sheet_members %}
         <tr>
@@ -19,16 +23,32 @@
     </table>
 
     <div style="padding: 5px">&nbsp;</div>
+
     <div id="add_spending_form">
     <form action="" method="post">
-            {{ add_spending_form.description.label }}: {{ add_spending_form.description(placeholder="Шаурма в ларьке") }}
+        <div>
+        {{ add_spending_form.description.label }}: {{ add_spending_form.description(placeholder="Шаурма в ларьке") }}
         </div>
         <div>
-            {{ add_spending_form.amount.label }}:
+        {{ add_spending_form.amount.label }}:
                 {{ add_spending_form.amount(placeholder="105.2") }}
+        </div>
+        <div>
+            <button name="add_spending_form">Добавить</button>
         </div>
         {{ add_spending_form.csrf_token }}
     </form>
+
+    <table>
+        {% for spending in sheet_spendings %}
+        <tr>
+            <td>{{ spending.id }}</td>
+            <td>{{ spending.description }}</td>
+            <td>{{ spending.amount }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
     </div>
 
 </div>

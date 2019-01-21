@@ -1,11 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
 <div style="background-color: #f5fff5; padding: 10px">
-    <table style="border-collapse: collapse; border-width: 1px; border-spacing: 0px; border-color: #000000">
+    <table class="sheets">
         <thead>
             <tr>
-                <th>Sheet</th><th>Link</th>
+                <th>ID</th>
+                <th>Лист</th>
             </tr>
+            <colgroup>
+                <col width="">
+            </colgroup>
+        </thead>
+
         <tbody>
             {% for sheet in sheets %}
             <tr>

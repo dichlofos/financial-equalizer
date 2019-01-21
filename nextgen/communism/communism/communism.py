@@ -66,7 +66,7 @@ class Member(db.Model):
     )
     sheet = db.relationship(
         'Sheet',
-        backref=db.backref('sheets', lazy=True),
+        backref=db.backref('member_sheet', lazy=True),
     )
 
     user_id = db.Column(
@@ -109,7 +109,7 @@ class Spending(db.Model):
     )
     sheet = db.relationship(
         'Sheet',
-        backref=db.backref('sheets', lazy=True),
+        backref=db.backref('spending_sheet', lazy=True),
     )
     description = db.Column(db.String(256), nullable=False)
     amount = db.Column(db.Numeric(10, 3), nullable=False)
@@ -138,7 +138,8 @@ class AddSpendingForm(wtf.Form):
         places=2,
     )
     # TODO(mvel): currency
-    member_id = wtf.SelectField('Участник', coerce=int)
+    # TODO(mvel): member selection
+    # member_id = wtf.SelectField('Участник', coerce=int)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -174,7 +175,6 @@ def sheets():
 @app.route('/sheet/<int:sheet_id>', methods=['GET', 'POST'])
 def sheet(sheet_id):
     add_member_form = AddMemberForm(f.request.form)
-
     add_spending_form = AddSpendingForm(f.request.form)
 
     sheet_members = Member.query.filter(Member.sheet_id == sheet_id)
