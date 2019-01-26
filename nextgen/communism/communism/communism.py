@@ -88,7 +88,10 @@ class AddMemberForm(wtf.Form):
 
 
 class User(db.Model):
-    # For registered users
+    """
+    Registered user.
+    Do not mix with `Member`.
+    """
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -99,7 +102,7 @@ class User(db.Model):
 
 class Spending(db.Model):
     """
-    Статья расходов
+    Spending (external transaction with waste of money).
     """
     id = db.Column(db.Integer, primary_key=True)
     sheet_id = db.Column(
@@ -122,6 +125,7 @@ class Spending(db.Model):
     def __repr__(self):
         return '<Spending #{} of sheet #{}: {}, {}>'.format(
             self.id, self.sheet_id, self.description, self.amount,
+            # self.date_time,
         )
 
 
@@ -140,6 +144,85 @@ class AddSpendingForm(wtf.Form):
     # TODO(mvel): currency
     # TODO(mvel): member selection
     # member_id = wtf.SelectField('Участник', coerce=int)
+
+
+class SpendingMembership(db.Model):
+    """
+    A membership in particular spending. Links `Spending` and `Member`.
+    By default, all spendings are distributed with weight, equal to 1.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    weight = db.Column(db.Numeric(10, 3), nullable=False)
+
+    spending_id = db.Column(
+        db.Integer,
+        db.ForeignKey('spending.id'),
+        nullable=False,
+    )
+    spending = db.relationship(
+        'Spending',
+        backref=db.backref('spendingmembership_spending', lazy=True),
+    )
+
+    member_id = db.Column(
+        db.Integer,
+        db.ForeignKey('member.id'),
+        nullable=False,
+    )
+    member = db.relationship(
+        'Member',
+        backref=db.backref('spendingmembership_member', lazy=True),
+    )
+
+
+class MoneyMove(db.Model):
+    """
+    Money moving (internal transaction with zero-waste of money), e.g. depts
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    sheet_id = db.Column(
+        db.Integer,
+        db.ForeignKey('sheet.id'),
+        nullable=False,
+    )
+    sheet = db.relationship(
+        'Sheet',
+        backref=db.backref('moneymove_sheet', lazy=True),
+    )
+    description = db.Column(db.String(256), nullable=False)
+    amount = db.Column(db.Numeric(10, 3), nullable=False)
+    date_time = db.Column(
+        db.DateTime,
+        nullable=True,
+        default=datetime.datetime.utcnow,
+    )
+    credited_member_id = db.Column(
+        db.Integer,
+        db.ForeignKey('member.id'),
+        nullable=False,
+    )
+    credited_member = db.relationship(
+        'Member',
+        backref=db.backref('credited_member', lazy=True),
+        foreign_keys=(credited_member_id, ),
+    )
+
+    debited_member_id = db.Column(
+        db.Integer,
+        db.ForeignKey('member.id'),
+        nullable=False,
+    )
+    debited_member = db.relationship(
+        'Member',
+        backref=db.backref('debited_member', lazy=True),
+        foreign_keys=(debited_member_id, ),
+    )
+
+    def __repr__(self):
+        return '<MoneyMove #{} of sheet #{}: {}, {}, debited #{}, credited #{}>'.format(
+            self.id, self.sheet_id, self.description, self.amount,
+            self.debited_member_id, self.credited_member_id,
+        )
 
 
 @app.route('/', methods=['GET', 'POST'])

@@ -1,19 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
 <div style="background-color: #f5f5f5; padding: 10px">
-    <div id="add_member_form">
     <form action="" method="post">
-        <div>
-        {{ add_member_form.display_name.label }}: {{ add_member_form.display_name(placeholder="Иван Человеков") }}
+        <div id="add_member_form" class="form-group">
+            {{ add_member_form.display_name.label }}
+            {{ add_member_form.display_name(placeholder="Иван Человеков", class="form-control") }}
         </div>
-        <div>
-            <button name="add_member_form">Добавить</button>
-        </div>
+        <button name="add_member_form" type="submit" class="btn btn-primary">Добавить</button>
         {{ add_member_form.csrf_token }}
     </form>
-    </div>
 
-    <table>
+    <div class="sep">&nbsp;</div>
+
+    <table class="table table-sm">
+        <thead class="thead-light">
+            <th>ID</th>
+            <th>Имя</th>
+        </thead>
         {% for member in sheet_members %}
         <tr>
             <td>{{ member.id }}</td>
@@ -22,35 +25,41 @@
         {% endfor %}
     </table>
 
-    <div style="padding: 5px">&nbsp;</div>
+    <div class="sep">&nbsp;</div>
 
-    <div id="add_spending_form">
     <form action="" method="post">
-        <div>
-        {{ add_spending_form.description.label }}: {{ add_spending_form.description(placeholder="Шаурма в ларьке") }}
+        <div class="form-group">
+        {{ add_spending_form.description.label }}
+        {{ add_spending_form.description(placeholder="Шаурма в ларьке", class="form-control") }}
         </div>
-        <div>
-        {{ add_spending_form.amount.label }}:
-                {{ add_spending_form.amount(placeholder="105.2") }}
+        <div class="form-group">
+        {{ add_spending_form.amount.label }}
+        {{ add_spending_form.amount(placeholder="105.2", class="form-control") }}
         </div>
-        <div>
-            <button name="add_spending_form">Добавить</button>
-        </div>
+        <button name="add_spending_form" type="submit" class="btn btn-primary">Добавить</button>
         {{ add_spending_form.csrf_token }}
     </form>
 
-    <table>
+    <div class="sep">&nbsp;</div>
+
+    <table class="table table-sm">
+        <thead>
+            <th>ID</th>
+            <th>Описание</th>
+            <th>Сколько</th>
+            <th>Когда</th>
+            <th>Кто потратил</th>
+            <th>Неполное участие</th>
+        </thead>
         {% for spending in sheet_spendings %}
         <tr>
             <td>{{ spending.id }}</td>
             <td>{{ spending.description }}</td>
             <td>{{ spending.amount }}</td>
+            <td>{{ spending.date_time }}</td>
         </tr>
         {% endfor %}
     </table>
-
-    </div>
-
 </div>
 {% endblock %}
 
