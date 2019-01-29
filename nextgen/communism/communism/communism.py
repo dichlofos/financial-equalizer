@@ -103,6 +103,7 @@ class User(db.Model):
 class Spending(db.Model):
     """
     Spending (external transaction with waste of money).
+    Linked with exactly one member.
     """
     id = db.Column(db.Integer, primary_key=True)
     sheet_id = db.Column(
@@ -122,6 +123,17 @@ class Spending(db.Model):
         default=datetime.datetime.utcnow,
     )
 
+    # a link to particular member who spent this amount of money
+    member_id = db.Column(
+        db.Integer,
+        db.ForeignKey('member.id'),
+        nullable=False,
+    )
+    member = db.relationship(
+        'Member',
+        backref=db.backref('spending_member', lazy=True),
+    )
+
     def __repr__(self):
         return '<Spending #{} of sheet #{}: {}, {}>'.format(
             self.id, self.sheet_id, self.description, self.amount,
@@ -133,23 +145,35 @@ class AddSpendingForm(wtf.Form):
     """
     Форма добавления статьи расходов
     """
-    description = wtf.StringField('Статья расхода', [wtf.validators.Length(min=2, max=256)])
+    # form_name = wtf.HiddenField('Add Spending')
+    description = wtf.StringField(
+        'Статья расхода',
+        validators=[
+            wtf.validators.Length(min=2, max=256),
+        ]
+    )
     amount = wtf.DecimalField(
         'Сумма расходов',
-        [
+        validators=[
             wtf.validators.DataRequired(),
         ],
         places=2,
     )
-    # TODO(mvel): currency
-    # TODO(mvel): member selection
-    # member_id = wtf.SelectField('Участник', coerce=int)
+    member_id = wtf.SelectField(
+        'Участник',
+        validators=[
+            wtf.validators.DataRequired(),
+        ],
+        id='select_member',
+        coerce=int,
+    )
 
 
-class SpendingMembership(db.Model):
+class SpendingPartialMembership(db.Model):
     """
-    A membership in particular spending. Links `Spending` and `Member`.
-    By default, all spendings are distributed with weight, equal to 1.
+    A partial membership in usage of particular spending.
+    Links `Spending` and `Member`.
+    By default, all spendings are distributed with weight of 1.0.
     """
     id = db.Column(db.Integer, primary_key=True)
     weight = db.Column(db.Numeric(10, 3), nullable=False)
@@ -263,6 +287,11 @@ def sheet(sheet_id):
     sheet_members = Member.query.filter(Member.sheet_id == sheet_id)
     sheet_spendings = Spending.query.filter(Spending.sheet_id == sheet_id)
 
+    add_spending_form.member_id.choices = [
+        (sheet_member.id, sheet_member.display_name)
+        for sheet_member in sheet_members
+    ]
+
     logging.info('add_member_form: %s', json.dumps(add_member_form.data, indent=4))
     if f.request.method == 'POST' and add_member_form.validate():
         print(add_member_form.display_name.data)
@@ -276,16 +305,22 @@ def sheet(sheet_id):
         f.flash('Участник добавлен')
         return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 
-    if f.request.method == 'POST' and add_spending_form.validate():
-        spending = Spending(
-            sheet_id=sheet_id,
-            description=add_spending_form.description.data,
-            amount=add_spending_form.amount.data,
-        )
-        db.session.add(spending)
-        db.session.commit()
-        f.flash('Статья расходов добавлена')
-        return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
+    if f.request.method == 'POST':
+        if add_spending_form.validate():
+            spending = Spending(
+                sheet_id=sheet_id,
+                description=add_spending_form.description.data,
+                amount=add_spending_form.amount.data,
+                member_id=add_spending_form.member_id.data,
+            )
+            db.session.add(spending)
+            db.session.commit()
+            f.flash('Статья расходов добавлена')
+            return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
+        else:
+            print("Validate FAILED")
+            f.flash('Чё-то вы не то пытаетесь сделать')
+            return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 
     return f.render_template(
         'sheet.html',
