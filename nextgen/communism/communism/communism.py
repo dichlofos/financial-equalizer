@@ -5,9 +5,10 @@ Main Financial Equalizer core
 """
 
 import datetime
-import json
-import logging
+# import json
+# import logging
 import os
+from collections import defaultdict
 
 import flask as f
 
@@ -80,7 +81,7 @@ class Member(db.Model):
     )
 
     def __repr__(self):
-        return '<Member #{}: {} {} {}>'.format(self.id, self.display_name, self.sheet_id, self.user_id)
+        return '<Member #{}: {} sheet:{} user:{}>'.format(self.id, self.display_name, self.sheet_id, self.user_id)
 
 
 class AddMemberForm(wtf.Form):
@@ -145,7 +146,6 @@ class AddSpendingForm(wtf.Form):
     """
     Форма добавления статьи расходов
     """
-    # form_name = wtf.HiddenField('Add Spending')
     description = wtf.StringField(
         'Статья расхода',
         validators=[
@@ -178,6 +178,16 @@ class SpendingPartialMembership(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     weight = db.Column(db.Numeric(10, 3), nullable=False)
 
+    # for easy filtering
+    sheet_id = db.Column(
+        db.Integer,
+        db.ForeignKey('sheet.id'),
+        nullable=False,
+    )
+    sheet = db.relationship(
+        'Sheet',
+        backref=db.backref('spendingmembership_sheet', lazy=True),
+    )
     spending_id = db.Column(
         db.Integer,
         db.ForeignKey('spending.id'),
@@ -187,7 +197,6 @@ class SpendingPartialMembership(db.Model):
         'Spending',
         backref=db.backref('spendingmembership_spending', lazy=True),
     )
-
     member_id = db.Column(
         db.Integer,
         db.ForeignKey('member.id'),
@@ -196,6 +205,27 @@ class SpendingPartialMembership(db.Model):
     member = db.relationship(
         'Member',
         backref=db.backref('spendingmembership_member', lazy=True),
+    )
+
+
+class AddSpendingPartialMembership(wtf.Form):
+    """
+    Форма добавления частичного участия расходов
+    """
+    weight = wtf.DecimalField(
+        'Доля',
+        validators=[
+            wtf.validators.DataRequired(),
+        ],
+        places=2,
+    )
+    member_id = wtf.SelectField(
+        'Участник',
+        validators=[
+            wtf.validators.DataRequired(),
+        ],
+        id='select_member',
+        coerce=int,
     )
 
 
@@ -283,16 +313,29 @@ def sheets():
 def sheet(sheet_id):
     add_member_form = AddMemberForm(f.request.form)
     add_spending_form = AddSpendingForm(f.request.form)
+    add_spm_form = AddSpendingPartialMembership(f.request.form)
 
     sheet_members = Member.query.filter(Member.sheet_id == sheet_id)
     sheet_spendings = Spending.query.filter(Spending.sheet_id == sheet_id)
 
-    add_spending_form.member_id.choices = [
+    member_choices = [
         (sheet_member.id, sheet_member.display_name)
         for sheet_member in sheet_members
     ]
 
-    logging.info('add_member_form: %s', json.dumps(add_member_form.data, indent=4))
+    add_spending_form.member_id.choices = member_choices
+    add_spm_form.member_id.choices = member_choices
+
+    sheet_spm = SpendingPartialMembership.query.filter(
+        SpendingPartialMembership.sheet_id == sheet_id
+    )
+
+    sheet_spm_by_spending = defaultdict(list)
+    for pm in sheet_spm:
+        sheet_spm_by_spending[pm.spending_id].append(pm)
+
+    # logging.info('add_member_form: %s', json.dumps(add_member_form.data, indent=4))
+
     if f.request.method == 'POST' and add_member_form.validate():
         print(add_member_form.display_name.data)
 
@@ -306,6 +349,8 @@ def sheet(sheet_id):
         return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 
     if f.request.method == 'POST':
+        f.request.data
+
         if add_spending_form.validate():
             spending = Spending(
                 sheet_id=sheet_id,
@@ -318,14 +363,25 @@ def sheet(sheet_id):
             f.flash('Статья расходов добавлена')
             return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
         else:
-            print("Validate FAILED")
+            print('Validate add_spending_form FAILED')
             f.flash('Чё-то вы не то пытаетесь сделать')
             return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
+
+    if f.request.method == 'POST':
+        if add_spm_form.validate():
+            spm = SpendingPartialMembership(
+                sheet_id=sheet_id,
+            )
+            db.session.add(spm)
+            db.session.commit()
+            f.flash('Неполное участие добавлено')
 
     return f.render_template(
         'sheet.html',
         add_member_form=add_member_form,
         add_spending_form=add_spending_form,
+        add_spm_form=add_spm_form,
         sheet_members=sheet_members,
         sheet_spendings=sheet_spendings,
+        sheet_spm_by_spending=sheet_spm_by_spending,
     )

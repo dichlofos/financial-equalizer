@@ -40,7 +40,11 @@
         {{ add_spending_form.member_id.label }}
         {{ add_spending_form.member_id(class="form-control") }}
         </div>
-        <button name="add_spending_form" type="submit" class="btn btn-primary">Добавить</button>
+        <button
+            name="add_spending_form"
+            type="submit"
+            class="btn btn-primary"
+        >Добавить</button>
         {{ add_spending_form.csrf_token }}
     </form>
 
@@ -60,7 +64,28 @@
             <td>{{ spending.id }}</td>
             <td>{{ spending.description }}</td>
             <td>{{ spending.amount }}</td>
-            <td>{{ spending.date_time }}</td>
+            <td>{{ spending.date_time.strftime("%Y.%m.%d %H:%M") }}</td>
+            <td>{{ spending.member.display_name }}</td>
+            <td>
+                {% for pm in sheet_partial_membership %}
+                    {{ pm }}
+                {% endfor %}
+                <form action="" method="post">
+                    <div class="form-group">
+                        {{ add_spm_form.weight.label }}
+                        {{ add_spm_form.weight(placeholder="0.0", class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ add_spending_form.member_id.label }}
+                        {{ add_spending_form.member_id(class="form-control") }}
+                    </div>
+                    <button
+                        name="add_spm_form"
+                        type="submit"
+                        class="btn btn-primary"
+                    >Добавить</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </table>
