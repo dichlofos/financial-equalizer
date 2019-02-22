@@ -5,6 +5,7 @@ Main Financial Equalizer core
 """
 
 import datetime
+import logging
 # import json
 # import logging
 import os
@@ -349,7 +350,10 @@ def sheet(sheet_id):
         return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 
     if f.request.method == 'POST':
-        f.request.data
+        print(type(add_spending_form.data['description']))
+        # print("\n".join(dir(add_spending_form.data)))
+        # for key in add_spending_form.data:
+        #    print(key, "value=", add_spending_form[key].value)
 
         if add_spending_form.validate():
             spending = Spending(
@@ -369,6 +373,8 @@ def sheet(sheet_id):
 
     if f.request.method == 'POST':
         if add_spm_form.validate():
+            logging.info("working!!!")
+            print("Working!!!")
             spm = SpendingPartialMembership(
                 sheet_id=sheet_id,
             )

@@ -70,7 +70,7 @@
                 {% for pm in sheet_partial_membership %}
                     {{ pm }}
                 {% endfor %}
-                <form action="" method="post">
+                <form action="" method="post" class="form-inline">
                     <div class="form-group">
                         {{ add_spm_form.weight.label }}
                         {{ add_spm_form.weight(placeholder="0.0", class="form-control") }}
