@@ -67,18 +67,21 @@
             <td>{{ spending.date_time.strftime("%Y.%m.%d %H:%M") }}</td>
             <td>{{ spending.member.display_name }}</td>
             <td>
-                {% for pm in sheet_partial_membership %}
-                    {{ pm }}
+                {% for pm in sheet_spm_by_spending[spending.id] %}
+                    {{ pm.member.display_name }}: {{ pm.weight }}<br/>
                 {% endfor %}
                 <form action="" method="post" class="form-inline">
+                    <input type="hidden" name="spm"/>
+                    <input type="hidden" name="spending_id" value="{{ spending.id }}" />
                     <div class="form-group">
-                        {{ add_spm_form.weight.label }}
-                        {{ add_spm_form.weight(placeholder="0.0", class="form-control") }}
+                        {{ add_spm_form.weight.label }}&nbsp;
+                        {{ add_spm_form.weight(placeholder="0.0", class="form-control fc-weight") }}
                     </div>
+                    &nbsp;
                     <div class="form-group">
-                        {{ add_spending_form.member_id.label }}
-                        {{ add_spending_form.member_id(class="form-control") }}
+                        {{ add_spm_form.member_id(class="form-control") }}
                     </div>
+                    &nbsp;
                     <button
                         name="add_spm_form"
                         type="submit"
