@@ -1,0 +1,19 @@
+div.sep {
+    padding: 1px;
+}
+
+table {
+    border-collapse: collapse;
+    border-width: 1px;
+    border-spacing: 0px;
+    border-color: #000000;
+    padding: 3px;
+}
+
+table.sheets {
+    /* customize it */
+}
+
+.fc-weight {
+    width: 3.5em !important;
+}
