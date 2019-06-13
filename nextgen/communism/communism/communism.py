@@ -336,24 +336,11 @@ def sheet(sheet_id):
         sheet_spm_by_spending[pm.spending_id].append(pm)
 
     if f.request.method == 'POST':
-
-        logging.error("request values %s", f.request.values['spending_id'])
-
-        logging.error("desc type %s", type(add_spending_form.data['description']))
-        logging.error("add_spm_form type %s", type(add_spm_form.data))
-        # print("\n".join(dir(add_spending_form.data)))
-        for key in add_spending_form.data:
-            logging.error("add_spending_form %s", key)
-
-        for key in add_spm_form.data:
-            logging.error("add_spm_form %s", key)
-        logging.error("add_spm_form %s", add_spm_form.weight.data)
-        logging.error("add_spm_form mid %s", add_spm_form.member_id.data)
-
         if add_member_form.validate():
             return _handle_add_member_form(add_member_form)
 
-        if add_spm_form.member_id.data != -1:
+        logging.error("add_spm_form.data %s", add_spm_form.member_id.data)
+        if add_spm_form.validate() and add_spm_form.member_id.data > 0:  # valid identifier
             return _handle_add_spm_form(sheet_id, add_spm_form)
 
         if add_spending_form.validate():
