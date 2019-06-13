@@ -230,6 +230,45 @@ class AddSpendingPartialMembership(wtf.Form):
     )
 
 
+class Currency(db.Model):
+    """
+    Currency for given sheet
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    sheet_id = db.Column(
+        db.Integer,
+        db.ForeignKey('sheet.id'),
+        nullable=False,
+    )
+    sheet = db.relationship(
+        'Sheet',
+        backref=db.backref('currency_sheet', lazy=True),
+    )
+    sign = db.Column(db.String(64), nullable=False)
+    rate = db.Column(db.Numeric(10, 3), nullable=False)
+
+    def __repr__(self):
+        return '<Currency #{} of sheet #{}: {}, {}>'.format(
+            self.id, self.sheet_id, self.sign, self.rate,
+            # self.date_time,
+        )
+
+
+class AddCurrency(wtf.Form):
+    """
+    Adding currency form
+    """
+    sign = wtf.StringField('Валюта', [wtf.validators.Length(min=2, max=40)])
+
+    rate = wtf.DecimalField(
+        'Курс',
+        validators=[
+            wtf.validators.DataRequired(),
+        ],
+        places=3,
+    )
+
+
 class MoneyMove(db.Model):
     """
     Money moving (internal transaction with zero-waste of money), e.g. depts
