@@ -93,20 +93,12 @@ def _handle_sheet(sheet_id, filter_member_id=None):
         if add_spending_form.validate():
             return _handle_add_spending_form(sheet_id, add_spending_form)
 
+        if add_currency_form.validate():
+            return _handle_add_currency_form(sheet_id, add_currency_form)
+
         logging.error("BAD HANDLER")
         f.flash('Чё-то вы не то пытаетесь сделать')
         return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
-
-    if f.request.method == 'POST':
-        if add_spm_form.validate():
-            logging.info("working!!!")
-            print("Working!!!")
-            spm = m.SpendingPartialMembership(
-                sheet_id=sheet_id,
-            )
-            db.session.add(spm)
-            db.session.commit()
-            f.flash('Неполное участие добавлено')
 
     return f.render_template(
         'sheet.html',
@@ -135,6 +127,21 @@ def _handle_add_member_form(sheet_id, add_member_form):
     db.session.add(member)
     db.session.commit()
     f.flash('Участник добавлен')
+    return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
+
+
+def _handle_add_currency_form(sheet_id, add_currency_form):
+    """
+    `add_currency_form` request handler
+    """
+    currency = m.Currency(
+        sheet_id=sheet_id,
+        sign=add_currency_form.sign.data,
+        rate=add_currency_form.rate.data,
+    )
+    db.session.add(currency)
+    db.session.commit()
+    f.flash('Валюта добавлена')
     return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 
 
