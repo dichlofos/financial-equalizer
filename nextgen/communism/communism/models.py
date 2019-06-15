@@ -180,7 +180,7 @@ class SpendingPartialMembership(db.Model):
     )
 
 
-class AddSpendingPartialMembership(wtf.Form):
+class AddSpendingPartialMembershipForm(wtf.Form):
     """
     Форма добавления частичного участия расходов
     """

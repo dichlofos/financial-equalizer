@@ -41,13 +41,31 @@ def sheets():
 
 @app.route('/sheet/<int:sheet_id>', methods=['GET', 'POST'])
 def sheet(sheet_id):
+    return _handle_sheet(sheet_id)
+
+
+@app.route('/sheet/<int:sheet_id>/member/<int:filter_member_id>', methods=['GET', 'POST'])
+def sheet_per_member(sheet_id, filter_member_id):
+    return _handle_sheet(
+        sheet_id=sheet_id,
+        filter_member_id=filter_member_id,
+    )
+
+
+def _handle_sheet(sheet_id, filter_member_id=None):
+    """
+    Sheet handler including restriction per member.
+    """
     add_member_form = m.AddMemberForm(f.request.form)
     add_currency_form = m.AddCurrencyForm(f.request.form)
     add_spending_form = m.AddSpendingForm(f.request.form)
-    add_spm_form = m.AddSpendingPartialMembership(f.request.form)
+    add_spm_form = m.AddSpendingPartialMembershipForm(f.request.form)
 
     sheet_members = m.Member.query.filter(m.Member.sheet_id == sheet_id)
-    sheet_spendings = m.Spending.query.filter(m.Spending.sheet_id == sheet_id)
+    if filter_member_id is None:
+        sheet_spendings = m.Spending.query.filter(m.Spending.sheet_id == sheet_id)
+    else:
+        sheet_spendings = m.Spending.query.filter(m.Spending.member_id == filter_member_id)
 
     member_choices = [
         (sheet_member.id, sheet_member.display_name)
@@ -94,6 +112,7 @@ def sheet(sheet_id):
 
     return f.render_template(
         'sheet.html',
+        sheet_id=sheet_id,
         add_member_form=add_member_form,
         add_currency_form=add_currency_form,
         add_spending_form=add_spending_form,
