@@ -29,6 +29,11 @@ table.sheets {
 
 }
 
+.member.selected {
+    font-weight: bold;
+    background-color: #ffafaf;
+}
+
 .members {
     padding-top: 5px;
     padding-bottom: 5px;

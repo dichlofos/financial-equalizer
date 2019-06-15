@@ -12,7 +12,7 @@
     </form>
     <div class="members">
         {% for member in sheet_members %}
-        <span class="member"><a
+        <span class="member {% if filter_member_id == member.id %}selected{% endif %}"><a
             href="/sheet/{{ sheet_id }}/member/{{ member.id }}">{{ member.display_name }}</a></span>
         {% endfor %}
     </div>

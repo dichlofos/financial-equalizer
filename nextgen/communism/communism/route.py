@@ -113,6 +113,7 @@ def _handle_sheet(sheet_id, filter_member_id=None):
     return f.render_template(
         'sheet.html',
         sheet_id=sheet_id,
+        filter_member_id=filter_member_id,
         add_member_form=add_member_form,
         add_currency_form=add_currency_form,
         add_spending_form=add_spending_form,
