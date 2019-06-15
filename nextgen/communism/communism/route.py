@@ -14,16 +14,15 @@ def index():
     add_sheet_form = m.AddSheetForm(f.request.form)
 
     if f.request.method == 'POST' and add_sheet_form.validate():
-        print(add_sheet_form.description.data)
 
         sheet = m.Sheet(
             description=add_sheet_form.description.data,
         )
+        # FIXME(mvel): obtain inserted sheet ID
         x = db.session.add(sheet)
         db.session.commit()
-        print(repr(x))
+        logging.error("type=%s", type(x))
         f.flash('Лист добавлен')
-        # FIXME(mvel) hc sheet id
         sheet_id = 100
         return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 
@@ -95,7 +94,6 @@ def _handle_sheet(sheet_id, filter_member_id=None):
             return _handle_add_spending_form(sheet_id, add_spending_form)
 
         logging.error("BAD HANDLER")
-        # print('Validate add_spending_form FAILED')
         f.flash('Чё-то вы не то пытаетесь сделать')
         return f.redirect(f.url_for('sheet', sheet_id=sheet_id))
 

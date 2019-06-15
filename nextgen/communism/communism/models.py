@@ -107,6 +107,16 @@ class Spending(db.Model):
         backref=db.backref('spending_member', lazy=True),
     )
 
+    currency_id = db.Column(
+        db.Integer,
+        db.ForeignKey('currency.id'),
+        nullable=False,
+    )
+    currency = db.relationship(
+        'Currency',
+        backref=db.backref('spending_currency', lazy=True),
+    )
+
     def __repr__(self):
         return '<Spending #{} of sheet #{}: {}, {}>'.format(
             self.id, self.sheet_id, self.description, self.amount,

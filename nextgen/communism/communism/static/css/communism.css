@@ -18,6 +18,15 @@ table.sheets {
     width: 3.5em !important;
 }
 
+th.amount {
+    text-align: right;
+    padding-right: 5px;
+}
+
+td.amount {
+    text-align: right;
+}
+
 .member {
     background-color: #afafaf;
     padding-top: 3px;
@@ -38,3 +47,4 @@ table.sheets {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+

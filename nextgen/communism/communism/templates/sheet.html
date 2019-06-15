@@ -28,6 +28,20 @@
         <button name="add_currency_form" type="submit" class="btn btn-primary">Добавить</button>
         {{ add_currency_form.csrf_token }}
     </form>
+    <div class="currency">
+        {% for currency in sheet_currencies %}
+        <form action="" method="post" class="form-inline">
+            <div id="edit_currency_form" class="form-group">
+                {{ edit_currency_form.sign.label }}&nbsp;
+                {{ edit_currency_form.sign(placeholder="EUR", class="form-control") }}
+            </div>
+            &nbsp;
+            <button name="edit_currency_form" type="submit" class="btn btn-primary">Добавить</button>
+            {{ edit_currency_form.csrf_token }}
+        </form>
+        <!--<span class="currency">{{ currency.sign }}</span>-->
+        {% endfor %}
+    </div>
 
     <div class="sep">&nbsp;</div>
 
@@ -61,7 +75,7 @@
         <thead>
             <th>ID</th>
             <th>Описание</th>
-            <th>Сколько</th>
+            <th class="amount">Сколько</th>
             <th>Когда</th>
             <th>Кто потратил</th>
             <th>Неполное участие</th>
@@ -70,7 +84,7 @@
         <tr>
             <td>{{ spending.id }}</td>
             <td>{{ spending.description }}</td>
-            <td>{{ spending.amount }}</td>
+            <td class="amount">{{ spending.amount }}</td>
             <td>{{ spending.date_time.strftime("%Y.%m.%d %H:%M") }}</td>
             <td>{{ spending.member.display_name }}</td>
             <td>
