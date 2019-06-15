@@ -4,16 +4,11 @@
 Main Financial Equalizer core
 """
 
-import datetime
-import logging
 import os
-from collections import defaultdict
 
 import flask as f
 
 import flask_sqlalchemy as fsql
-
-import wtforms as wtf
 
 app = f.Flask(__name__)
 app.config.from_object(__name__)

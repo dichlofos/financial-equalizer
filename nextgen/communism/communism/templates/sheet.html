@@ -28,6 +28,17 @@
     <div class="sep">&nbsp;</div>
 
     <form action="" method="post">
+        <div id="add_currency_form" class="form-group">
+            {{ add_currency_form.sign.label }}
+            {{ add_currency_form.sign(placeholder="EUR", class="form-control") }}
+        </div>
+        <button name="add_currency_form" type="submit" class="btn btn-primary">Добавить</button>
+        {{ add_currency_form.csrf_token }}
+    </form>
+
+    <div class="sep">&nbsp;</div>
+
+    <form action="" method="post">
         <div class="form-group">
         {{ add_spending_form.description.label }}
         {{ add_spending_form.description(placeholder="Шаурма в ларьке", class="form-control") }}

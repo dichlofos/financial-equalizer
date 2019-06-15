@@ -1,11 +1,6 @@
-import flask as f
 import wtforms as wtf
 
 import datetime
-import logging
-import os
-
-from collections import defaultdict
 
 
 from .communism import db
@@ -226,11 +221,10 @@ class Currency(db.Model):
     def __repr__(self):
         return '<Currency #{} of sheet #{}: {}, {}>'.format(
             self.id, self.sheet_id, self.sign, self.rate,
-            # self.date_time,
         )
 
 
-class AddCurrency(wtf.Form):
+class AddCurrencyForm(wtf.Form):
     """
     Adding currency form
     """

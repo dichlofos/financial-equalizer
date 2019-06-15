@@ -3,7 +3,6 @@ import logging
 from collections import defaultdict
 
 import flask as f
-import wtforms as wtf
 
 from .communism import db
 from .communism import app
@@ -43,6 +42,7 @@ def sheets():
 @app.route('/sheet/<int:sheet_id>', methods=['GET', 'POST'])
 def sheet(sheet_id):
     add_member_form = m.AddMemberForm(f.request.form)
+    add_currency_form = m.AddCurrencyForm(f.request.form)
     add_spending_form = m.AddSpendingForm(f.request.form)
     add_spm_form = m.AddSpendingPartialMembership(f.request.form)
 
@@ -85,7 +85,7 @@ def sheet(sheet_id):
         if add_spm_form.validate():
             logging.info("working!!!")
             print("Working!!!")
-            spm = SpendingPartialMembership(
+            spm = m.SpendingPartialMembership(
                 sheet_id=sheet_id,
             )
             db.session.add(spm)
@@ -95,6 +95,7 @@ def sheet(sheet_id):
     return f.render_template(
         'sheet.html',
         add_member_form=add_member_form,
+        add_currency_form=add_currency_form,
         add_spending_form=add_spending_form,
         add_spm_form=add_spm_form,
         sheet_members=sheet_members,
