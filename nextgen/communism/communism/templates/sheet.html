@@ -1,56 +1,52 @@
 {% extends "layout.html" %}
 {% block content %}
 <div style="background-color: #f5f5f5; padding: 10px">
-    <form action="" method="post">
+    <form action="" method="post" class="form-inline">
         <div id="add_member_form" class="form-group">
-            {{ add_member_form.display_name.label }}
+            {{ add_member_form.display_name.label }}&nbsp;
             {{ add_member_form.display_name(placeholder="Иван Человеков", class="form-control") }}
         </div>
+        &nbsp;
         <button name="add_member_form" type="submit" class="btn btn-primary">Добавить</button>
         {{ add_member_form.csrf_token }}
     </form>
-
-    <div class="sep">&nbsp;</div>
-
-    <table class="table table-sm">
-        <thead class="thead-light">
-            <th>ID</th>
-            <th>Имя</th>
-        </thead>
+    <div class="members">
         {% for member in sheet_members %}
-        <tr>
-            <td>{{ member.id }}</td>
-            <td>{{ member.display_name }}</td>
-        </tr>
+        <span class="member"><a
+            href="/sheet/{{sheet_id}}/member/{{member.member_id}}">{{ member.display_name }}</a></span>
         {% endfor %}
-    </table>
+    </div>
 
     <div class="sep">&nbsp;</div>
 
-    <form action="" method="post">
+    <form action="" method="post" class="form-inline">
         <div id="add_currency_form" class="form-group">
-            {{ add_currency_form.sign.label }}
+            {{ add_currency_form.sign.label }}&nbsp;
             {{ add_currency_form.sign(placeholder="EUR", class="form-control") }}
         </div>
+        &nbsp;
         <button name="add_currency_form" type="submit" class="btn btn-primary">Добавить</button>
         {{ add_currency_form.csrf_token }}
     </form>
 
     <div class="sep">&nbsp;</div>
 
-    <form action="" method="post">
+    <form action="" method="post" class="form-inline">
         <div class="form-group">
-        {{ add_spending_form.description.label }}
+        {{ add_spending_form.description.label }}&nbsp;
         {{ add_spending_form.description(placeholder="Шаурма в ларьке", class="form-control") }}
         </div>
+        &nbsp;&nbsp;
         <div class="form-group">
-        {{ add_spending_form.amount.label }}
+        {{ add_spending_form.amount.label }}&nbsp;
         {{ add_spending_form.amount(placeholder="105.2", class="form-control") }}
         </div>
+        &nbsp;&nbsp;
         <div class="form-group">
-        {{ add_spending_form.member_id.label }}
+        {{ add_spending_form.member_id.label }}&nbsp;
         {{ add_spending_form.member_id(class="form-control") }}
         </div>
+        &nbsp;
         <button
             name="add_spending_form"
             type="submit"
