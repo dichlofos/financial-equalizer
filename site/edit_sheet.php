@@ -168,6 +168,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
 
         <table class="table table-condensed transactions">
         <tr>
+        <th class="transaction-time"><img title="Дата/время ввода" src="/static/communism/images/clock.png" border="0"/></th>
         <th class="non-member transaction-description">Статья расхода или сбора (<?php echo count($transactions); ?>&nbsp;шт.)</th>
         <th class="non-member transaction-currency">Валюта</th><?php
         foreach ($members as $member_id => $member_name) {
@@ -178,7 +179,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
             echo "<th class=\"transaction-amount\" style=\"width: $width_percent%;\">$inner_member_html</th>\n";
         }
         ?>
-        <th class="non-member transaction-stats">Сумма / Чел</th>
+        <th class="non-member transaction-stats">&Sigma;&nbsp;/&nbsp;чел</th>
         </tr>
         </table>
 
@@ -205,6 +206,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
         <!-- footer (Total) -->
         <table class="table table-condensed transactions transactions-footer">
         <tr>
+            <th class="transaction-time"><img title="Дата/время ввода" src="/static/communism/images/clock.png" border="0"/></th>
             <th class="transaction-description">&nbsp;</th>
             <th class="transaction-currency">&nbsp;</th>
         <?php

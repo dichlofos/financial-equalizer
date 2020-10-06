@@ -55,7 +55,6 @@ input.transaction-title {
 
 .form-inline input.form-control.transaction-description {
     width: 280px;
-    margin-left: 5px;
 }
 
 table {
@@ -168,6 +167,19 @@ table.transactions th {
     word-break: break-all;
 }
 
+th.transaction-time,
+td.transaction-time {
+    width: 105px;
+    /* for proper width calculation, remove padding */
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+td.transaction-time {
+    font-size: 10px;
+    vertical-align: middle !important;
+}
+
 th.transaction-description,
 td.transaction-description {
     width: 300px;
@@ -186,7 +198,7 @@ td.transaction-currency {
 
 th.transaction-stats,
 td.transaction-stats {
-    width: 85px;
+    width: 60x;
     /* for proper width calculation, remove padding */
     padding-left: 0px !important;
     padding-right: 0px !important;

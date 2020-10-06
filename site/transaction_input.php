@@ -68,14 +68,15 @@ function fe_print_transaction_input(
 
     $visibility_class = fe_calc_row_visibility_class($transaction, $member_id_filter);
 
-    echo "<tr class=\"$bad_lambda_norm_class $visibility_class\">";
+    echo "<tr class=\"$bad_lambda_norm_class $visibility_class\">\n";
+    echo "<td class=\"transaction-time\">&nbsp;$timestamp</td>\n";
     echo "<td class=\"transaction-description\">";
     echo "<input type=\"hidden\" name=\"ts${transaction_id}\" value=\"$timestamp\"/>";
     echo "<input class=\"form-control input-sm transaction-description\" name=\"dtr${transaction_id}\" value=\"$description\" type=\"text\" ".
-        "title=\"Товар или оказанная услуга\" placeholder=\"Трансфер из пункта А в пункт Б\" />";
+        "title=\"Товар или оказанная услуга\" placeholder=\"Трансфер из пункта А в пункт Б\" />\n";
     echo "<td class=\"transaction-currency\">";
     fe_currency_selector($currency, "cur$transaction_id", $exchange_rates);
-    echo "</td>\n ";
+    echo "</td>\n";
     $transaction_sum = 0;
     $transaction_member_count = 0;
 
@@ -104,8 +105,6 @@ function fe_print_transaction_input(
             "title=\"Коэффициент пользования данной услугой для данного участника\" />";
         echo "</td>\n ";
     }
-    echo "<td class=\"transaction-stats\">";
-    echo    "<img title=\"$timestamp\" src=\"/static/communism/images/clock.png\" border=\"0\"/>&nbsp;";
-    echo    "$transaction_sum / $transaction_member_count</td>\n ";
-    echo "</tr>";
+    echo "<td class=\"transaction-stats\">$transaction_sum / $transaction_member_count</td>\n";
+    echo "</tr>\n";
 }
