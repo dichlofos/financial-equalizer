@@ -7,33 +7,27 @@ set -e
 
 xengine="site/xengine"
 
-function check_repo() {
-    [ -x $1/.hg ]
-}
-
-
 if echo $USER | grep -q mvel ; then
-    # TODO(mvel): rework this utter crap
-    if [ -x deploy-tools/.hg ] ; then
+    if [ -x deploy-tools/.git ] ; then
         echo "Obtaining latest deploy-tools version"
-        ( cd $my_dir/deploy-tools && hg pull && hg update )
+        ( cd $my_dir/deploy-tools && git pull )
     else
-        hg clone /home/mvel/work/deploy-tools deploy-tools
+        git clone git@github.com:dichlofos/deploy-tools.git deploy-tools
     fi
 else
-    if ! [ -x deploy-tools/.hg ] || ! [ -x $xengine/.hg ] ; then
+    if ! [ -x deploy-tools/.git ] || ! [ -x $xengine/.git ] ; then
         echo "Please checkout complete repo using bootstrap.sh"
         exit 1
     fi
 fi
 
 echo "Obtaining latest deploy-tools version"
-( cd $my_dir/deploy-tools && hg pull && hg update )
+( cd $my_dir/deploy-tools && git pull )
 
 . deploy-tools/installer/installer.sh
 
-# from this momen we can use installer tools
+# from this moment we can use installer tools
 print_message "Obtaining latest xengine version"
-( cd $my_dir/$xengine && hg pull && hg update )
+( cd $my_dir/$xengine && git pull )
 
 print_message "Updating dependencies done"
