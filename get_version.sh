@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-hg_tip () {
-    hg log -r tip | head -n1 | cut -d ':' -f3
-}
+. deploy-tools/installer/installer.sh
 
-( cd . && echo "financial-equalizer:$(hg_tip)" )
-( cd site/xengine && echo "xengine:$(hg_tip)" )
-( cd deploy-tools && echo "deploy-tools:$(hg_tip)" )
+( cd . && echo "financial-equalizer:$(xcms_get_version)" )
+( cd site/xengine && echo "xengine:$(xcms_get_version)" )
+( cd deploy-tools && echo "deploy-tools:$(xcms_get_version)" )
