@@ -4,7 +4,7 @@ require_once('transaction_input.php');
 
 
 function fe_check_max_input_vars($members, $transactions) {
-    // See issue https://bitbucket.org/dichlofos/financial-equalizer/issues/13
+    // See issue #13
     $max_input_vars = (integer)(ini_get('max_input_vars'));
     if (count($members) * count($transactions) * 4 <= $max_input_vars) {
         return;
