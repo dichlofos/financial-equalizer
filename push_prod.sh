@@ -14,11 +14,11 @@ if [ -z "$destination" ] ; then
 fi
 
 # push to production host
-common_repo_path="ssh://dmvn.net//srv/hg"
+common_repo_path="ssh://dmvn.net//srv/git"
 
 # bootstrap project into current directory
-( cd . && ( hg push $common_repo_path/$project_name || true ) )
-( cd site/xengine && ( hg push $common_repo_path/xengine || true ) )
-( cd deploy-tools && ( hg push $common_repo_path/deploy-tools || true ) )
+( cd . && ( git push $common_repo_path/$project_name.git || true ) )
+( cd site/xengine && ( git push $common_repo_path/xengine.git || true ) )
+( cd deploy-tools && ( git push $common_repo_path/deploy-tools.git || true ) )
 
 print_message "'$project_name' is synced with production $common_repo_path"
