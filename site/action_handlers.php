@@ -20,6 +20,35 @@ function fe_action_new_sheet($sheet_id) {
     $_SESSION["sheet_id"] = $sheet_id;
 }
 
+/**
+  * New transaction adding action handler
+  * @param sheet_id Sheet identifier
+  * @param request: POST request data
+  **/
+function fe_action_add_transaction($sheet_id, $request) {
+    $description = xcms_get_key_or($_REQUEST, "description");
+    $sheet_data = fe_load_sheet($sheet_id);
+    $timestamp_str = xcms_datetime();
+    $members = xcms_get_key_or($sheet_data, "members");
+    $spent = array();
+    foreach ($members as $member_id => $member_name) {
+        $spent[$member_id] = 1.0; // default spending is for all members
+    }
+    $charges = array();
+    foreach ($members as $member_id => $member_name) {
+        $charges[$member_id] = 0; // default charges is for all members
+    }
+    $sheet_data["transactions"][] = array(
+        "description" => $description,
+        "currency" => FE_DEFAULT_CURRENCY,
+        "spent" => $spent,
+        "charges" => $charges,
+        FE_KEY_TIMESTAMP_MODIFIED => $timestamp_str,
+    );
+    $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = $timestamp_str;
+    fe_save_sheet($sheet_id, $sheet_data);
+}
+
 
 /**
   * Transactions form update handler

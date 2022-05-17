@@ -289,7 +289,7 @@ function fe_test_calculate_sheet_diff() {
         ),
         "transactions" => array(
             array(
-                "currency" => "RUR",
+                "currency" => FE_DEFAULT_CURRENCY,
                 "charges" => array(
                     "100",
                     "2000",

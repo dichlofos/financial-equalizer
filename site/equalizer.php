@@ -2,11 +2,6 @@
 require_once('utils.php');
 require_once("${xengine_dir}sys/util.php");
 
-define('FE_DEFAULT_CURRENCY', "RUR");
-
-define('FE_KEY_TIMESTAMP_CREATED', "timestamp_created");
-define('FE_KEY_TIMESTAMP_MODIFIED', "timestamp_modified");
-
 
 function fe_save_sheet($sheet_id, $sheet_data) {
     if (xu_empty($sheet_id)) {
@@ -74,7 +69,56 @@ function fe_get_spent($transaction, $member_id) {
 
 
 function fe_get_currency($transaction) {
-    return xcms_get_key_or($transaction, "currency", FE_DEFAULT_CURRENCY);
+    $currency = xcms_get_key_or($transaction, "currency", FE_DEFAULT_CURRENCY);
+
+    if ($currency == "RUR") {
+        $currency = FE_DEFAULT_CURRENCY;  // RUR and "Рубли" are equal
+    }
+    return $currency;
+}
+
+
+/**
+ * Compare two transactions.
+ * We cannot use `json_decode` (bad) function for transaction comparison
+ * by two reasons:
+ * - keys are not sorted in json
+ * - new transaction has no timestamp, so it always will have diff with old.
+ *
+ * @param new_transaction: New (updated) transaction data
+ * @param old_transaction: Old (previous) transaction data
+ * @return true if no significant changes detected
+ **/
+function fe_is_transactions_equal($new_transaction, $old_transaction) {
+    if (
+        xcms_get_key_or($new_transaction, "description") !==
+        xcms_get_key_or($old_transaction, "description")
+    ) {
+        return false;
+    }
+
+    if (
+        xcms_get_key_or($new_transaction, "currency") !==
+        xcms_get_key_or($old_transaction, "currency")
+    ) {
+        return false;
+    }
+
+    if (
+        xcms_get_key_or($new_transaction, "charges", array()) !==
+        xcms_get_key_or($old_transaction, "charges", array())
+    ) {
+        return false;
+    }
+
+    if (
+        xcms_get_key_or($new_transaction, "spent", array()) !==
+        xcms_get_key_or($old_transaction, "spent", array())
+    ) {
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -92,10 +136,11 @@ function fe_calculate_sheet_diff($old_sheet_data, &$sheet_data, $timestamp = fal
     foreach ($transactions as $transaction_id => $transaction) {
         if (array_key_exists($transaction_id, $old_transactions)) {
             // transaction exists in both sheets
-            $transaction_str = json_encode($transaction);
             $old_transaction = $old_transactions[$transaction_id];
-            $old_transaction_str = json_encode($old_transaction);
-            if ($old_transaction_str != $transaction_str) {
+            if (fe_is_transactions_equal($transaction, $old_transaction)) {
+                // new transaction does not have modification time, so use old one
+                $sheet_data["transactions"][$transaction_id] = $old_transaction;
+            } else {
                 $sheet_data["transactions"][$transaction_id][FE_KEY_TIMESTAMP_MODIFIED] = $timestamp_str;
                 $modified = true;
             }
