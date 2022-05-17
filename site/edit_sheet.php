@@ -206,7 +206,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
         <!-- footer (Total) -->
         <table class="table table-condensed transactions transactions-footer">
         <tr>
-            <th class="transaction-time"><img title="Дата/время ввода" src="/static/communism/images/clock.png" border="0"/></th>
+            <th class="transaction-time"><img title="Дата/время ввода" src="/static/communism/images/clock.png" style="border: 0px; visibility: hidden;"/></th>
             <th class="transaction-description">&nbsp;</th>
             <th class="transaction-currency">&nbsp;</th>
         <?php
@@ -217,6 +217,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
         <th>&nbsp;</th>
         </tr>
         <tr class="info">
+            <td>&nbsp;</td>
             <td>Итоговые расходы участника (RUR)</td>
             <td>&nbsp;</td>
         <?php
