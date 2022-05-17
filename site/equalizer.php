@@ -78,9 +78,13 @@ function fe_get_currency($transaction) {
 }
 
 
+function _fe_compare_arrays($arr_a, $arr_b) {
+    return json_encode($arr_a) == json_encode($arr_b);
+}
+
 /**
  * Compare two transactions.
- * We cannot use `json_decode` (bad) function for transaction comparison
+ * We cannot use `json_decode` (bad) function for whole transaction comparison
  * by two reasons:
  * - keys are not sorted in json
  * - new transaction has no timestamp, so it always will have diff with old.
@@ -104,17 +108,17 @@ function fe_is_transactions_equal($new_transaction, $old_transaction) {
         return false;
     }
 
-    if (
-        xcms_get_key_or($new_transaction, "charges", array()) !==
+    if (!_fe_compare_arrays(
+        xcms_get_key_or($new_transaction, "charges", array()),
         xcms_get_key_or($old_transaction, "charges", array())
-    ) {
+    )) {
         return false;
     }
 
-    if (
-        xcms_get_key_or($new_transaction, "spent", array()) !==
+    if (!_fe_compare_arrays(
+        xcms_get_key_or($new_transaction, "spent", array()),
         xcms_get_key_or($old_transaction, "spent", array())
-    ) {
+    )) {
         return false;
     }
 

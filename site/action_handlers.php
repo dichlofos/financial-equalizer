@@ -58,6 +58,10 @@ function fe_action_update_sheet($sheet_id, $request) {
     $sheet_data = fe_load_sheet($sheet_id);
     $sheet_old_data = $sheet_data;
 
+    print("<pre>");
+    print_r($request);
+    print_r($sheet_data);
+
     $transactions = array();
     $members = array();
     $exchange_rates = array();
@@ -68,13 +72,13 @@ function fe_action_update_sheet($sheet_id, $request) {
             $amount_key = explode("_", $amount_key);
             $transaction_id = $amount_key[0];
             $member_id = $amount_key[1];
-            $transactions[$transaction_id]["charges"][$member_id] = $value;
+            $transactions[$transaction_id]["charges"][$member_id] = (integer)($value);
         } elseif (xu_startswith($key, "sp")) {
             $spent_key = substr($key, 2);
             $spent_key = explode("_", $spent_key);
             $transaction_id = $spent_key[0];
             $member_id = $spent_key[1];
-            $transactions[$transaction_id]["spent"][$member_id] = $value;
+            $transactions[$transaction_id]["spent"][$member_id] = (float)($value);
         } elseif (xu_startswith($key, "cur")) {
             $transaction_id = substr($key, 3);
             $transactions[$transaction_id]["currency"] = $value;
