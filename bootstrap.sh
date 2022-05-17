@@ -19,7 +19,7 @@ fi
 
 # bootstrap project into current directory
 git clone $common_repo_path/$project_name.git $destination
-( cd $destination; git checkout ec4f02533697da3447ce43c6014e209ef7e59639 ; cd - )
+# ( cd $destination; git checkout ec4f02533697da3447ce43c6014e209ef7e59639 ; cd - )
 git clone $common_repo_path/xengine.git $destination/site/xengine
 git clone $common_repo_path/deploy-tools.git $destination/deploy-tools
 
