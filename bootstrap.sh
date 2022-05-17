@@ -19,6 +19,7 @@ fi
 
 # bootstrap project into current directory
 git clone $common_repo_path/$project_name.git $destination
+cd $destination; git checkout 0.2.13-prod-2022.03.29 ; cd -
 git clone $common_repo_path/xengine.git $destination/site/xengine
 git clone $common_repo_path/deploy-tools.git $destination/deploy-tools
 
