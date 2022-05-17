@@ -78,10 +78,21 @@ if ($action == "new_sheet") {
     $description = xcms_get_key_or($_REQUEST, "description");
     $sheet_data = fe_load_sheet($sheet_id);
     $timestamp_str = xcms_datetime();
+    $members = xcms_get_key_or($sheet_data, "members");
+    $spent = array();
+    foreach ($members as $member_id => $member_name) {
+        $spent[$member_id] = 1.0; // default spending is for all members
+    }
+    $charges = array();
+    foreach ($members as $member_id => $member_name) {
+        $charges[$member_id] = 0; // default charges is for all members
+    }
     $sheet_data["transactions"][] = array(
         "description" => $description,
         "currency" => FE_DEFAULT_CURRENCY,
         FE_KEY_TIMESTAMP_MODIFIED => $timestamp_str,
+        "spent" => $spent,
+        "charges" => $charges,
     );
     $sheet_data[FE_KEY_TIMESTAMP_MODIFIED] = $timestamp_str;
     fe_save_sheet($sheet_id, $sheet_data);
