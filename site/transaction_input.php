@@ -6,7 +6,7 @@ require_once('equalizer.php');
 function fe_currency_selector($currency, $id, $exchange_rates) {
     echo "<select class=\"form-control input-sm currency-select\" name=\"$id\">";
     foreach ($exchange_rates as $curr => $rate) {
-        $selected = ($curr == $currency) ? ' selected="selected" ' : '';
+        $selected = ($curr === $currency) ? ' selected="selected" ' : '';
         echo "<option value=\"$curr\"$selected>$curr</option>\n";
     }
     echo "</select>";

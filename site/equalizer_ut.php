@@ -18,8 +18,8 @@ function fe_assert_equal($first, $second, $message) {
 
 
 function fe_assert_inequal($first, $second, $message) {
-    if ($first == $second) {
-        fe_uprint("Assertion failed: $first == $second [$message]");
+    if ($first === $second) {
+        fe_uprint("Assertion failed: $first === $second [$message]");
     }
 }
 

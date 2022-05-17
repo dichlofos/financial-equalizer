@@ -57,8 +57,9 @@ function fe_get_charge($transaction, $member_id) {
 
 function fe_get_spent($transaction, $member_id) {
     $spent = xcms_get_key_or($transaction, "spent", array());
-    $member_spent = xcms_get_key_or($spent, $member_id, "1.0");
-    if ($member_spent == "yes") {
+    $member_spent = xcms_get_key_or($spent, (integer)$member_id, "1.0");
+
+    if ($member_spent === "yes") {
         // backwards compatibility
         $member_spent = "1.0";
     } elseif (xu_empty($member_spent)) {
@@ -71,7 +72,7 @@ function fe_get_spent($transaction, $member_id) {
 function fe_get_currency($transaction) {
     $currency = xcms_get_key_or($transaction, "currency", FE_DEFAULT_CURRENCY);
 
-    if ($currency == "RUR") {
+    if ($currency === "RUR") {
         $currency = FE_DEFAULT_CURRENCY;  // RUR and "Рубли" are equal
     }
     return $currency;
@@ -79,7 +80,7 @@ function fe_get_currency($transaction) {
 
 
 function _fe_compare_arrays($arr_a, $arr_b) {
-    return json_encode($arr_a) == json_encode($arr_b);
+    return json_encode($arr_a) === json_encode($arr_b);
 }
 
 /**

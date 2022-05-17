@@ -35,18 +35,18 @@ if (xu_empty($member_id_filter)) {
     }
 }
 
-if ($action == "new_sheet") {
+if ($action === "new_sheet") {
     fe_action_new_sheet($sheet_id);
     header("Location: /?sheet_id=$sheet_id");
     exit();
-} elseif ($action == "update_sheet") {
+} elseif ($action === "update_sheet") {
     if (xu_empty($sheet_id)) {
         die("Invalid request: sheet_id is empty");
     }
     fe_action_update_sheet($sheet_id, $_REQUEST);
     header("Location: /?sheet_id=$sheet_id");
     exit();
-} elseif ($action == "add_member") {
+} elseif ($action === "add_member") {
     $member_name = xcms_get_key_or($_REQUEST, "member_name");
     $member_name = trim($member_name);
     if (xu_not_empty($member_name)) {
@@ -58,7 +58,7 @@ if ($action == "new_sheet") {
     }
     header("Location: /?sheet_id=$sheet_id");
     exit();
-} elseif ($action == "add_currency") {
+} elseif ($action === "add_currency") {
     $currency = xcms_get_key_or($_REQUEST, "currency");
     $currency = trim($currency);
     if (xu_not_empty($currency)) {
@@ -70,15 +70,15 @@ if ($action == "new_sheet") {
     }
     header("Location: /?sheet_id=$sheet_id");
     exit();
-} elseif ($action == "clear_session") {
+} elseif ($action === "clear_session") {
     $_SESSION["sheet_id"] = "";
     header("Location: /");
     exit();
-} elseif ($action == "add_transaction") {
+} elseif ($action === "add_transaction") {
     fe_action_add_transaction($sheet_id, $_REQUEST);
     header("Location: /?sheet_id=$sheet_id");
     exit();
-} elseif ($action == "set_sheet_title") {
+} elseif ($action === "set_sheet_title") {
     $title = xcms_get_key_or($_REQUEST, "title");
     $title = trim($title);
     $sheet_data = fe_load_sheet($sheet_id);
@@ -87,10 +87,10 @@ if ($action == "new_sheet") {
     fe_save_sheet($sheet_id, $sheet_data);
     header("Location: /?sheet_id=$sheet_id");
     exit();
-} elseif ($action == "export") {
+} elseif ($action === "export") {
     $format = xcms_get_key_or($_REQUEST, "format");
     $sheet_data = fe_load_sheet($sheet_id);
-    if ($format == "csv") {
+    if ($format === "csv") {
         fe_export_sheet_to_csv($sheet_data);
     } else {
         die("Invalid format: $format");
@@ -149,8 +149,8 @@ if (strpos($host, "communism.dmvn.net") !== false) {?>
             Экспорт <a href="/?action=export&amp;format=csv&amp;sheet_id=<?php echo $sheet_id; ?>">в CSV</a><br />
             <?php
             $host_name = xcms_hostname();
-            $is_production = ($host_name == "communism.dmvn.net");
-            $is_testing = ($host_name == "test.communism.dmvn.net");
+            $is_production = ($host_name === "communism.dmvn.net");
+            $is_testing = ($host_name === "test.communism.dmvn.net");
             if (!$is_production) {
                 echo "<b style=\"color: red\">WARNING: This is a TEST instance!<br/>Your data can be LOST!</b>";
             }
