@@ -214,7 +214,7 @@ function fe_edit_sheet($sheet_id, $member_id_filter) {
             echo "<th>$member_name</th>\n";
         }
         ?>
-        <th>&nbsp;</th>
+        <th class="non-member transaction-stats">&nbsp;</th>
         </tr>
         <tr class="info">
             <td>&nbsp;</td>
